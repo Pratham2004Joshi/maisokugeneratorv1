@@ -1,1 +1,1430 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Maisoku Generator — R.connect</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans JP',sans-serif;background:#f0f2f5;color:#111;min-height:100vh}
+#topbar{background:#1a1a1a;color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:10px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo img{height:24px;width:auto;object-fit:contain}
+.logo-title{font-weight:700;font-size:14px;color:#fff}
+.logo-sub{color:#777;font-size:11px}
+.topbtns{display:flex;gap:8px;align-items:center}
+.btn{border:none;padding:7px 14px;border-radius:4px;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit}
+.btn-prev{background:#333;color:#fff}.btn-prev.on{background:#C8102E}
+.btn-print{background:#2563eb;color:#fff}
+.btn-pdf{background:#16a34a;color:#fff}
+.lang-tog{display:flex;border:1px solid #444;border-radius:4px;overflow:hidden}
+.lang-btn{background:transparent;color:#aaa;border:none;padding:5px 11px;cursor:pointer;font-size:11px;font-weight:700;font-family:inherit}
+.lang-btn.on{background:#C8102E;color:#fff}
+#app{max-width:1150px;margin:20px auto;display:flex;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08)}
+#sidebar{width:160px;background:#1a1a1a;padding:18px 0;flex-shrink:0}
+.ti{padding:11px 18px;cursor:pointer;font-size:12px;color:#aaa;border-left:3px solid transparent;transition:all .15s}
+.ti:hover{color:#ddd;background:#222}
+.ti.on{color:#C8102E;font-weight:700;border-left-color:#C8102E;background:#222}
+.sb-sec{margin:18px 10px 6px;border-top:1px solid #333;padding-top:12px}
+.sb-lbl{color:#555;font-size:10px;padding-left:8px;margin-bottom:7px;letter-spacing:1px;text-transform:uppercase}
+.di{padding:5px 8px;cursor:pointer;font-size:11px;color:#aaa;border-left:3px solid transparent;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.di:hover{color:#ddd;background:#222}
+.di.on{color:#C8102E;font-weight:700;border-left-color:#C8102E;background:#222}
+#fp{flex:1;padding:24px;overflow-y:auto;max-height:calc(100vh - 56px)}
+.io-row{display:flex;gap:10px;background:#f8fafc;border:1px dashed #cbd5e1;padding:12px;border-radius:6px;margin-bottom:20px;align-items:center}
+.btn-save{background:#475569;color:#fff}.btn-save:hover{background:#334155}
+.stitle{font-weight:900;font-size:15px;margin-bottom:18px;padding-bottom:7px;border-bottom:2px solid #C8102E}
+.fr{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.fl{width:150px;flex-shrink:0;font-size:12px;color:#555;font-weight:500;padding-top:8px}
+.fi{flex:1}
+.fi input,.fi fill,.fi select,.fi textarea{width:100%;padding:6px 9px;border:1px solid #ddd;border-radius:4px;font-size:12px;font-family:inherit;outline:none}
+.fi input:focus,.fi select:focus,.fi textarea:focus{border-color:#C8102E}
+.fi textarea{resize:vertical}
+.ag{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.ac{display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer;background:#f5f5f5;border:1px solid #ddd;padding:4px 9px;border-radius:4px;user-select:none;transition:all .15s}
+.ac.on{background:#fff0f0;border-color:#C8102E;color:#C8102E;font-weight:600}
+.sbox{background:#f9f9f9;border:1px solid #eee;border-radius:6px;padding:14px;margin-bottom:12px}
+.sbox-t{font-weight:700;font-size:12px;margin-bottom:10px;color:#444}
+.ub{background:#f5f5f5;border:2px dashed #ddd;border-radius:5px;padding:10px 16px;font-size:12px;color:#888;cursor:pointer;display:inline-block;transition:all .15s}
+.ub:hover{border-color:#C8102E;color:#C8102E}
+.ub.done{border-style:solid;border-color:#22c55e;color:#22c55e;background:#f0fff4}
+.uprev{max-height:90px;border-radius:4px;border:1px solid #eee;margin-top:7px;display:none}
+.tip{background:#fff8e1;border:1px solid #ffe082;border-radius:5px;padding:10px;font-size:11px;color:#795548;margin-top:10px}
+.btn-ai{background:linear-gradient(135deg,#7c3aed,#C8102E);color:#fff;font-weight:700;letter-spacing:.04em;border:none;cursor:pointer;transition:opacity .2s}
+.btn-ai:hover{opacity:.88}
+.btn-ai:disabled{opacity:.5;cursor:not-allowed}
+#scan-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center}
+#scan-overlay.active{display:flex}
+#scan-modal{background:#fff;border-radius:10px;padding:28px 32px;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+#scan-modal h3{font-size:15px;font-weight:800;color:#111;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+#scan-modal p{font-size:12px;color:#64748b;margin-bottom:16px;line-height:1.7}
+#scan-progress{display:none;margin-top:14px}
+.scan-bar-wrap{height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;margin-bottom:8px}
+.scan-bar{height:100%;width:0%;background:linear-gradient(90deg,#7c3aed,#C8102E);border-radius:3px;transition:width .4s ease}
+.scan-status{font-size:11px;color:#7c3aed;font-weight:600;letter-spacing:.04em}
+.scan-result-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:12px}
+.scan-result-row:last-child{border-bottom:none}
+.scan-result-key{color:#475569;font-weight:500}
+.scan-result-val{color:#111;font-weight:600;max-width:240px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#scan-fields-preview{margin-top:16px;max-height:280px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px;display:none}
+.scan-err{background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:10px 14px;font-size:12px;color:#dc2626;margin-top:12px;display:none}
+#pp{padding:16px 20px;overflow-y:auto;max-height:calc(100vh - 56px);flex:1;overflow-x:auto}
+.phint{background:#fff3cd;border:1px solid #ffc107;border-radius:5px;padding:9px 14px;font-size:12px;margin-bottom:14px}
 
+/* ═══ MAISOKU CANVAS CORE STRUCTURE ═══ */
+#ms{font-family:'Noto Sans JP',sans-serif;font-size:11px;border:1px solid #ccc;position:relative;overflow:hidden;width:1047px;height:740px;min-width:1047px;min-height:740px;background:#fff;display:flex;flex-direction:column}
+#ms-canvas-body{flex:1;position:relative;overflow:hidden}
+
+.ms-tbl table{width:100%;border-collapse:collapse;font-size:9.5px;table-layout:fixed;letter-spacing:-0.01em}
+.ms-tbl th, .ms-tbl .mth {padding:2px 4px;font-size:8.5px !important;font-weight:500;white-space:normal;line-height:1.1 !important;text-align:center;letter-spacing:-0.01em}
+.ms-tbl td, .ms-tbl .ms-td-val {padding:2px 5px;border-bottom:1px solid #e0e0e0;line-height:1.2;vertical-align:middle;background:#fff;word-break:break-all;font-size:9px !important;font-weight:400;}
+
+.img-contain-box{width:100%;height:100%;border-radius:0;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;background:#fff}
+.img-contain-box img{max-width:100%;max-height:100%;object-fit:contain;display:block;margin:auto;z-index:2}
+.img-cover-box{width:100%;height:100%;overflow:hidden;position:relative;background:#222}
+.img-cover-box img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block}
+
+.ms-am { display: flex; flex-direction: column; background: #fff; justify-content: flex-start; height: 100%; border-right: 1px solid #ddd; }
+.ms-ar { display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 4px 8px; border-bottom: 1px solid #f1f5f9; width: 100%; height: auto; overflow: hidden; }
+.ms-ai { width: 20px; height: 20px; background: #f1f5f9; border-radius: 3px; flex-shrink: 0; display: inline-flex !important; align-items: center !important; justify-content: center !important; font-size: 11px; line-height: 1 !important; margin: 0 !important; vertical-align: middle; }
+.ms-am-text { font-size: 10px; display: inline-block; vertical-align: middle; line-height: 20px; height: 20px; color: #1e293b; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.ms-map { flex-shrink: 0; overflow: hidden; background: #e2e8f0; position: relative; width: 100%; height: 100%; }
+.ms-map-canvas-box { width: 100%; height: 100%; position: relative; }
+
+#ms-foot{display:flex;align-items:center;padding:8px 14px;gap:12px;flex-wrap:nowrap;height:75px;border-top:1px solid #111;background:#fff;color:#111;position:absolute;bottom:0;left:0;right:0;z-index:20;overflow:hidden}
+.ms-fr-logo-container{display:flex;align-items:center;height:55px;gap:10px;flex-shrink:0}
+.ms-fr-sketch-logo{height:55px !important;width:auto !important;max-height:55px !important;object-fit:contain !important;display:block}
+.ms-fc-logo-img{height:32px !important;width:auto !important;max-height:32px !important;object-fit:contain !important;display:block}
+.ms-fi{border-left:1px solid #bbb;padding-left:12px;font-size:9px;line-height:1.5;flex:1;min-width:0;color:#333}
+.ms-fk{font-size:9px;line-height:1.5;border-left:1px solid #bbb;padding-left:12px;white-space:nowrap;color:#333}
+.ms-ff{font-size:9px;line-height:1.5;padding-left:12px;white-space:nowrap;color:#333}
+
+/* ═════ CORE GEOMETRY ARCHETYPE SWITCHES ═════ */
+.la-layout-grid { display: grid; grid-template-columns: 46% 54%; height: 430px; border-bottom: 1px solid #111; }
+.la-bottom-grid { display: grid; grid-template-columns: 27% 15% 25% 33%; height: 215px; border-bottom: 1px solid #111; background: #fff; }
+.la-hero-text { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%); z-index: 5; }
+.la-hero-text .pt { color: rgba(255,255,255,0.85); font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+.la-hero-text .pn { color: #fff; font-size: 24px; font-weight: 900; font-family: 'Noto Serif JP', serif; line-height: 1.2; margin-bottom: 4px; }
+.la-hero-text .pp { font-size: 15px; font-weight: 700; }
+
+.la-sub-split { display: flex; flex-direction: column; height: 100%; width: 100%; border-left: 1px solid #ddd; background: #fff; overflow: hidden; position: relative; }
+.la-map-box { height: 100%; width: 100%; position: relative; overflow: hidden; }
+
+.lb-banner { height: 120px; width: 100%; border-bottom: 1px solid #111; position: relative; }
+.lb-banner-text { position: absolute; inset: 0; padding: 0 24px; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(to right, rgba(0,0,0,0.9) 45%, transparent 100%); z-index: 5; }
+.lb-banner-text .pt { color: rgba(255,255,255,0.85); font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+.lb-banner-text .pn { color: #fff; font-size: 26px; font-weight: 900; font-family: 'Noto Serif JP', serif; margin-bottom: 4px; }
+.lb-banner-text .pp { font-size: 16px; font-weight: 700; }
+.lb-middle-grid { display: grid; grid-template-columns: 44% 56%; height: 355px; border-bottom: 1px solid #111; overflow: hidden; }
+.lb-amenity-strip { height: 32px; width: 100%; border-bottom: 1px solid #111; display: flex; align-items: center; justify-content: space-around; padding: 0 35px; background: #fff; z-index: 10; position: relative; }
+.lb-amenity-strip .ms-ar { padding: 0; border: none; background: transparent; width: auto; display: inline-flex !important; height: 100%; align-items: center; }
+.lb-bottom-strip { display: grid; grid-template-columns: 30% 35% 35%; height: 138px; border-bottom: 1px solid #111; background: #fff; }
+
+.lc-wrapper-shell { display: flex; flex-direction: column; width: 100%; height: 645px; gap: 10px; padding: 10px; background: inherit; }
+.lc-top-split { display: grid; grid-template-columns: 55% calc(45% - 10px); gap: 10px; height: 325px; }
+.lc-banner-left { position: relative; height: 100%; overflow: hidden; background: #fff; border: 1px solid rgba(0,0,0,0.15); }
+.lc-banner-text { position: absolute; inset: 0; padding: 24px; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(to right, rgba(0,0,0,0.85) 50%, transparent 100%); z-index: 5; color: #fff; }
+.lc-banner-text .pt { color: rgba(255,255,255,0.85); font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+.lc-banner-text .pn { font-size: 26px; font-weight: 900; font-family: 'Noto Serif JP', serif; margin-bottom: 4px; }
+.lc-banner-text .pp { font-size: 16px; font-weight: 700; }
+.lc-spec-box { height: 100%; background: #fff; overflow: hidden; font-size: 8.5px; }
+.lc-bottom-shell { display: grid; grid-template-columns: 33% 27% calc(40% - 20px); gap: 10px; height: 290px; }
+.lc-floorplan-panel { background: #fff; border: 1px solid rgba(0,0,0,0.15); height: 100%; }
+.lc-amenities-panel { background: #fff; border: 1px solid rgba(0,0,0,0.15); height: 100%; overflow: hidden; }
+.lc-right-subrow { display: grid; grid-template-rows: 135px calc(155px - 10px); gap: 10px; height: 100%; }
+.lc-entrance-box { border: 1px solid rgba(0,0,0,0.15); height: 135px; background: #fff; }
+.lc-transport-map { display: grid; grid-template-columns: 1fr 140px; height: 145px; background: #fff; border: 1px solid rgba(0,0,0,0.15); }
+.lc-trans-list { padding: 8px; display: flex; flex-direction: column; justify-content: center; gap: 4px; background: #fff; }
+
+.ld-main-shell { display: grid; grid-template-columns: 50% 50%; height: 645px; border-bottom: 1px solid #111; }
+.ld-left-table-pane { height: 100%; border-right: 1px solid #111; background: #fff; overflow: hidden; }
+.ld-right-assets-pane { display: grid; grid-template-rows: 240px 240px 165px; height: 100%; }
+.ld-hero-banner { position: relative; border-bottom: 1px solid #111; }
+.ld-floorplan-box { border-bottom: 1px solid #111; background: #fff; }
+.ld-bottom-subrow { display: grid; grid-template-columns: 33% 33% 34%; height: 100%; background: #fff; }
+.ld-amenity-card { border-right: 1px solid #ddd; height: 100%; }
+.ld-entrance-card { border-right: 1px solid #ddd; height: 100%; }
+.ld-map-card { height: 100%; position: relative; }
+
+.ms-disc-bar { padding: 2px 14px; font-size: 8px; text-align: right; color: #555; background: #fff; height: 20px; line-height: 16px; position: absolute; bottom: 75px; left:0; right:0; border-top: 1px solid #ddd; z-index: 10; }
+
+@media print{
+  body,html{margin:0;padding:0;background:#fff}
+  #topbar,#sidebar,#fp,#pp .phint,.topbtns{display:none!important}
+  #app{max-width:none;margin:0;border-radius:0;box-shadow:none;overflow:visible}
+  #pp{padding:0;margin:0;overflow:visible;max-height:none}
+  #ms{border:none;box-shadow:none;position:absolute;top:0;left:0}
+  @page{size:A4 landscape;margin:0}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
+</style>
+</head>
+<body>
+<div id="topbar">
+  <div class="logo">
+    <div style="background:#C8102E; color:#fff; font-weight:900; padding:2px 7px; border-radius:3px; font-size:14px; font-family:'Noto Serif JP',serif; margin-right:4px;">R</div>
+    <span class="logo-title" id="tb-t">マイソク ジェネレーター</span>
+    <span class="logo-sub">by R.connect</span>
+  </div>
+  <div class="topbtns">
+    <div class="lang-tog">
+      <button class="lang-btn on" id="lj" onclick="setLang('ja')">日本語</button>
+      <button class="lang-btn" id="le" onclick="setLang('en')">EN</button>
+    </div>
+    <button class="btn btn-prev" id="prevBtn" onclick="toggleView()">プレビュー →</button>
+    <button class="btn btn-pdf" id="pdfBtn" style="display:none" onclick="doExportPDF()">ワンクリックPDF出力</button>
+    <button class="btn btn-print" id="printBtn" style="display:none" onclick="doPrint()">システム印刷</button>
+  </div>
+</div>
+
+<div id="app">
+<div id="sidebar">
+  <div class="ti on" id="st0" onclick="showTab(0,this)">基本情報</div>
+  <div class="ti" id="st1" onclick="showTab(1,this)">スペック</div>
+  <div class="ti" id="st2" onclick="showTab(2,this)">アクセス</div>
+  <div class="ti" id="st3" onclick="showTab(3,this)">画像</div>
+  <div class="ti" id="st4" onclick="showTab(4,this)">会社情報</div>
+  <div class="sb-sec">
+    <div class="sb-lbl" id="sb-dl">デザイン</div>
+    <div class="di on" id="d0" onclick="setDesign(0,this)">クラシック（赤黒）</div>
+    <div class="di" id="d1" onclick="setDesign(1,this)">プレミアム（紺金）</div>
+    <div class="di" id="d2" onclick="setDesign(2,this)">モダンホライズン</div>
+    <div class="di" id="d3" onclick="setDesign(3,this)">銀座エディトリアル</div>
+    <div class="di" id="d4" onclick="setDesign(4,this)">エメラルド・エステート</div>
+    <div class="di" id="d5" onclick="setDesign(5,this)">京都トラディション</div>
+    <div class="di" id="d6" onclick="setDesign(6,this)">ネオ・ミニマリズム</div>
+  </div>
+</div>
+
+<div id="fp">
+  <div class="io-row" style="flex-wrap:wrap;gap:8px">
+    <span style="font-size:12px; font-weight:bold; color:#334155;" id="io-title">物件データ保存 / 読込:</span>
+    <button class="btn btn-ai" style="padding:7px 14px;" id="btn-scan-txt" onclick="startPDFScan(this)">
+      ✨ AIでPDFを読み込む
+    </button>
+    <button class="btn btn-save" onclick="saveDataDraft()" id="btn-save-txt">💾 本体の設定を保存する</button>
+    <label class="btn btn-save" style="background:#0284c7; display:inline-block;" id="btn-load-txt">
+      📂 保存したファイルを読み込む
+      <input type="file" accept=".json" style="display:none" onchange="loadDataDraft(this)">
+    </label>
+  </div>
+
+  <!-- AI PDF Scan Modal -->
+  <div id="scan-overlay">
+    <div id="scan-modal">
+      <h3>✨ <span id="scan-modal-title">物件PDFをスキャン中…</span></h3>
+      <p id="scan-modal-desc">AIが物件概要書を解析し、フォームに自動入力します。<br>数秒お待ちください。</p>
+      <div id="scan-progress">
+        <div class="scan-bar-wrap"><div class="scan-bar" id="scan-bar"></div></div>
+        <div class="scan-status" id="scan-status">PDFを解析中…</div>
+      </div>
+      <div id="scan-fields-preview"></div>
+      <div class="scan-err" id="scan-err"></div>
+      <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end" id="scan-btns">
+        <button class="btn" style="background:#e2e8f0;color:#334155" onclick="closeScanModal()">キャンセル</button>
+        <button class="btn btn-ai" id="scan-apply-btn" style="display:none;padding:8px 20px" onclick="applyScanResults()">✅ フォームに反映する</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab0" class="tc">
+    <div class="stitle" id="ft0">基本情報</div>
+    <div class="fr"><div class="fl" id="l-pt">物件種別</div><div class="fi"><select id="f-pt" oninput="upd()"><option>オーナーチェンジ物件</option><option>居住用物件</option><option>投資用物件</option><option>新築物件</option></select></div></div>
+    <div class="fr"><div class="fl" id="l-pn">物件名</div><div class="fi"><input id="f-pn" oninput="upd()" placeholder="グラントレゾール広尾"></div></div>
+    <div class="fr"><div class="fl" id="l-pr">販売価格（万円）</div><div class="fi"><input id="f-pr" oninput="runYieldCalc()" placeholder="5000"></div></div>
+    <div class="fr"><div class="fl" id="l-ad">所在地</div><div class="fi"><input id="f-ad" oninput="upd()" placeholder="東京都渋谷区恵比寿2-38-3"></div></div>
+    <div class="fr"><div class="fl" id="l-ly">間取りタイプ</div><div class="fi"><input id="f-ly" oninput="upd()" placeholder="1DK（メゾネット型 2階・3階部分）"></div></div>
+    <div class="fr"><div class="fl" id="l-cs">現況</div><div class="fi"><select id="f-cs" oninput="upd()"><option>賃貸中</option><option>空室</option><option>居住中</option></select></div></div>
+    <div class="fr"><div class="fl" id="l-tx">取引態様</div><div class="fi"><select id="f-tx" oninput="upd()"><option>売主</option><option>媒介</option><option>代理</option></select></div></div>
+    <div class="fr"><div class="fl" id="l-am">設備</div><div class="fi"><div class="ag" id="ag"></div></div></div>
+  </div>
+  
+  <div id="tab1" class="tc" style="display:none">
+    <div class="stitle" id="ft1">スペック詳細</div>
+    <div class="fr"><div class="fl" id="l-st">構造・規模</div><div class="fi"><input id="f-st" oninput="upd()" placeholder="RC造 地下1階付き5階建 2階3階部分"></div></div>
+    <div class="fr"><div class="fl" id="l-ea">専有面積（㎡）</div><div class="fi"><input id="f-ea" oninput="upd()" placeholder="50.30"></div></div>
+    <div class="fr"><div class="fl" id="l-ba">バルコニー面積（㎡）</div><div class="fi"><input id="f-ba" oninput="upd()" placeholder="2.00"></div></div>
+    <div class="fr"><div class="fl" id="l-zo">用途制限</div><div class="fi"><input id="f-zo" oninput="upd()" value="住宅"></div></div>
+    <div class="fr"><div class="fl" id="l-lr">土地権利</div><div class="fi"><input id="f-lr" oninput="upd()" value="所有権"></div></div>
+    <div class="fr"><div class="fl" id="l-tu">総戸数</div><div class="fi"><input id="f-tu" oninput="upd()" placeholder="27"></div></div>
+    <div class="fr"><div class="fl" id="l-bd">築年月</div><div class="fi"><input id="f-bd" oninput="upd()" placeholder="2011年3月"></div></div>
+    <div class="fr"><div class="fl" id="l-re">賃料（共益費込）</div><div class="fi"><input id="f-re" oninput="runYieldCalc()" placeholder="250,000"></div></div>
+    <div class="fr"><div class="fl" id="l-ar">年間賃料</div><div class="fi"><input id="f-ar" oninput="runYieldCalc()" placeholder="3,000,000"></div></div>
+    <div class="fr"><div class="fl" id="l-gy">表面利回</div><div class="fi"><input id="f-gy" oninput="upd()" placeholder="自動計算されます（手入力も可）"></div></div>
+    <div class="fr"><div class="fl" id="l-mc">管理会社</div><div class="fi"><input id="f-mc" oninput="upd()" placeholder="日本ハウズイング株式会社"></div></div>
+    <div class="fr"><div class="fl" id="l-mf">管理費</div><div class="fi"><input id="f-mf" oninput="upd()" placeholder="23,610円/月"></div></div>
+    <div class="fr"><div class="fl" id="l-rf">修繕積立金</div><div class="fi"><input id="f-rf" oninput="upd()" placeholder="（空欄可）"></div></div>
+    <div class="fr"><div class="fl" id="l-tm">合計</div><div class="fi"><input id="f-tm" oninput="upd()" placeholder="23,610円/月"></div></div>
+    <div class="fr"><div class="fl" id="l-oc">その他金額</div><div class="fi"><input id="f-oc" oninput="upd()" value="-"></div></div>
+    <div class="fr"><div class="fl" id="l-dl">引渡日</div><div class="fi"><input id="f-dl" oninput="upd()" value="相談"></div></div>
+    <div class="fr"><div class="fl" id="l-no">備考</div><div class="fi"><textarea id="f-no" oninput="upd()" rows="3" placeholder="※司法書士は売主様指定となります（応相談）&#10;管理費修繕積立金は内訳不明の為、合算"></textarea></div></div>
+  </div>
+  
+  <div id="tab2" class="tc" style="display:none">
+    <div class="stitle" id="ft2">アクセス</div>
+    <div class="sbox"><div class="sbox-t" id="sb2-l1">路線 1</div>
+      <div class="fr"><div class="fl" id="l-l1">路線名</div><div class="fi"><input id="f-l1" oninput="upd()" placeholder="東京メトロ日比谷線"></div></div>
+      <div class="fr"><div class="fl" id="l-s1">駅名</div><div class="fi"><input id="f-s1" oninput="upd()" placeholder="広尾"></div></div>
+      <div class="fr"><div class="fl" id="l-m1">徒歩（分）</div><div class="fi"><input id="f-m1" oninput="upd()" placeholder="8"></div></div>
+    </div>
+    <div class="sbox"><div class="sbox-t" id="sb2-l2">路線 2</div>
+      <div class="fr"><div class="fl" id="l-l2">路線名</div><div class="fi"><input id="f-l2" oninput="upd()" placeholder="JR山手線"></div></div>
+      <div class="fr"><div class="fl" id="l-s2">駅名</div><div class="fi"><input id="f-s2" oninput="upd()" placeholder="恵比寿"></div></div>
+      <div class="fr"><div class="fl" id="l-m2">徒歩（分）</div><div class="fi"><input id="f-m2" oninput="upd()" placeholder="15"></div></div>
+    </div>
+    
+    <div class="sbox" style="border-color: #cbd5e1; background: #f8fafc;">
+      <div class="sbox-t" id="l-coord-title">🗺️ 地図の微調整 (座標指定)</div>
+      <p id="l-coord-desc" style="font-size: 11px; color: #64748b; margin-bottom: 10px; line-height: 1.4;">
+        住所自動生成のピンがずれる場合、ここにGoogleマップ等からコピーした座標を入力してください。
+      </p>
+      <div class="fr">
+        <div class="fl" id="l-coord-label">緯度経度 (カンマ区切り)</div>
+        <div class="fi">
+          <input id="f-coords" oninput="upd()" placeholder="例: 35.6517, 139.6645">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="tab3" class="tc" style="display:none">
+    <div class="stitle" id="ft3">画像アップロード</div>
+    <div class="fr"><div class="fl" id="l-ex">外観写真</div><div class="fi"><label><div class="ub" id="ub-ex">📷 選択</div><input type="file" accept="image/*" style="display:none" onchange="processImageBinary('exterior',this,'ub-ex','pv-ex')"></label><br><img id="pv-ex" class="uprev"></div></div>
+    <div class="fr"><div class="fl" id="l-fp">間取り図</div><div class="fi"><label><div class="ub" id="ub-fp">📐 選択</div><input type="file" accept="image/*" style="display:none" onchange="processImageBinary('floorplan',this,'ub-fp','pv-fp')"></label><br><img id="pv-fp" class="uprev"></div></div>
+    <div class="fr"><div class="fl" id="l-en">エントランス写真</div><div class="fi"><label><div class="ub" id="ub-en">🚪 選択</div><input type="file" accept="image/*" style="display:none" onchange="processImageBinary('entrance',this,'ub-en','pv-en')"></label><br><img id="pv-en" class="uprev"></div></div>
+    <div class="fr"><div class="fl" id="l-map-upload">🗺️ 地図写真 (高画質)</div><div class="fi"><label><div class="ub" id="ub-map">🗺️ 選択</div><input type="file" accept="image/*" style="display:none" onchange="processImageBinary('mapcustom',this,'ub-map','pv-map')"></label><br><img id="pv-map" class="uprev"></div></div>
+    <div class="tip" id="map-tip">💡 自動地図の画質が悪い場合、Google Maps等のスクリーンショットをここで直接アップロードできます。</div>
+  </div>
+  
+  <div id="tab4" class="tc" style="display:none">
+    <div class="stitle" id="ft4">会社情報</div>
+    <div class="fr"><div class="fl" id="l-cn">会社名</div><div class="fi"><input id="f-cn" oninput="upd()" value="株式会社 R.connect"></div></div>
+    <div class="fr"><div class="fl" id="l-ca">住所</div><div class="fi"><input id="f-ca" oninput="upd()" value="〒106-6034 東京都港区六本木1-6-1 泉ガーデンタワー34階"></div></div>
+    <div class="fr"><div class="fl" id="l-tel">TEL</div><div class="fi"><input id="f-tel" oninput="upd()" value="03-6277-6194"></div></div>
+    <div class="fr"><div class="fl" id="l-fax">FAX</div><div class="fi"><input id="f-fax" oninput="upd()" value="03-6277-6195"></div></div>
+    <div class="fr"><div class="fl" id="l-li">免許番号</div><div class="fi"><input id="f-li" oninput="upd()" value="東京都知事免許（2）第100829号"></div></div>
+    <div class="fr"><div class="fl" id="l-ag">担当者名</div><div class="fi"><input id="f-ag" oninput="upd()" placeholder="舛岡" value="舛岡"></div></div>
+    <div class="fr"><div class="fl" id="l-hf">手数料</div><div class="fi"><input id="f-hf" oninput="upd()" value="分かれ"></div></div>
+    <div class="fr"><div class="fl" id="l-tf">取引形態（客付）</div><div class="fi"><input id="f-tf" oninput="upd()" value="一般"></div></div>
+  </div>
+</div>
+
+<div id="pp" style="display:none">
+  <div class="phint" id="phint">💡 印刷：用紙A4・横・余白なし・「ページに合わせる」</div>
+  <div id="ms" class="la">
+    <div id="ms-bg" style="position:absolute; inset:0; z-index:1; pointer-events:none; display:none; opacity:0.18;"></div>
+    <div id="ms-canvas-body" style="position:relative; z-index:2; height:645px;"></div>
+    <div class="ms-disc-bar" id="ms-disc">※イメージと現況が異なる場合、現況を優先とさせていただきます。</div>
+    <div id="ms-foot">
+      <div class="ms-fr-logo-container">
+        <img src="ロゴ影あり (2).png" class="ms-fr-sketch-logo" alt="R">
+        <img id="ms-fc-logo-img" src="connect 社名 (2).png" class="ms-fc-logo-img" alt="R.connect">
+      </div>
+      <div class="ms-fi">
+        <div id="ms-fa">〒106-6034 東京都港区六本木1-6-1 泉ガーデンタワー34階</div>
+        <div>TEL：<span id="ms-tel">03-6277-6194</span> FAX：<span id="ms-fax">03-6277-6195</span></div>
+        <div id="ms-li">東京都知事免許（2）第100829号</div>
+      </div>
+      <div class="ms-fk">
+        <div style="font-weight:700" id="ms-fkl">【客付会社様へ】</div>
+        <div id="ms-noad">広告掲載不可</div>
+        <div id="ms-fal">担当：<span id="ms-ag">舛岡</span></div>
+      </div>
+      <div class="ms-ff">
+        <div>□<span id="ms-hfl">手数料</span>：<span id="ms-hf">分かれ</span></div>
+        <div>□<span id="ms-txl">取引形態</span>：<span id="ms-tf">一般</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<template id="spec-table-blueprint">
+  <div id="ms-spec" style="display: flex; flex-direction: column; width: 100%; height: 100%; border: 1px solid #111; background: #fff; overflow: hidden;">
+    <div style="display: flex; border-bottom: 1px solid #111; height: 21px; align-items: stretch;">
+      <div class="mth" id="th-ly" style="width: 25%; padding: 2px 4px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">間取りタイプ</div>
+      <div class="ms-td-val" id="td-ly" style="flex: 1; padding: 2px 6px; display: flex; align-items: center; font-weight: 500; background: #fff;">—</div>
+    </div>
+    <div style="display: flex; border-bottom: 1px solid #111; height: 21px; align-items: stretch;">
+      <div class="mth" id="th-ad" style="width: 25%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">所在地</div>
+      <div class="ms-td-val" id="td-ad" style="flex: 1; padding: 2px 6px; display: flex; align-items: center; background: #fff;">—</div>
+    </div>
+    <div style="display: flex; border-bottom: 1px solid #111; height: 63px; align-items: stretch;">
+      <div class="mth" id="th-bd" style="width: 25%; padding: 2px 4px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">建物</div>
+      <div style="flex: 1; display: flex; flex-direction: column; background: #fff;">
+        <div style="display: flex; border-bottom: 1px solid #111; height: 21px; align-items: stretch;">
+          <div class="mth" id="th-st" style="width: 20%; font-size: 10px; padding: 2px 2px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">構造・規模</div>
+          <div class="ms-td-val" id="td-st" style="flex: 1; padding: 2px 6px; display: flex; align-items: center; border-right: 1px solid #111; background: #fff;">—</div>
+          <div class="ms-td-val" id="td-ba" style="width: 25%; padding: 2px 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px; white-space: nowrap; background: #fff;">—</div>
+        </div>
+        <div style="display: flex; border-bottom: 1px solid #111; height: 21px; align-items: stretch;">
+          <div class="mth" id="th-ea" style="width: 20%; font-size: 10px; padding: 2px 2px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">専有面積</div>
+          <div class="ms-td-val" id="td-ea" style="flex: 1; padding: 2px 6px; display: flex; align-items: center; border-right: 1px solid #111; background: #fff;">—</div>
+          <div class="mth" id="th-ba-lbl" style="width: 20%; font-size: 10px; padding: 2px 2px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0; background: inherit; color: inherit;">バルコニー</div>
+          <div class="ms-td-val" id="td-ba-val" style="width: 25%; padding: 2px 6px; display: flex; align-items: center; background: #fff;">—</div>
+        </div>
+        <div style="display: flex; height: 21px; align-items: stretch;">
+          <div class="mth" id="th-zo" style="width: 20%; font-size: 10px; padding: 2px 2px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">用途制限</div>
+          <div class="ms-td-val" id="td-zo" style="flex: 1; padding: 2px 6px; display: flex; align-items: center; background: #fff;">住宅</div>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; border-bottom: 1px solid #111; height: 21px; align-items: stretch;">
+      <div class="mth" id="th-lr" style="width: 25%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">土地権利</div>
+      <div class="ms-td-val" id="td-lr" style="flex: 1; padding: 4px 8px; display: flex; align-items: center; border-right: 1px solid #111; background: #fff;">所有権</div>
+      <div class="mth" id="th-tu" style="width: 20%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">総戸数</div>
+      <div class="ms-td-val" id="td-tu" style="width: 25%; padding: 4px 8px; display: flex; align-items: center; background: #fff;">—</div>
+    </div>
+    <div style="display: flex; border-bottom: 1px solid #111; height: 21px; align-items: stretch;">
+      <div class="mth" id="th-bd2" style="width: 25%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">築年月</div>
+      <div class="ms-td-val" id="td-bd" style="flex: 1; padding: 4px 8px; display: flex; align-items: center; border-right: 1px solid #111; background: #fff;">—</div>
+      <div class="mth" id="th-cs" style="width: 20%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">現況</div>
+      <div class="ms-td-val" id="td-cs" style="width: 25%; padding: 4px 8px; display: flex; align-items: center; background: #fff;">賃貸中</div>
+    </div>
+    <div style="display: flex; border-bottom: 1px solid #111; height: 21px; align-items: stretch;">
+      <div class="mth" id="th-tx" style="width: 25%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">取引態様</div>
+      <div class="ms-td-val" id="td-tx" style="flex: 1; padding: 4px 8px; display: flex; align-items: center; background: #fff;">—</div>
+    </div>
+    <div style="display: flex; border-bottom: 1px solid #111; height: 21px; align-items: stretch;">
+      <div class="mth" id="th-re" style="width: 25%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">賃料(共益費込)</div>
+      <div class="ms-td-val" id="td-re" style="flex: 1; padding: 4px 8px; display: flex; align-items: center; border-right: 1px solid #111; background: #fff;">—</div>
+      <div class="mth" id="th-ar" style="width: 20%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">年間賃料</div>
+      <div class="ms-td-val" id="td-ar" style="width: 25%; padding: 4px 8px; display: flex; align-items: center;">—</div>
+    </div>
+    <div style="display: flex; border-bottom: 1px solid #111; height: 21px; align-items: stretch;">
+      <div class="mth" id="th-gy" style="width: 25%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">表面利回</div>
+      <div class="ms-td-val" id="td-gy" style="flex: 1; padding: 4px 8px; display: flex; align-items: center; border-right: 1px solid #111; font-weight: bold; color: #C8102E;">—</div>
+      <div class="mth" id="th-mc" style="width: 20%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">管理会社</div>
+      <div class="ms-td-val" id="td-mc" style="width: 25%; padding: 4px 8px; display: flex; align-items: center; background: #fff;">—</div>
+    </div>
+    <div style="display: flex; border-bottom: 1px solid #111; height: 21px; align-items: stretch;">
+      <div class="mth" id="th-mf" style="width: 25%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">管理費</div>
+      <div class="ms-td-val" id="td-mf" style="flex: 1; padding: 4px 8px; display: flex; align-items: center; border-right: 1px solid #111; background: #fff;">—</div>
+      <div class="mth" id="th-rf" style="width: 20%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">修繕積立金</div>
+      <div class="ms-td-val" id="td-rf" style="width: 25%; padding: 4px 8px; display: flex; align-items: center; background: #fff;">—</div>
+    </div>
+    <div style="display: flex; border-bottom: 1px solid #111; height: 21px; align-items: stretch;">
+      <div class="mth" id="th-tm" style="width: 25%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">合計</div>
+      <div class="ms-td-val" id="td-tm" style="flex: 1; padding: 4px 8px; display: flex; align-items: center; border-right: 1px solid #111; background: #fff;">—</div>
+      <div class="mth" id="th-oc" style="width: 20%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">その他金額</div>
+      <div class="ms-td-val" id="td-oc" style="width: 25%; padding: 4px 8px; display: flex; align-items: center; background: #fff;">-</div>
+    </div>
+    <div style="display: flex; border-bottom: 1px solid #111; height: 21px; align-items: stretch;">
+      <div class="mth" id="th-dl" style="width: 25%; padding: 4px 6px; font-weight: 500; text-align: center; display: flex; align-items: center; justify-content: center; border-right: 1px solid #111; flex-shrink: 0;">引渡日</div>
+      <div class="ms-td-val" id="td-dl" style="flex: 1; padding: 4px 8px; display: flex; align-items: center; background: #fff;">相談</div>
+    </div>
+    <div style="display: flex; flex: 1; min-height: 40px; align-items: stretch;">
+      <div class="mth" id="th-no" style="width: 25%; font-weight: 500; border-right: 1px solid #111; display: flex; align-items: center; justify-content: center;">備考</div>
+      <div class="ms-td-val" id="td-no" style="flex: 1; padding: 4px 8px; font-size: 10px; line-height: 1.25; overflow: hidden; background: #fff;"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+const T={
+ja:{appTitle:'マイソク ジェネレーター',
+  btnPrev:'プレビュー →',btnBack:'← フォームに戻る',btnPrint:'システム印刷',btnPdf:'ワンクリックPDF出力',
+  ioTitle:'物件データ保存 / 読込:',btnSaveTxt:'💾 本体の設定を保存する',btnPrevTxt:'プレビュー →',btnBackTxt:'← フォームに戻る',
+  btnLoadTxt:'📂 保存したファイルを読み込む',
+  tabs:['基本情報','スペック','アクセス','画像','会社情報'],
+  dLabel:'デザイン', designs:['クラシック（赤黒）','プレミアム（紺金）','モダンホライズン','銀座エディトリアル','エメラルド・エステート','京都トラディション','ネオ・ミニマリズム'],
+  ft:['基本情報','スペック詳細','アクセス','画像アップロード','会社情報'],
+  sb1:'路線 1',sb2:'路線 2',
+  fl:['物件種別','物件名','販売価格（万円）','所在地','間取りタイプ','現況','取引態様','設備',
+      '構造・規模','専有面積（㎡）','バルコニー面積（㎡）','用途制限','土地権利','総戸数','築年月',
+      '賃料（共益費込）','年間賃料','表面利回','管理会社','管理費','修繕積立金','合計','その他金額','引渡日','備考',
+      '路線名','駅名','徒歩（分）','路線名','駅名','徒歩（分）',
+      '外観写真','間取り図','エントランス写真','会社名','住所','TEL','FAX','免許番号','担当者名','手数料','取引形態（客付）'],
+  pType:['オーナーチェンジ物件','居住用物件','投資用物件','新築物件'],
+  pStatus:['賃貸中','空室','居住中'],
+  pTx:['売主','媒介','代理'],
+  upLbl:['📷 選択','📐 選択','🚪 選択','✅ アップロード済み'],
+  mapTip:'💡 自動地図の画質が悪い場合、Google Maps等のスクリーンショットをここで直接アップロードできます。',
+  phint:'💡 印刷：用紙A4・横・余白なし・「ページに合わせる」',
+  mth:['間取りタイプ','所在地','建物','構造・規模','専有面積','用途制限',
+       '土地権利','総戸数','築年月','現況','取引態様',
+       '賃料(共益費込)','年間賃料','表面利回','管理会社','管理費','修繕積立金','合計','その他金額','引渡日','備考'],
+  mthEst:['間取りタイプ','所在地','建物','構造・規模','専有面積','用途制限',
+       '土地権利','総戸数','築年月','現況','取引態様',
+       '想定賃料','想定年間賃料','想定表面利回','管理会社','管理費','修繕積立金','合計','その他金額','引渡日','備考'],
+  accTitle:'交通',
+  clientLbl:'【客付会社様へ】',noad:'広告掲載不可',agPfx:'担当：',feeLbl:'手数料',txLbl:'取引形態',
+  disc:'※イメージと現況が異なる場合、現況を優先とさせていただきます。',
+  mapLoad:'🗺️ 地図読み込み中...',mapNF:'住所が見つかりません',
+  extPh:'外観写真',fpPh:'間取り図',entPh:'エントランス写真',
+  prPfx:'価 格 ',prSfx:' 万円（税込）',prEmpty:'XXXX 万円（税込）',
+  areaPfx:'壁芯 ',aUnit:'㎡',balLbl:'バルコニー面積',unitSfx:'戸',
+  wPfx:'徒歩 ',wSfx:' 分',stSfx:'駅',
+  lblAddress:'〒106-6034 東京都港区六本木1-6-1 泉ガーデンタワー34階',
+  lblLicense:'東京都知事免許（2）第100829号',
+  valCommission:'分かれ',
+  valTransaction:'一般',
+  coordTitle:'🗺️ 地図の微調整 (座標指定)',
+  coordDesc:'住所自動生成のピンがずれる場合、ここにGoogleマップ等からコピーした座標を入力してください。',
+  coordLabel:'緯度経度 (カンマ区切り)',
+  mapUpload:'🗺️ 地図写真 (高画質)',
+  mapUploadTip:'💡 自動地図の画質が悪い場合、Google Maps等のスクリーンショットをここで直接アップロードできます。'},
+en:{appTitle:'Maisoku Generator',
+  btnPrev:'Preview →',btnBack:'← Back to Form',btnPrint:'System Print',btnPdf:'One-Click PDF Export',
+  ioTitle:'Property Data Draft:',btnSaveTxt:'💾 Save Property Draft',btnPrevTxt:'Preview →',btnBackTxt:'← Back to Form',
+  btnLoadTxt:'📂 Load Property Draft File',
+  tabs:['Basic Info','Specs','Access','Images','Company'],
+  dLabel:'Design', designs:['Classic (Red/Black)','Premium (Navy/Gold)','Modern Horizon','Ginza Editorial','Emerald Estate','Kyoto Tradition','Neo-Minimalist'],
+  ft:['Basic Information','Property Specs','Access / Transport','Upload Images','Company Info'],
+  sb1:'Line 1',sb2:'Line 2',
+  fl:['Property Type','Property Name','Sale Price (¥10k)','Address','Layout Type','Status','Transaction Type','Amenities',
+      'Structure / Scale','Exclusive Area (㎡)','Balcony Area (㎡)','Zoning','Land Rights','Total Units','Year Built',
+      'Monthly Rent (incl. fees)','Annual Rent','Gross Yield','Mgmt Company','Mgmt Fee','Repair Reserve','Total Monthly','Other Costs','Handover','Notes',
+      'Line Name','Station','Walk (min)','Line Name','Station','Walk (min)',
+      'Exterior Photo','Floor Plan','Entrance Photo','Company Name','Address','TEL','FAX','License No.','Agent Name','Commission','Transaction Type (Co-broke)'],
+  pType:['Owner-Change Property','Residential Property','Investment Property','New Construction'],
+  pStatus:['Tenanted','Vacant','Owner-Occupied'],
+  pTx:['Vendor','Agent','Representative'],
+  upLbl:['📷 Click to select','📐 Click to select','🚪 Click to select','✅ Uploaded'],
+  mapTip:'💡 Map auto-generated from address (OpenStreetMap — free)',
+  phint:'💡 To print: Paper A4, Landscape, Margins None, Scale "Fit to page"',
+  mth:['Layout','Address','Building','Structure / Scale','Exclusive Area','Zoning',
+       'Land Rights','Total Units','Year Built','Status','Transaction Type',
+       'Monthly Rent','Annual Rent','Gross Yield','Mgmt Company','Mgmt Fee','Repair Reserve','Total Monthly','Other Costs','Handover','Notes'],
+  mthEst:['Layout','Address','Building','Structure / Scale','Exclusive Area','Zoning',
+       'Land Rights','Total Units','Year Built','Status','Transaction Type',
+       'Estimated Rent','Estimated Annual Rent','Estimated Gross Yield','Mgmt Company','Mgmt Fee','Repair Reserve','Total Monthly','Other Costs','Handover','Notes'],
+  accTitle:'Transit',
+  clientLbl:'[To Co-Broking Agencies]',noad:'Advertisement Not Allowed',agPfx:'Agent in charge: ',feeLbl:'Commission',txLbl:'Transaction Type',
+  disc:'※ Images are for reference only. Actual conditions take precedence.',
+  mapLoad:'🗺️ Loading map...',mapNF:'Address not found',
+  extPh:'Exterior Photo',fpPh:'Floor Plan',entPh:'Entrance Photo',
+  prPfx:'Price ',prSfx:' (¥10k, tax incl.)',prEmpty:'Price TBD',
+  areaPfx:'(wall) ',aUnit:'㎡',balLbl:'Balcony Area',unitSfx:' units',
+  wPfx:'',wSfx:' min walk',stSfx:' Stn.',
+  lblAddress:'34F Izumi Garden Tower, 1-6-1 Roppongi, Minato-ku, Tokyo 106-6034',
+  lblLicense:'Tokyo Metropolitan Governor Real Estate License (2) No. 100829',
+  valCommission:'Paid by each side',
+  valTransaction:'General Brokerage',
+  coordTitle:'🗺️ Map Fine-Tuning (Coordinates Input)',
+  coordDesc:'If the auto-generated pin misaligns, copy and paste coordinates from Google Maps here.',
+  coordLabel:'Latitude, Longitude (Comma separated)',
+  mapUpload:'🗺️ Custom Map Image (High-Res)',
+  mapUploadTip:'💡 If the default map quality is insufficient, take a high-res screenshot from Google Maps and upload it here.'}
+};
+
+const DS=[
+  {layout:'la',thBg:'#C8102E',thTx:'#fff',footBg:'#fff',footTx:'#111',prColor:'#C8102E',botBorder:'#111',bg:'#fff',tdBg:'',footBorder:'#ccc',npBg:'#C8102E'},
+  {layout:'lb',thBg:'#0D1B2A',thTx:'#C9A84C',footBg:'#fff',footTx:'#111',prColor:'#C9A84C',botBorder:'#0D1B2A',bg:'#fff',tdBg:'',footBorder:'#ccc',npBg:'#0D1B2A'},
+  {layout:'lc',thBg:'#22252a',thTx:'#fff',footBg:'#fff',footTx:'#111',prColor:'#C8102E',botBorder:'#111',bg:'#e2e8f0',tdBg:'#fff',footBorder:'#ccc',npBg:'#1a1a1a'},
+  {layout:'ld',thBg:'#000000',thTx:'#ffffff',footBg:'#fff',footTx:'#111',prColor:'#000',botBorder:'#111',bg:'#fff',tdBg:'#fff',footBorder:'#eee',npBg:'#1a1a1a'},
+  {layout:'lc',thBg:'#064e3b',thTx:'#fef08a',footBg:'#fff',footTx:'#064e3b',prColor:'#064e3b',botBorder:'#064e3b',bg:'#f0fdf4',tdBg:'#fff',footBorder:'#bbf7d0',npBg:'#064e3b'},
+  {layout:'lc',thBg:'#b91c1c',thTx:'#ffffff',footBg:'#fff',footTx:'#111',prColor:'#b91c1c',botBorder:'#b91c1c',bg:'#fffbf7',tdBg:'#fff',footBorder:'#fed7aa',npBg:'#b91c1c'},
+  {layout:'lb',thBg:'#f8fafc',thTx:'#0f172a',footBg:'#fff',footTx:'#0f172a',prColor:'#ffb020',botBorder:'#e2e8f0',bg:'#fff',tdBg:'',footBorder:'#f1f5f9',npBg:'#0f172a'}
+];
+
+let lang='ja', design=0, isPrev=false;
+const imgs={exterior:null,floorplan:null,entrance:null,mapcustom:null};
+const mapCache={};
+const AJ=["室内洗濯機置場","メールボックス","エレベーター","オートロック","宅配ボックス","バルコニー","駐車場","駐輪場","24時間セキュリティ","ペット可","楽器可"];
+const AE=["Indoor Laundry","Mailbox","Elevator","Auto-lock","Parcel Box","Balcony","Parking","Bicycle Parking","24hr Security","Pets Allowed","Instruments OK"];
+const AI={"室内洗濯機置場":"🫧","メールボックス":"📬","エレベーター":"🛗","オートロック":"🔑","宅配ボックス":"📦","バルコニー":"🌿","駐車場":"🚗","駐輪場":"🚲","24時間セキュリティ":"🔒","ペット可":"🐾","楽器可":"🎵"};
+let selAm=["室内洗濯機置場","メールボックス","エレベーター","オートロック","宅配ボックス","バルコニー"];
+
+function gv(id){return(document.getElementById(id)||{}).value||'';}
+function el(id){return document.getElementById(id);}
+function st(id,v){const e=el(id);if(e)e.textContent=v;}
+function sh(id,v){const e=el(id);if(e)e.innerHTML=v;}
+function ss(id,p,v){const e=el(id);if(e&&e.style)e.style[p]=v;}
+
+function setDesign(idx, elem) {
+  design = idx;
+  document.querySelectorAll('.di').forEach(d => d.classList.remove('on'));
+  if (elem) elem.classList.add('on');
+  upd();
+}
+
+function processImageBinary(key, input, btnId, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    imgs[key] = e.target.result;
+    const btn = el(btnId);
+    const pv = el(previewId);
+    if (btn) {
+      btn.textContent = T[lang].upLbl[3];
+      btn.classList.add('done');
+    }
+    if (pv) {
+      pv.src = e.target.result;
+      pv.style.display = 'block';
+    }
+    upd();
+  };
+  reader.readAsDataURL(file);
+}
+
+function runYieldCalc() {
+  try {
+    const priceVal = gv('f-pr');
+    const rentVal = gv('f-re');
+    const rawPrice = parseFloat(priceVal);
+    let rentStr = typeof rentVal === 'string' ? rentVal.replace(/[,円\/月]/g, '') : '';
+    const rawRent = parseFloat(rentStr);
+
+    if (!isNaN(rawPrice) && rawPrice > 0 && !isNaN(rawRent) && rawRent > 0) {
+      const annualRent = rawRent * 12;
+      const targetAr = el('f-ar');
+      if (targetAr && (!targetAr.value || targetAr.value === '' || targetAr.value === '3,000,000')) {
+        targetAr.value = annualRent.toLocaleString() + (lang === 'ja' ? '円/年' : ' JPY/yr');
+      }
+      const capYield = (annualRent / (rawPrice * 10000)) * 100;
+      const targetGy = el('f-gy');
+      if (targetGy) targetGy.value = capYield.toFixed(2) + '%';
+    }
+  } catch(e) {
+    console.warn(e);
+  }
+  upd();
+}
+
+function setLang(l){
+  lang=l;
+  if(el('lj')) el('lj').className='lang-btn'+(l==='ja'?' on':'');
+  if(el('le')) el('le').className='lang-btn'+(l==='en'?' on':'');
+  applyLang(); buildAG(); upd();
+}
+
+function applyLang(){
+  const t=T[lang]; if(!t) return;
+  st('tb-t',t.appTitle);
+  if(el('prevBtn')) el('prevBtn').textContent=isPrev?t.btnBackTxt:t.btnPrevTxt;
+  st('printBtn',t.btnPrint); st('pdfBtn',t.btnPdf); st('io-title',t.ioTitle); st('btn-save-txt',t.btnSaveTxt);
+  const loadLbl=el('btn-load-txt');
+  if(loadLbl){
+    const fileInp=loadLbl.querySelector('input');
+    loadLbl.innerHTML=t.btnLoadTxt;
+    if(fileInp) loadLbl.appendChild(fileInp);
+  }
+  for(let i=0;i<5;i++) { if(el('st'+i)) el('st'+i).textContent = t.tabs[i]; }
+  st('sb-dl',t.dLabel);
+  document.querySelectorAll('.di').forEach((e, i) => { if(e) e.textContent = t.designs[i]; });
+  for(let i=0;i<5;i++) { if(el('ft'+i)) el('ft'+i).textContent = t.ft[i]; }
+  st('sb1t',t.sb1); st('sb2t',t.sb2);
+  
+  const lids=['l-pt','l-pn','l-pr','l-ad','l-ly','l-cs','l-tx','l-am','l-st','l-ea','l-ba','l-zo','l-lr','l-tu','l-bd','l-re','l-ar','l-gy','l-mc','l-mf','l-rf','l-tm','l-oc','l-dl','l-no','l-l1','l-s1','l-m1','l-l2','l-s2','l-m2','l-ex','l-fp','l-en','l-map-upload','l-cn','l-ca','l-tel','l-fax','l-li','l-ag','l-hf','l-tf'];
+  lids.forEach((id,i)=>{ if(el(id)) el(id).textContent = t.fl[i]; });
+
+  ['f-pt','f-cs','f-tx'].forEach((sid,i)=>{
+    const s=el(sid); if(!s) return;
+    const v=s.selectedIndex >= 0 ? s.selectedIndex : 0;
+    const opts=[t.pType,t.pStatus,t.pTx][i];
+    s.innerHTML=opts.map(o=>`<option>${o}</option>`).join('');
+    if(v < s.options.length) s.selectedIndex=v;
+  });
+  
+  st('l-coord-title', t.coordTitle);
+  st('l-coord-desc', t.coordDesc);
+  st('l-coord-label', t.coordLabel);
+  st('map-tip', t.mapUploadTip);
+
+  const brandImgNode = el('ms-fc-logo-img');
+  if(brandImgNode) {
+    brandImgNode.src = (lang === 'ja') ? 'connect 社名 (2).png' : '会社名（英語） (2).png';
+  }
+}
+
+function buildAG(){
+  const g=el('ag'); if(!g) return;
+  g.innerHTML='';
+  AJ.forEach((a,i)=>{
+    const lbl=lang==='en'?AE[i]:a;
+    const c=document.createElement('div');
+    c.className='ac'+(selAm.includes(a)?' on':'');
+    c.innerHTML=`${AI[a]||'·'} ${lbl}`;
+    c.onclick=()=>{selAm.includes(a)?selAm=selAm.filter(x=>x!==a):selAm.push(a);buildAG();upd();};
+    g.appendChild(c);
+  });
+}
+
+function compileActiveTemplateHTML() {
+  const t=T[lang];
+  let targetLayout = DS[design].layout;
+  const body=el('ms-canvas-body');
+  if(!body) return;
+  
+  const extPhoto = imgs.exterior ? `<img src="${imgs.exterior}">` : `<div style="color:#555;font-size:12px">${t.extPh}</div>`;
+  const fpPhoto = imgs.floorplan ? `<img src="${imgs.floorplan}">` : `<div style="color:#bbb;font-size:11px">${t.fpPh}</div>`;
+  const entPhoto = imgs.entrance ? `<img src="${imgs.entrance}">` : `<div style="color:#aaa;font-size:11px">${t.entPh}</div>`;
+  const mapOverlayPhoto = imgs.mapcustom ? `<img src="${imgs.mapcustom}" style="width:100%;height:100%;object-fit:cover;">` : null;
+
+  const STN_MAP = {
+    "池ノ上":"Ikenoue","池尻大橋":"Ikejiri-Ohashi","渋谷":"Shibuya","新宿":"Shinjuku",
+    "恵比寿":"Ebisu","広尾":"Hiro-o","六本木":"Roppongi","表参道":"Omotesando",
+    "原宿":"Harajuku","代々木":"Yoyogi","代々木上原":"Yoyogi-Uehara","代々木公園":"Yoyogi-koen",
+    "中目黒":"Nakameguro","目黒":"Meguro","五反田":"Gotanda","大崎":"Osaki",
+    "品川":"Shinagawa","高輪ゲートウェイ":"Takanawa Gateway","田町":"Tamachi",
+    "浜松町":"Hamamatsucho","新橋":"Shimbashi","有楽町":"Yurakucho","東京":"Tokyo",
+    "神田":"Kanda","秋葉原":"Akihabara","御徒町":"Okachimachi","上野":"Ueno",
+    "南千住":"Minami-Senju","北千住":"Kita-Senju","綾瀬":"Ayase","亀有":"Kameari",
+    "町田":"Machida","溝の口":"Mizonokuchi","二子玉川":"Futako-Tamagawa",
+    "自由が丘":"Jiyugaoka","学芸大学":"Gakugeidaigaku","都立大学":"Toritsu-Daigaku",
+    "祐天寺":"Yutenji","下北沢":"Shimokitazawa","世田谷代田":"Setagaya-Daita",
+    "梅ヶ丘":"Umegaoka","豪徳寺":"Gotokuji","経堂":"Kyodo","千歳船橋":"Chitose-Funabashi",
+    "祖師ヶ谷大蔵":"Soshigaya-Okura","成城学園前":"Seijogakuenmae","狛江":"Komae",
+    "向ヶ丘遊園":"Mukogaoka-Yuen","新百合ヶ丘":"Shin-Yurigaoka","永田町":"Nagatacho",
+    "赤坂":"Akasaka","溜池山王":"Tameike-Sanno","国会議事堂前":"Kokkai-Gijidomae",
+    "霞ヶ関":"Kasumigaseki","日比谷":"Hibiya","銀座":"Ginza","築地":"Tsukiji",
+    "茅場町":"Kayabacho","水天宮前":"Suitengumae","清澄白河":"Kiyosumi-Shirakawa",
+    "錦糸町":"Kinshicho","押上":"Oshiage","浅草":"Asakusa","三越前":"Mitsukoshimae",
+    "大手町":"Otemachi","日本橋":"Nihombashi","人形町":"Ningyocho","湯島":"Yushima",
+    "根津":"Nezu","千駄木":"Sendagi","西日暮里":"Nishi-Nippori","町屋":"Machiya",
+    "六本木一丁目":"Roppongi-Itchome","麻布十番":"Azabu-Juban","白金台":"Shirokanedai",
+    "白金高輪":"Shirokane-Takanawa","三田":"Mita","芝公園":"Shiba-koen",
+    "神谷町":"Kamiyacho","虎ノ門":"Toranomon","虎ノ門ヒルズ":"Toranomon Hills"
+  };
+  const LINE_MAP = {
+    "東京メトロ日比谷線":"Tokyo Metro Hibiya Line","東京メトロ千代田線":"Tokyo Metro Chiyoda Line",
+    "東京メトロ半蔵門線":"Tokyo Metro Hanzomon Line","東京メトロ銀座線":"Tokyo Metro Ginza Line",
+    "東京メトロ丸ノ内線":"Tokyo Metro Marunouchi Line","東京メトロ有楽町線":"Tokyo Metro Yurakucho Line",
+    "東京メトロ副都心線":"Tokyo Metro Fukutoshin Line","東京メトロ南北線":"Tokyo Metro Namboku Line",
+    "東京メトロ東西線":"Tokyo Metro Tozai Line","京王井の頭線":"Keio Inokashira Line",
+    "京王線":"Keio Line","東急田園都市線":"Tokyu Den-en-toshi Line",
+    "東急東横線":"Tokyu Toyoko Line","東急目黒線":"Tokyu Meguro Line",
+    "東急大井町線":"Tokyu Oimachi Line","東急世田谷線":"Tokyu Setagaya Line",
+    "JR山手線":"JR Yamanote Line","JR中央線":"JR Chuo Line","JR総武線":"JR Sobu Line",
+    "JR京浜東北線":"JR Keihin-Tohoku Line","JR埼京線":"JR Saikyo Line",
+    "JR常磐線":"JR Joban Line","都営浅草線":"Toei Asakusa Line",
+    "都営三田線":"Toei Mita Line","都営新宿線":"Toei Shinjuku Line",
+    "都営大江戸線":"Toei Oedo Line","りんかい線":"Rinkai Line",
+    "ゆりかもめ":"Yurikamome","小田急小田原線":"Odakyu Odawara Line",
+    "小田急線":"Odakyu Line","西武新宿線":"Seibu Shinjuku Line",
+    "西武池袋線":"Seibu Ikebukuro Line","東武東上線":"Tobu Tojo Line",
+    "東武スカイツリーライン":"Tobu Skytree Line","京急本線":"Keikyu Main Line",
+    "相鉄線":"Sotetsu Line","つくばエクスプレス":"Tsukuba Express"
+  };
+  const buildAccRow = (num) => {
+    let line = gv('f-l'+num), stn = gv('f-s'+num), min = gv('f-m'+num);
+    if(!line && !stn) return '';
+    if(lang === 'en') {
+      line = LINE_MAP[line] || line;
+      stn  = STN_MAP[stn]  || stn;
+    }
+    const quote = lang === 'en' ? `"${stn}"` : `『${stn}』`;
+    return `<div class="render-acc-box" style="background:transparent; padding: 0 4px; margin-bottom:3px;">
+        <div style="color:#64748b;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${line}</div>
+        <div style="font-size:11px;font-weight:700;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${quote}${t.stSfx}</div>
+        ${min ? `<div style="font-size:9px;color:#475569;">${t.wPfx}<strong>${min}</strong>${t.wSfx}</div>` : ''}
+      </div>`;
+  };
+
+  const amenitiesRendered = selAm.map(a=>{
+    const i=AJ.indexOf(a), lbl=lang==='en'&&i>=0?AE[i]:a;
+    return `<div class="ms-ar" style="background:#fff;">
+      <div class="ms-ai">${AI[a]||'·'}</div>
+      <span class="ms-am-text">${lbl}</span>
+    </div>`;
+  }).join('');
+
+  const _acc1 = buildAccRow(1), _acc2 = buildAccRow(2);
+  const sharedAccessOverlayBlock = (_acc1 || _acc2) ? `
+    <div style="position:absolute;bottom:6px;right:6px;z-index:50;background:rgba(255,255,255,0.93);border:1px solid #d1d5db;box-shadow:0 2px 8px rgba(0,0,0,0.18);border-radius:3px;padding:5px 8px;display:inline-flex;flex-direction:column;gap:0;max-width:220px;min-width:0;">
+      <div style="font-weight:700;color:#475569;font-size:11px;border-bottom:1px solid #e2e8f0;padding-bottom:3px;margin-bottom:4px;white-space:nowrap;">${t.accTitle}</div>
+      ${_acc1}${_acc2}
+    </div>` : '';
+
+  if(targetLayout === 'la') {
+    body.innerHTML = `
+      <div class="la-layout-grid">
+        <div class="img-cover-box" style="position:relative; width:100%; height:100%;">
+          ${extPhoto}
+          <div class="la-hero-text">
+            <div class="pt" id="ms-pt"></div>
+            <div class="pn" id="ms-pn"></div>
+            <div class="pp" id="ms-pp"></div>
+          </div>
+        </div>
+        <div class="ms-tbl" id="la-table-dock"></div>
+      </div>
+      <div class="la-bottom-grid">
+        <div class="img-contain-box" style="border-right:1px solid #ddd;">${fpPhoto}</div>
+        <div class="ms-am">${amenitiesRendered}</div>
+        <div class="img-cover-box" style="border-right:1px solid #ddd;">${entPhoto}</div>
+        <div class="la-sub-split">
+          <div class="la-map-box" id="ms-map-wrapper-la" style="width: 100%; height: 100%; position: relative; overflow: hidden;">
+            ${sharedAccessOverlayBlock}
+            ${mapOverlayPhoto ? mapOverlayPhoto : ''}
+          </div>
+        </div>
+      </div>`;
+  } 
+  else if(targetLayout === 'lb') {
+    body.innerHTML = `
+      <div class="lb-banner">
+        <div class="img-cover-box">${extPhoto}</div>
+        <div class="lb-banner-text">
+          <div class="pt" id="ms-pt"></div>
+          <div class="pn" id="ms-pn"></div>
+          <div class="pp" id="ms-pp"></div>
+        </div>
+      </div>
+      <div class="lb-middle-grid">
+        <div class="img-contain-box" style="height:355px;">${fpPhoto}</div>
+        <div class="ms-tbl" id="lb-table-dock"></div>
+      </div>
+      <div class="lb-amenity-strip" style="background:#fff;">${amenitiesRendered}</div>
+      <div class="lb-bottom-strip">
+        <div class="img-cover-box" style="border-right:1px solid #ddd;">${entPhoto}</div>
+        <div id="ms-map-wrapper-lb" style="position:relative; width:100%; height:100%; overflow:hidden;">
+          ${sharedAccessOverlayBlock}
+          ${mapOverlayPhoto ? mapOverlayPhoto : ''}
+        </div>
+      </div>`;
+  } 
+  else if(targetLayout === 'lc') {
+    body.innerHTML = `
+      <div class="lc-wrapper-shell">
+        <div class="lc-top-split">
+          <div class="lc-banner-left">
+            <div class="img-cover-box" style="width:100%; height:100%;">${extPhoto}</div>
+            <div class="lc-banner-text">
+              <div class="pt" id="ms-pt"></div>
+              <div class="pn" id="ms-pn"></div>
+              <div class="pp" id="ms-pp"></div>
+            </div>
+          </div>
+          <div class="lc-spec-box ms-tbl" id="lc-table-dock"></div>
+        </div>
+        <div class="lc-bottom-shell">
+          <div class="lc-floorplan-panel img-contain-box">${fpPhoto}</div>
+          <div class="lc-amenities-panel ms-am">${amenitiesRendered}</div>
+          <div class="lc-right-subrow">
+            <div class="lc-entrance-box img-cover-box">${entPhoto}</div>
+            <div class="lc-transport-map" style="position:relative; display:block;">
+              ${sharedAccessOverlayBlock}
+              <div id="ms-map-wrapper-lc" style="width:100%; height:100%;">${mapOverlayPhoto ? mapOverlayPhoto : ''}</div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+  else if(targetLayout === 'ld') {
+    body.innerHTML = `
+      <div class="ld-main-shell">
+        <div class="ld-left-table-pane ms-tbl" id="ld-table-dock"></div>
+        <div class="ld-right-assets-pane">
+          <div class="ld-hero-banner img-cover-box">
+            ${extPhoto}
+            <div class="la-hero-text">
+              <div class="pt" id="ms-pt"></div>
+              <div class="pn" id="ms-pn"></div>
+              <div class="pp" id="ms-pp"></div>
+            </div>
+          </div>
+          <div class="ld-floorplan-box img-contain-box">${fpPhoto}</div>
+          <div class="ld-bottom-subrow">
+            <div class="ld-amenity-card ms-am">${amenitiesRendered}</div>
+            <div class="ld-entrance-card img-cover-box">${entPhoto}</div>
+            <div class="ld-map-card" id="ms-map-wrapper-ld" style="position:relative;">
+              ${sharedAccessOverlayBlock}
+              ${mapOverlayPhoto ? mapOverlayPhoto : ''}
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+}
+
+function initMapContainer(layoutId) {
+  if(imgs.mapcustom) return null;
+
+  const wrapper = el('ms-map-wrapper-' + layoutId);
+  if (!wrapper) return null;
+  
+  let mapHeight = "100%";
+  let mapWidth = "100%";
+  if (layoutId === 'lb') mapHeight = "138px";
+  if (layoutId === 'lc') mapHeight = "145px";
+  if (layoutId === 'la') { mapHeight = "215px"; mapWidth = "100%"; }
+
+  wrapper.style.height = mapHeight;
+  wrapper.style.width = mapWidth;
+  wrapper.style.position = "relative";
+  wrapper.style.overflow = "hidden";
+  wrapper.style.background = "#e2e8f0";
+  wrapper.style.flexShrink = "0";
+  
+  wrapper.innerHTML = `<div class="ms-map-canvas-box" id="ms-map-inner" style="width:100%;height:100%;position:relative;"></div>`;
+  return el('ms-map-inner');
+}
+
+function applyDesign() {
+  const ms=el('ms'); if(!ms)return;
+  const d=DS[design]; if(!d) return;
+  const t=T[lang];
+
+  compileActiveTemplateHTML();
+  
+  let layoutId = d.layout;
+  
+  // ✅ DYNAMIC RE-MOUNT BLUEPRINT PATCH: Safely mount template table contents into active layout nodes *after* DOM mounting
+  const specTemplate=el('spec-table-blueprint');
+  const tableDock=el(layoutId+'-table-dock');
+  if(specTemplate && tableDock){
+    tableDock.innerHTML = ''; 
+    tableDock.appendChild(specTemplate.content.cloneNode(true));
+  }
+
+  initMapContainer(layoutId);
+
+  ms.style.background = '#ffffff';
+  const bgLayer = el('ms-bg');
+  if (bgLayer) {
+    bgLayer.style.display = 'none';
+    bgLayer.style.background = '';
+  }
+  ss('ms-pp','color',d.prColor);
+  
+  if (design === 3 || design === 5) {
+    ms.style.fontFamily = "'Noto Serif JP', serif";
+  } else {
+    ms.style.fontFamily = "'Noto Sans JP', sans-serif";
+  }
+
+  document.querySelectorAll('.mth').forEach(th=>{th.style.background=d.thBg; th.style.color=d.thTx;});
+  document.querySelectorAll('#ms-spec td').forEach(td=>{td.style.background=d.tdBg || '#ffffff';});
+  
+  const foot=el('ms-foot'); if(foot){foot.style.background=d.footBg; foot.style.color=d.footTx;}
+  ss('ms-fr','background',d.thBg===d.footBg?'#C8102E':d.thBg);
+  ss('ms-fr','color',d.thTx);
+  ss('ms-fi','borderLeftColor',d.footBorder);
+  ss('ms-fk','borderLeftColor',d.footBorder);
+
+  const innerSpec = el('ms-spec');
+  if(innerSpec) innerSpec.style.borderColor = d.botBorder;
+
+  if (design === 2 || design === 4) {
+    ms.style.background = d.bg;
+    if (bgLayer && imgs.exterior) {
+      bgLayer.style.display = 'block';
+      bgLayer.style.background = `url(${imgs.exterior}) no-repeat center center`;
+      bgLayer.style.backgroundSize = 'cover';
+      bgLayer.style.opacity = '0.18';
+    }
+    document.querySelectorAll('#ms-spec td').forEach(td => { td.style.background = '#ffffff'; });
+    document.querySelectorAll('.ms-tbl th').forEach(th => { th.style.background = d.thBg; th.style.color = d.thTx; });
+  }
+
+  const currentPType = gv('f-pt');
+  const isOwnerChange = currentPType.includes('オーナーチェンジ') || currentPType.toLowerCase().includes('owner-change');
+  const selectedMthArray = isOwnerChange ? t.mthEst : t.mth;
+
+  const mids=['th-ly','th-ad','th-bd','th-st','th-ea','th-zo','th-lr','th-tu','th-bd2','th-cs','th-tx','th-re','th-ar','th-gy','th-mc','th-mf','th-rf','th-tm','th-oc','th-dl','th-no'];
+  mids.forEach((id,i)=>{ if(el(id)) el(id).textContent = selectedMthArray[i]; });
+  
+  if (el('th-ba-lbl')) {
+    el('th-ba-lbl').style.background = d.thBg;
+    el('th-ba-lbl').style.color = d.thTx;
+    el('th-ba-lbl').textContent = lang === 'en' ? 'Balcony' : 'バルコニー';
+  }
+}
+
+function renderMap(lat,lon){
+  if(imgs.mapcustom) return;
+
+  const w=el('ms-map-inner');if(!w)return;
+  const z=16;
+  const parsedLat = parseFloat(lat);
+  const parsedLon = parseFloat(lon);
+  if(isNaN(parsedLat) || isNaN(parsedLon)) return;
+
+  const fixedLat = parseFloat(parsedLat.toFixed(4));
+  const fixedLon = parseFloat(parsedLon.toFixed(4));
+
+  const tx=Math.floor((fixedLon+180)/360*Math.pow(2,z));
+  const latR=fixedLat*Math.PI/180;
+  const ty=Math.floor((1-Math.log(Math.tan(latR)+1/Math.cos(latR))/Math.PI)/2*Math.pow(2,z));
+  const url='https://tile.openstreetmap.org/'+z+'/'+tx+'/'+ty+'.png';
+  const leftUrl='https://tile.openstreetmap.org/'+z+'/'+(tx-1)+'/'+ty+'.png';
+  
+  w.innerHTML=`<div style="position:relative;width:100%;height:100%;overflow:hidden;background:#f4f3f0;">
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:512px;height:256px;display:flex;">
+      <img src="${leftUrl}" style="width:256px;height:256px;" crossorigin="anonymous" onerror="this.style.opacity=0;">
+      <img src="${url}" style="width:256px;height:256px;" crossorigin="anonymous" onerror="this.style.display='none'">
+    </div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-6px,-12px);font-size:18px;line-height:1;z-index:4;">📍</div>
+    <div style="position:absolute;bottom:2px;right:2px;font-size:8px;color:#555;background:rgba(255,255,255,.7);padding:1px 3px;z-index:5;">© OSM</div>
+  </div>`;
+}
+
+function upd(){
+  if(!isPrev)return;
+  const t=T[lang]; if(!t) return;
+  const d=DS[design]; if(!d) return;
+
+  applyDesign();
+
+  let ptDisplayVal = gv('f-pt');
+  if(lang === 'en') {
+    if(ptDisplayVal === 'オーナーチェンジ物件') ptDisplayVal = 'Owner-Change Property';
+    if(ptDisplayVal === '居住用物件') ptDisplayVal = 'Residential Property';
+    if(ptDisplayVal === '投資用物件') ptDisplayVal = 'Investment Property';
+    if(ptDisplayVal === '新築物件') ptDisplayVal = 'New Construction';
+  }
+  st('ms-pt', ptDisplayVal);
+  st('ms-pn', gv('f-pn') || 'Property Name');
+  
+  const pr=gv('f-pr');
+  const prTxt=pr && !isNaN(parseFloat(pr)) ? t.prPfx+parseFloat(pr).toLocaleString()+t.prSfx : t.prEmpty;
+  st('ms-pp',prTxt);
+
+  st('td-ly',gv('f-ly')||'—');
+  st('td-ad',gv('f-ad')||'—');
+  st('td-st',gv('f-st')||'—');
+  
+  const ea=gv('f-ea'), ba=gv('f-ba');
+  sh('td-ea', ea ? t.areaPfx + ea + t.aUnit : '—');
+  if (el('td-ba')) {
+    el('td-ba').textContent = gv('f-st') ? gv('f-st').split(' ')[2] || '—' : '—'; 
+  }
+  if (el('td-ba-val')) {
+    el('td-ba-val').textContent = ba ? ba + t.aUnit : '—';
+  }
+  
+  st('td-zo',gv('f-zo')||'—');
+  
+  let lrDisplayVal = gv('f-lr');
+  if(lang === 'en' && lrDisplayVal === '所有権') lrDisplayVal = 'Freehold';
+  st('td-lr', lrDisplayVal || '—');
+  
+  st('td-tu',gv('f-tu')?(gv('f-tu') + (lang==='ja'?'戸':t.unitSfx)):'—');
+  st('td-bd',gv('f-bd')||'—');
+  
+  let csDisplayVal = gv('f-cs');
+  if(lang === 'en') {
+    if(csDisplayVal === '賃貸中') csDisplayVal = 'Tenanted';
+    if(csDisplayVal === '空室') csDisplayVal = 'Vacant';
+    if(csDisplayVal === '居住中') csDisplayVal = 'Owner-Occupied';
+  }
+  st('td-cs', csDisplayVal || '—');
+  
+  let txDisplayVal = gv('f-tx');
+  if(lang === 'en') {
+    if(txDisplayVal === '売主') txDisplayVal = 'Vendor';
+    if(txDisplayVal === '媒介') txDisplayVal = 'Brokerage';
+    if(txDisplayVal === '代理') txDisplayVal = 'Agent';
+  }
+  st('td-tx', txDisplayVal || '—');
+  
+  const reInput = gv('f-re');
+  st('td-re',reInput ? (parseFloat(reInput.replace(/,/g,'')).toLocaleString() + (lang==='ja'?'円/月':' /month')) : '—');
+  
+  const arInput = gv('f-ar');
+  st('td-ar',arInput ? arInput.replace('JPY/yr', '/year').replace('円/年', '') : '—');
+  
+  const gyInput = gv('f-gy');
+  st('td-gy', gyInput && !gyInput.includes(' beers') ? gyInput : '—');
+  st('td-mc',gv('f-mc')||'—');
+  
+  const mfInput = gv('f-mf');
+  st('td-mf', mfInput || '—');
+  
+  const rfInput = gv('f-rf');
+  st('td-rf', rfInput && !rfInput.includes('ya mon') ? rfInput : '—');
+  
+  const tmInput = gv('f-tm');
+  st('td-tm', tmInput || '—');
+  st('td-oc',gv('f-oc')||'-');
+  
+  let dlDisplayVal = gv('f-dl');
+  if(lang === 'en' && dlDisplayVal === '相談') dlDisplayVal = 'Negotiable';
+  st('td-dl', dlDisplayVal || '—');
+  
+  const no=gv('f-no');
+  sh('td-no', no && !no.includes('type shi') ? no.split('\n').map(l=>`<div>${l}</div>`).join('') : '—');
+  
+  st('ms-np-txt', ptDisplayVal || '—');
+
+  let hasManualCoordinates = false;
+  const coordInput = gv('f-coords');
+  if(coordInput && coordInput.includes(',')) {
+    const parts = coordInput.split(',');
+    const manualLat = parseFloat(parts[0].trim());
+    const manualLon = parseFloat(parts[1].trim());
+    if(!isNaN(manualLat) && !isNaN(manualLon)) {
+      renderMap(manualLat, manualLon);
+      hasManualCoordinates = true;
+    }
+  }
+
+  if (!hasManualCoordinates) {
+    const addr=gv('f-ad');
+    if(addr){
+      if(mapCache[addr]) renderMap(mapCache[addr].lat,mapCache[addr].lon);
+      else{
+        sh('ms-map-inner',`<div style="color:#aaa;font-size:10px;text-align:center;padding:24px 6px">${t.mapLoad}</div>`);
+        fetch('https://nominatim.openstreetmap.org/search?format=json&q='+encodeURIComponent(addr)+'&limit=1',{headers:{'Accept-Language':'ja'}})
+          .then(r=>r.json()).then(data=>{
+            if(data&&data[0]){mapCache[addr]={lat:data[0].lat,lon:data[0].lon};renderMap(data[0].lat,data[0].lon);}
+            else sh('ms-map-inner',`<div style="color:#aaa;font-size:10px;text-align:center;padding:24px 6px">📍 ${t.mapNF}</div>`);
+          }).catch(()=>sh('ms-map-inner',`<div style="color:#aaa;font-size:10px;padding:24px 6px">📍</div>`));
+      }
+    }
+  }
+
+  st('ms-fc', gv('f-cn') || 'R.connect'); 
+  if(el('ms-fa')) el('ms-fa').textContent = t.lblAddress;
+  if(el('ms-li')) el('ms-li').textContent = t.lblLicense;
+  
+  const footContactBox = el('ms-fa').nextElementSibling;
+  if (footContactBox) {
+    footContactBox.innerHTML = `TEL : ${gv('f-tel')} &nbsp;&nbsp; FAX : ${gv('f-fax')}`;
+  }
+
+  st('ms-fkl', t.clientLbl);
+  st('ms-noad', t.noad);
+  
+  let agentNameVal = gv('f-ag') || '舛岡';
+  if(lang === 'en' && agentNameVal === '舛岡') agentNameVal = 'Masuoka';
+  const fal=el('ms-fal'); 
+  if(fal) fal.innerHTML = t.agPfx + `<span>${agentNameVal}</span>`;
+  
+  st('ms-hfl', t.feeLbl); 
+  let hfDisplayVal = gv('f-hf');
+  if(lang === 'en' && hfDisplayVal === '分かれ') hfDisplayVal = t.valCommission;
+  st('ms-hf', hfDisplayVal || '—');
+
+  st('ms-txl', t.txLbl);
+  let tfDisplayVal = gv('f-tf');
+  if(lang === 'en' && tfDisplayVal === '一般') tfDisplayVal = t.valTransaction;
+  st('ms-tf', tfDisplayVal || '—');
+}
+
+function toggleView(){
+  isPrev=!isPrev;
+  if(el('fp')) el('fp').style.display=isPrev?'none':'block';
+  if(el('sidebar')) el('sidebar').style.display=isPrev?'none':'block';
+  if(el('pp')) el('pp').style.display=isPrev?'block':'none';
+  const t=T[lang];
+  if(el('prevBtn')) {
+    el('prevBtn').textContent=isPrev?t.btnBackTxt:t.btnPrevTxt;
+    el('prevBtn').className='btn btn-prev'+(isPrev?' on':'');
+  }
+  if(el('printBtn')) el('printBtn').style.display=isPrev?'inline-block':'none';
+  if(el('pdfBtn')) el('pdfBtn').style.display=isPrev?'inline-block':'none';
+  if(isPrev){applyLang(); upd();}
+}
+
+function doPrint(){
+  const ms=el('ms'); if(!ms)return;
+  const scale=Math.min(1, (window.innerWidth*0.9)/ms.offsetWidth);
+  ms.style.transform = `scale(${scale})`;
+  ms.style.transformOrigin='top left';
+  window.print();
+  setTimeout(()=>{ms.style.transform='';ms.style.transformOrigin='';},500);
+}
+
+function doExportPDF() {
+  doPrint();
+}
+
+
+/* ════════════════════════════════════════════════════════
+   AI PDF SCAN ENGINE — inline, no popup needed
+   Attach a hidden file input to the existing scan button.
+   Reads PDF as base64, calls Anthropic API directly.
+   Works on any HTTPS server (GitHub Pages, Netlify, etc).
+   ════════════════════════════════════════════════════════ */
+let _scanData = null;
+
+function startPDFScan(btn) {
+  // Create a hidden file input and trigger it
+  let inp = document.getElementById('_pdf_file_inp');
+  if (!inp) {
+    inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = 'application/pdf';
+    inp.id = '_pdf_file_inp';
+    inp.style.display = 'none';
+    document.body.appendChild(inp);
+    inp.addEventListener('change', function() {
+      if (inp.files[0]) runPDFScan(inp.files[0]);
+      inp.value = '';
+    });
+  }
+  inp.click();
+}
+
+async function runPDFScan(file) {
+  if (file.size > 20 * 1024 * 1024) {
+    alert(lang === 'en' ? 'PDF exceeds 20MB limit.' : 'PDFが20MBを超えています。');
+    return;
+  }
+  _scanData = null;
+  openScanModal();
+  setScanProgress(10, lang === 'en' ? 'Reading PDF…' : 'PDFを読み込み中…');
+
+  // Quick connectivity check
+  try {
+    const ping = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body: JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1,messages:[{role:'user',content:'hi'}]})
+    });
+    // 400 = bad request but API is reachable, 401 = auth needed, both are fine
+    if (!ping.ok && ping.status !== 400 && ping.status !== 401) {
+      const j = await ping.json().catch(()=>({}));
+      throw new Error(j.error?.message || 'API unreachable: ' + ping.status);
+    }
+  } catch(pingErr) {
+    if (pingErr.message && !pingErr.message.includes('API unreachable')) {
+      // Real network error
+      showScanErr(lang==='en'
+        ? 'Cannot reach Anthropic API. Check your internet connection.'
+        : 'Anthropic APIに接続できません。インターネット接続を確認してください。');
+      return;
+    }
+  }
+
+  let base64;
+  try {
+    base64 = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = e => res(e.target.result.split(',')[1]);
+      r.onerror = () => rej(new Error('Read failed'));
+      r.readAsDataURL(file);
+    });
+  } catch(e) {
+    showScanErr('PDFの読み込みに失敗しました: ' + e.message); return;
+  }
+
+  setScanProgress(40, lang === 'en' ? 'Sending to AI…' : 'AIに送信中…');
+
+  const sys = 'You are a Japanese real estate data extraction specialist. Extract ALL property information from the provided PDF and return ONLY a valid JSON object with no preamble, no markdown, no backticks. Fields (null if not found): {"pn":"物件名","pr":"販売価格 in 万円 number only. Convert: 1億2000万→12000","ad":"所在地 full address","ly":"間取りタイプ e.g. 1DK","pt":"物件種別: one of オーナーチェンジ物件/居住用物件/投資用物件/新築物件. 中古+空室→居住用物件. 賃貸中/想定賃料→オーナーチェンジ物件","cs":"現況: 賃貸中 or 空室 or 居住中","tx":"取引態様: 売主 or 媒介 or 代理","st":"構造・規模 e.g. RC造 8階建 1階部分","ea":"専有面積 number only","ba":"バルコニー面積 number only","zo":"用途制限","lr":"土地権利","tu":"総戸数 number only","bd":"築年月. Convert: 平成10年9月→1998年9月 令和5年→2023年 昭和から計算","re":"月額賃料 number only","ar":"年間賃料 number only","gy":"表面利回 e.g. 6.00%","mc":"管理会社名","mf":"管理費 number only","rf":"修繕積立金 number only","tm":"合計月額 e.g. 20210円/月","oc":"その他金額","dl":"引渡日","no":"備考","l1":"路線名1","s1":"駅名1","m1":"徒歩分数1 number only","l2":"路線名2","s2":"駅名2","m2":"徒歩分数2 number only"}';
+
+  try {
+    setScanProgress(60, lang === 'en' ? 'AI is reading the document…' : 'AIが書類を解析中…');
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1500,
+        system: sys,
+        messages: [{ role: 'user', content: [
+          { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
+          { type: 'text', text: 'Extract all property information and return the JSON.' }
+        ]}]
+      })
+    });
+
+    if (!resp.ok) {
+      let m = 'API error ' + resp.status;
+      try { const j = await resp.json(); m = j.error?.message || m; } catch(_) {}
+      if (resp.status === 401) m = lang === 'en' ? 'Authentication error — please contact your administrator.' : '認証エラー — 管理者にお問い合わせください。';
+      if (resp.status === 429) m = lang === 'en' ? 'Rate limit — please wait and retry.' : 'レート制限。少し待ってから再試行してください。';
+      throw new Error(m);
+    }
+
+    setScanProgress(85, lang === 'en' ? 'Parsing results…' : '結果を解析中…');
+    const data = await resp.json();
+    const raw = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+    const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    _scanData = parsed;
+    setScanProgress(100, lang === 'en' ? 'Complete!' : '完了！');
+    showScanPreview(parsed);
+
+  } catch(e) {
+    console.error('PDF scan error:', e.name, e.message, e);
+    const isNetwork = e instanceof TypeError || e.message === 'Failed to fetch';
+    showScanErr(isNetwork
+      ? (lang === 'en'
+          ? 'Connection error — please check your internet connection and try again.'
+          : '接続エラー — インターネット接続を確認して再試行してください。')
+      : (lang === 'en' ? 'Scan failed: ' + e.message : 'スキャン失敗: ' + e.message)
+    );
+  }
+}
+
+function openScanModal() {
+  el('scan-overlay').classList.add('active');
+  el('scan-progress').style.display = 'block';
+  el('scan-fields-preview').style.display = 'none';
+  el('scan-fields-preview').innerHTML = '';
+  el('scan-apply-btn').style.display = 'none';
+  el('scan-err').style.display = 'none';
+  el('scan-err').textContent = '';
+  el('scan-modal-title').textContent = lang === 'en' ? 'Scanning PDF…' : '物件PDFをスキャン中…';
+  el('scan-modal-desc').innerHTML = lang === 'en'
+    ? 'AI is analysing the property document and will auto-fill the form.<br>Please wait a moment.'
+    : 'AIが物件概要書を解析し、フォームに自動入力します。<br>数秒お待ちください。';
+}
+
+function closeScanModal() {
+  el('scan-overlay').classList.remove('active');
+  _scanData = null;
+}
+
+function setScanProgress(pct, status) {
+  el('scan-bar').style.width = pct + '%';
+  el('scan-status').textContent = status;
+}
+
+function showScanErr(msg) {
+  el('scan-progress').style.display = 'none';
+  const errEl = el('scan-err');
+  errEl.textContent = '⚠️ ' + msg;
+  errEl.style.display = 'block';
+}
+
+function showScanPreview(data) {
+  const LABELS = {
+    pn:'物件名',pr:'価格(万円)',ad:'所在地',ly:'間取り',pt:'物件種別',
+    cs:'現況',tx:'取引態様',st:'構造・規模',ea:'専有面積(㎡)',ba:'バルコニー(㎡)',
+    zo:'用途制限',lr:'土地権利',tu:'総戸数',bd:'築年月',re:'賃料',ar:'年間賃料',
+    gy:'表面利回',mc:'管理会社',mf:'管理費',rf:'修繕積立金',tm:'合計',
+    dl:'引渡日',no:'備考',l1:'路線1',s1:'駅名1',m1:'徒歩1(分)',
+    l2:'路線2',s2:'駅名2',m2:'徒歩2(分)'
+  };
+  const found = Object.entries(data).filter(([,v]) => v !== null && v !== '' && v !== undefined);
+  const preview = el('scan-fields-preview');
+  preview.innerHTML = `<div style="font-size:11px;font-weight:700;color:#334155;margin-bottom:8px;letter-spacing:.04em">
+    ${lang==='en'?`${found.length} fields detected`:`${found.length}項目を検出しました`}
+  </div>` + found.map(([k,v]) =>
+    `<div class="scan-result-row">
+      <span class="scan-result-key">${LABELS[k]||k}</span>
+      <span class="scan-result-val">${String(v).slice(0,60)}</span>
+    </div>`
+  ).join('');
+  preview.style.display = 'block';
+  el('scan-progress').style.display = 'none';
+  el('scan-apply-btn').style.display = 'inline-block';
+  el('scan-modal-title').textContent = lang==='en' ? 'Review & Apply' : '確認して反映する';
+  el('scan-modal-desc').innerHTML = lang==='en'
+    ? 'Review the detected fields below, then click Apply to fill the form.'
+    : '検出された項目を確認し、「フォームに反映する」をクリックしてください。';
+}
+
+function applyScanResults() {
+  if (!_scanData) return;
+  const d = _scanData;
+
+  // Direct field → input id mapping
+  const map = {
+    pn:'f-pn', pr:'f-pr', ad:'f-ad', ly:'f-ly',
+    st:'f-st', ea:'f-ea', ba:'f-ba', zo:'f-zo', lr:'f-lr',
+    tu:'f-tu', bd:'f-bd', re:'f-re', ar:'f-ar', gy:'f-gy',
+    mc:'f-mc', mf:'f-mf', rf:'f-rf', tm:'f-tm', oc:'f-oc',
+    dl:'f-dl', no:'f-no',
+    l1:'f-l1', s1:'f-s1', m1:'f-m1',
+    l2:'f-l2', s2:'f-s2', m2:'f-m2'
+  };
+  Object.entries(map).forEach(([k, fid]) => {
+    if (d[k] !== null && d[k] !== undefined && d[k] !== '') {
+      const inp = el(fid);
+      if (inp) inp.value = String(d[k]);
+    }
+  });
+
+  // Select dropdowns (need value matching)
+  if (d.pt) {
+    const ptEl = el('f-pt');
+    if (ptEl) {
+      const opts = Array.from(ptEl.options);
+      const match = opts.find(o =>
+        o.value.includes(d.pt) || d.pt.includes(o.value) ||
+        o.value === d.pt
+      );
+      if (match) ptEl.value = match.value;
+    }
+  }
+  if (d.cs) {
+    const csEl = el('f-cs');
+    if (csEl) {
+      const opts = Array.from(csEl.options);
+      const match = opts.find(o => o.value === d.cs || o.value.includes(d.cs));
+      if (match) csEl.value = match.value;
+    }
+  }
+  if (d.tx) {
+    const txEl = el('f-tx');
+    if (txEl) {
+      const opts = Array.from(txEl.options);
+      const match = opts.find(o => o.value === d.tx || o.value.includes(d.tx));
+      if (match) txEl.value = match.value;
+    }
+  }
+
+  closeScanModal();
+  upd();
+
+  // Flash the form to confirm
+  const fp = el('fp');
+  if (fp) {
+    fp.style.transition = 'background .3s';
+    fp.style.background = '#f0fdf4';
+    setTimeout(() => { fp.style.background = ''; }, 800);
+  }
+}
+
+function saveDataDraft(){
+  const payload={
+    metaVersion:"2026.4", designIndex:design, selectedLang:lang, amenities:selAm, images:imgs,
+    fields:{
+      pt:gv('f-pt'), pn:gv('f-pn'), pr:gv('f-pr'), ad:gv('f-ad'), ly:gv('f-ly'), cs:gv('f-cs'), tx:gv('f-tx'),
+      st:gv('f-st'), ea:gv('f-ea'), ba:gv('f-ba'), zo:gv('f-zo'), lr:gv('f-lr'), tu:gv('f-tu'), bd:gv('f-bd'),
+      re:gv('f-re'), ar:gv('f-ar'), gy:gv('f-gy'), mc:gv('f-mc'), mf:gv('f-mf'), rf:gv('f-rf'), tm:gv('f-tm'),
+      oc:gv('f-oc'), dl:gv('f-dl'), no:gv('f-no'),
+      l1:gv('f-l1'), s1:gv('f-s1'), m1:gv('f-m1'), l2:gv('f-l2'), s2:gv('f-s2'), m2:gv('f-m2'),
+      cn:gv('f-cn'), ca:gv('f-ca'), tel:gv('f-tel'), fax:gv('f-fax'), li:gv('f-li'), ag:gv('f-ag'), hf:gv('f-hf'), tf:gv('f-tf'),
+      coords:gv('f-coords')
+    }
+  };
+  const dataStr="data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload));
+  const dlAnchor = document.createElement('a'); dlAnchor.setAttribute("href", dataStr);
+  dlAnchor.setAttribute("download", (gv('f-pn')||'Property')+'_maisoku.json');
+  document.body.appendChild(dlAnchor); dlAnchor.click(); dlAnchor.remove();
+}
+
+function loadDataDraft(inputElement){
+  const targetFile=inputElement.files[0]; if(!targetFile) return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const parsed=JSON.parse(e.target.result); if(!parsed.fields) return;
+      design=parsed.designIndex||0;
+      document.querySelectorAll('.di').forEach((d,idx)=>idx===design?d.classList.add('on'):d.classList.remove('on'));
+      lang=parsed.selectedLang||'ja'; selAm=parsed.amenities||[];
+      if(parsed.images){
+        ['exterior','floorplan','entrance','mapcustom'].forEach(k=>{ imgs[k]=parsed.images[k]||null; });
+        const mapKeys=[{k:'exterior',b:'ub-ex',p:'pv-ex'},{k:'floorplan',b:'ub-fp',p:'pv-fp'},{k:'entrance',b:'ub-en',p:'pv-en'},{k:'mapcustom',b:'ub-map',p:'pv-map'}];
+        mapKeys.forEach(m=>{
+          const btn=el(m.b), pv=el(m.p);
+          if(imgs[m.k]){ if(btn){btn.textContent=T[lang].upLbl[3]; btn.classList.add('done');} if(pv){pv.src=imgs[m.k]; pv.style.display='block';} }
+          else{ if(btn) btn.classList.remove('done'); if(pv){pv.src=''; pv.style.display='none';} }
+        });
+      }
+      const f=parsed.fields;
+      const idMap={'f-pt':f.pt,'f-pn':f.pn,'f-pr':f.pr,'f-ad':f.ad,'f-ly':f.ly,'f-cs':f.cs,'f-tx':f.tx,'f-st':f.st,'f-ea':f.ea,'f-ba':f.ba,'f-zo':f.zo,'f-lr':f.lr,'f-tu':f.tu,'f-bd':f.bd,'f-re':f.re,'f-ar':f.ar,'f-gy':f.gy,'f-mc':f.mc,'f-mf':f.mf,'f-rf':f.rf,'f-tm':f.tm,'f-oc':f.fields?f.oc:f.oc,'f-dl':f.dl,'f-no':f.no,'f-l1':f.l1,'f-s1':f.s1,'f-m1':f.m1,'f-l2':f.l2,'f-s2':f.s2,'f-m2':f.m2,'f-cn':f.cn,'f-ca':f.ca,'f-tel':f.tel,'f-fax':f.fax,'f-li':f.li,'f-ag':f.ag,'f-hf':f.hf,'f-tf':f.tf,'f-coords':f.coords};
+      Object.keys(idMap).forEach(id=>{ const element=el(id); if(element) element.value=idMap[id]||''; });
+      setLang(lang); alert("Property Draft Restored Successfully!");
+    }catch(err){ console.error(err); }
+  };
+  reader.readAsText(targetFile); inputElement.value='';
+}
+
+function showTab(i,e){
+  document.querySelectorAll('.tc').forEach((t,j)=>t.style.display=j===i?'block':'none');
+  document.querySelectorAll('.ti').forEach(t=>t.classList.remove('on'));
+  if(e) e.classList.add('on');
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  buildAG(); applyLang();
+});
+</script>
+</body>
+</html>
