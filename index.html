@@ -993,7 +993,7 @@ function upd(){
   const ea=gv('f-ea'), ba=gv('f-ba');
   sh('td-ea', ea ? t.areaPfx + ea + t.aUnit : '—');
   if (el('td-ba')) {
-    el('td-ba').textContent = gv('f-st') ? gv('f-st').split(' ')[2] || '—' : '—'; 
+    el('td-ba').textContent = '';  // unused cell — kept for layout only
   }
   if (el('td-ba-val')) {
     el('td-ba-val').textContent = ba ? ba + t.aUnit : '—';
@@ -1006,7 +1006,22 @@ function upd(){
   st('td-lr', lrDisplayVal || '—');
   
   st('td-tu',gv('f-tu')?(gv('f-tu') + (lang==='ja'?'戸':t.unitSfx)):'—');
-  st('td-bd',gv('f-bd')||'—');
+  const bdVal = gv('f-bd');
+  if (bdVal && lang === 'en') {
+    // Convert Japanese year format to English
+    let bdEn = bdVal;
+    const months = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
+    const mMatch = bdEn.match(/(\d+)月/);
+    const yMatch = bdEn.match(/(\d{4})年/);
+    if (yMatch && mMatch) {
+      bdEn = months[parseInt(mMatch[1])] + ' ' + yMatch[1];
+    } else if (yMatch) {
+      bdEn = yMatch[1];
+    }
+    st('td-bd', bdEn || '—');
+  } else {
+    st('td-bd', bdVal || '—');
+  }
   
   let csDisplayVal = gv('f-cs');
   if(lang === 'en') {
@@ -1035,21 +1050,58 @@ function upd(){
   st('td-mc',gv('f-mc')||'—');
   
   const mfInput = gv('f-mf');
-  st('td-mf', mfInput || '—');
+  if (mfInput) {
+    const mfNum = parseFloat(mfInput.replace(/[,¥円\/月month]/g,''));
+    st('td-mf', isNaN(mfNum) ? mfInput : '¥' + mfNum.toLocaleString() + (lang==='ja' ? '/月' : '/month'));
+  } else st('td-mf', '—');
   
   const rfInput = gv('f-rf');
-  st('td-rf', rfInput && !rfInput.includes('ya mon') ? rfInput : '—');
+  if (rfInput && !rfInput.includes('ya mon')) {
+    const rfNum = parseFloat(rfInput.replace(/[,¥円\/月month]/g,''));
+    st('td-rf', isNaN(rfNum) ? rfInput : '¥' + rfNum.toLocaleString() + (lang==='ja' ? '/月' : '/month'));
+  } else st('td-rf', '—');
   
   const tmInput = gv('f-tm');
-  st('td-tm', tmInput || '—');
-  st('td-oc',gv('f-oc')||'-');
+  if (tmInput) {
+    const tmNum = parseFloat(tmInput.replace(/[,¥円\/月month]/g,''));
+    if (!isNaN(tmNum)) {
+      st('td-tm', '¥' + tmNum.toLocaleString() + (lang==='ja' ? '/月' : '/month'));
+    } else {
+      st('td-tm', tmInput);
+    }
+  } else st('td-tm', '—');
+  const ocInput = gv('f-oc');
+  if (ocInput && ocInput !== '-' && ocInput !== '—') {
+    const ocNum = parseFloat(ocInput.replace(/[,¥円\/月month]/g,''));
+    if (!isNaN(ocNum)) {
+      st('td-oc', '¥' + ocNum.toLocaleString() + (lang==='ja' ? '/月' : '/month'));
+    } else st('td-oc', ocInput);
+  } else st('td-oc', ocInput || '-');
   
   let dlDisplayVal = gv('f-dl');
   if(lang === 'en' && dlDisplayVal === '相談') dlDisplayVal = 'Negotiable';
   st('td-dl', dlDisplayVal || '—');
   
   const no=gv('f-no');
-  sh('td-no', no && !no.includes('type shi') ? no.split('\n').map(l=>`<div>${l}</div>`).join('') : '—');
+  if (no && !no.includes('type shi')) {
+    let noDisplay = no;
+    if (lang === 'en') {
+      // Translate common Japanese notes phrases
+      noDisplay = noDisplay
+        .replace(/※司法書士は売主様指定となります[（(]応相談[）)]/g, '※ Judicial scrivener designated by seller (negotiable)')
+        .replace(/司法書士は売主様指定となります[（(]応相談[）)]/g, 'Judicial scrivener designated by seller (negotiable)')
+        .replace(/管理費修繕積立金は内訳不明の為、合算/g, 'Mgmt fee and repair reserve combined (breakdown unavailable)')
+        .replace(/内訳不明/g, 'breakdown unavailable')
+        .replace(/応相談/g, 'negotiable')
+        .replace(/要相談/g, 'by arrangement')
+        .replace(/売主様指定/g, 'seller-designated')
+        .replace(/※/g, '※')
+        .replace(/（/g,'(').replace(/）/g,')');
+    }
+    sh('td-no', noDisplay.split('\n').map(l=>`<div>${l}</div>`).join(''));
+  } else {
+    sh('td-no', '—');
+  }
   
   st('ms-np-txt', ptDisplayVal || '—');
 
@@ -1208,7 +1260,88 @@ async function runPDFScan(file) {
 
   setScanProgress(40, lang === 'en' ? 'Sending to AI…' : 'AIに送信中…');
 
-  const sys = 'You are a Japanese real estate data extraction specialist. Extract ALL property information from the provided PDF and return ONLY a valid JSON object with no preamble, no markdown, no backticks. Fields (null if not found): {"pn":"物件名","pr":"販売価格 in 万円 number only. Convert: 1億2000万→12000","ad":"所在地 full address","ly":"間取りタイプ e.g. 1DK","pt":"物件種別: one of オーナーチェンジ物件/居住用物件/投資用物件/新築物件. 中古+空室→居住用物件. 賃貸中/想定賃料→オーナーチェンジ物件","cs":"現況: 賃貸中 or 空室 or 居住中","tx":"取引態様: 売主 or 媒介 or 代理","st":"構造・規模 e.g. RC造 8階建 1階部分","ea":"専有面積 number only","ba":"バルコニー面積 number only","zo":"用途制限","lr":"土地権利","tu":"総戸数 number only","bd":"築年月. Convert: 平成10年9月→1998年9月 令和5年→2023年 昭和から計算","re":"月額賃料 number only","ar":"年間賃料 number only","gy":"表面利回 e.g. 6.00%","mc":"管理会社名","mf":"管理費 number only","rf":"修繕積立金 number only","tm":"合計月額 e.g. 20210円/月","oc":"その他金額","dl":"引渡日","no":"備考","l1":"路線名1","s1":"駅名1","m1":"徒歩分数1 number only","l2":"路線名2","s2":"駅名2","m2":"徒歩分数2 number only"}';
+  const sys = `You are an expert Japanese real estate data extraction AI. Your job is to extract ALL property data from the provided PDF with 100% accuracy and return ONLY a raw JSON object — no markdown, no backticks, no explanation, just the JSON.
+
+EXTRACTION RULES (follow exactly):
+
+1. PRICE (pr): Extract 販売価格 in 万円 as a NUMBER ONLY.
+   - 5,000万円 → "5000"
+   - 1億2000万円 → "12000"  
+   - 8,500万円 → "8500"
+   - Never include 万, 円, commas or any text.
+
+2. PROPERTY TYPE (pt): Must be exactly one of:
+   - "オーナーチェンジ物件" → if 賃貸中, has current tenant, or shows 想定賃料
+   - "居住用物件" → if 空室, 中古マンション with no tenant, or for personal use
+   - "投資用物件" → if explicitly stated as investment
+   - "新築物件" → if brand new construction
+
+3. STATUS (cs): Must be exactly one of: 賃貸中 / 空室 / 居住中
+
+4. TRANSACTION TYPE (tx): Must be exactly one of: 売主 / 媒介 / 代理
+   - 一般/専任/専属専任 all map to → "媒介"
+
+5. STRUCTURE (st): Combine ALL structure info into one string.
+   - "RC造" + "8階建" + "1階部分" → "RC造 8階建 1階部分"
+   - Do NOT split — put the complete description in st, leave td-ba blank.
+
+6. AREAS (ea, ba): Numbers only, no units.
+   - 壁芯 30.72㎡ → "30.72"
+   - バルコニー 2.88㎡ → "2.88"
+   - If no balcony stated → null
+
+7. YEAR BUILT (bd): Convert Japanese era to Western year + month.
+   - 平成10年9月 → "1998年9月"
+   - 令和3年4月 → "2021年4月"
+   - 昭和55年 → "1980年"
+   - 平成 = 1988 + year number (e.g. 平成10 = 1988+10 = 1998)
+   - 令和 = 2018 + year number (e.g. 令和3 = 2018+3 = 2021)
+   - 昭和 = 1925 + year number (e.g. 昭和55 = 1925+55 = 1980)
+
+8. FEES (mf, rf, tm, oc): Extract NUMBER ONLY — no yen sign, no commas, no 円/月.
+   - 管理費 14,600円/月 → "14600"
+   - 修繕積立金 5,610円/月 → "5610"
+   - 合計 20,210円/月 → "20210"
+   - その他 0円/月 → "0"
+
+9. RENT (re, ar): NUMBER ONLY.
+   - 月額賃料 250,000円 → "250000"
+   - 年間賃料 3,000,000円 → "3000000"
+   - If 空室 with no stated rent → null
+
+10. YIELD (gy): Include the % sign.
+    - 表面利回 6.00% → "6.00%"
+    - If not stated → null
+
+11. TRANSIT: Extract up to 2 lines.
+    - l1/l2: Full line name e.g. "東京メトロ銀座線"
+    - s1/s2: Station name only e.g. "外苑前" (no 駅, no 『』)
+    - m1/m2: Walk minutes as NUMBER ONLY e.g. "5"
+
+12. NOTES (no): Extract 備考 section verbatim. Include ※ marks.
+    - Remove duplicate whitespace.
+    - If multiple lines, join with newline character.
+
+13. HANDOVER (dl): 
+    - 相談 → "相談"
+    - Specific date → exact date
+    - 即時 → "即時"
+
+14. ZONING (zo): Extract exact text from 用途制限 field.
+
+15. NULL RULES: Use null (not "", not "—", not "null") for any field not found.
+
+SELF-CHECK before outputting:
+- Is pr a plain number with no units? ✓
+- Are mf/rf/tm/oc plain numbers? ✓  
+- Is bd in Western year format (e.g. 1998年9月)? ✓
+- Is st the complete structure string (not split)? ✓
+- Are s1/s2 station names without 駅 suffix? ✓
+- Are m1/m2 plain numbers? ✓
+- Is pt exactly one of the 4 allowed values? ✓
+
+Return the JSON now:
+{"pn":null,"pr":null,"ad":null,"ly":null,"pt":null,"cs":null,"tx":null,"st":null,"ea":null,"ba":null,"zo":null,"lr":null,"tu":null,"bd":null,"re":null,"ar":null,"gy":null,"mc":null,"mf":null,"rf":null,"tm":null,"oc":null,"dl":null,"no":null,"l1":null,"s1":null,"m1":null,"l2":null,"s2":null,"m2":null}`;
 
   try {
     setScanProgress(60, lang === 'en' ? 'AI is reading the document…' : 'AIが書類を解析中…');
