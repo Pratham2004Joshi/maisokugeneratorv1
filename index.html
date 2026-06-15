@@ -635,6 +635,9 @@ function formatValue(raw, fmt, _lang) {
       return raw;
     
     case 'yen_monthly': {
+      if (raw === '確認中' || raw === '未定' || raw === '調査中') {
+        return _lang === 'en' ? 'TBC' : raw;
+      }
       const num = parseFloat(raw.replace(/[,¥円\/月monthper ]/g, ''));
       if (isNaN(num)) return raw;
       return '¥' + num.toLocaleString() + (_lang === 'ja' ? '/月' : '/month');
@@ -1472,99 +1475,139 @@ async function runPDFScan(file) {
 
   const sys = `You are an expert Japanese real estate data extraction AI. Your job is to extract ALL property data from the provided PDF with 100% accuracy and return ONLY a raw JSON object — no markdown, no backticks, no explanation, just the JSON.
 
+The PDF may contain multiple document types: a registry extract (登記簿謄本), a property summary sheet (物件概要書), or an existing maisoku flyer. Extract ONLY fields relevant to a sales maisoku — ignore legal registration details, mortgage records, and ownership transfer history.
+
 EXTRACTION RULES (follow exactly):
 
-1. PRICE (pr): Extract 販売価格 in 万円 as a NUMBER ONLY.
+1. PRICE (pr): Extract 販売価格 or 価格 in 万円 as a NUMBER ONLY.
    - 5,000万円 → "5000"
-   - 1億2000万円 → "12000"  
-   - 8,500万円 → "8500"
-   - Never include 万, 円, commas or any text.
+   - 1億2000万円 → "12000"
+   - 2,750万円（税込） → "2750"
+   - Never include 万, 円, commas, 税込 or any text.
 
-2. PROPERTY TYPE (pt): Must be exactly one of:
-   - "オーナーチェンジ物件" → if 賃貸中, has current tenant, or shows 想定賃料
+2. PROPERTY NAME (pn): 
+   - Look for 物件名, マンション名, or building name in the property summary section.
+   - If scanning a registry (登記簿), look for 建物の名称 in the 表題部（専有部分の建物の表示）section.
+   - Use the most complete readable name found. Include Ⅱ, Ⅲ etc if present.
+
+3. PROPERTY TYPE (pt): Must be exactly one of:
+   - "オーナーチェンジ物件" → if 賃貸中, サブリース中, has current tenant, or shows 保証賃料/想定賃料
    - "居住用物件" → if 空室, 中古マンション with no tenant, or for personal use
    - "投資用物件" → if explicitly stated as investment
    - "新築物件" → if brand new construction
 
-3. STATUS (cs): Must be exactly one of: 賃貸中 / 空室 / 居住中
+4. STATUS (cs): Must be exactly one of: 賃貸中 / 空室 / 居住中
+   - サブリース中 → "賃貸中"
+   - 募集中 → "空室"
+   - If not clear → "空室"
 
-4. TRANSACTION TYPE (tx): Must be exactly one of: 売主 / 媒介 / 代理
+5. TRANSACTION TYPE (tx): Must be exactly one of: 売主 / 媒介 / 代理
    - 一般/専任/専属専任 all map to → "媒介"
 
-5. STRUCTURE (st): Combine ALL structure info into one string.
-   - "RC造" + "8階建" + "1階部分" → "RC造 8階建 1階部分"
-   - Do NOT split — put the complete description in st, leave td-ba blank.
+6. STRUCTURE (st): Combine info from circled items ①③④ into ONE string.
+   When reading a registry (登記簿謄本):
+   - ① 構造 column: 鉄筋コンクリート造 → abbreviate to "RC造". 鉄骨造 → "S造". 木造 → "木造".
+     Also capture 陸屋根, 瓦葺 etc from same cell if present but ONLY include floor count and unit info below.
+   - ③ 階数 (floor count): e.g. "4階建" — found in the 構造 column or header e.g. "4階建"
+   - ④ which floor the unit is on: found in 表題部（専有部分の建物の表示）→ 床面積 column as "2階部分" or "3階部分"
+   Combine as: "RC造 4階建 2階部分"
+   From a property summary sheet, just use the 構造・規模 field directly.
+   Do NOT include 陸屋根 or roof type in st — only structure type, floor count, unit floor.
 
-6. AREAS (ea, ba): Numbers only, no units.
-   - 壁芯 30.72㎡ → "30.72"
-   - バルコニー 2.88㎡ → "2.88"
-   - If no balcony stated → null
+7. AREAS (ea, ba): Numbers only, no units.
+   When reading a registry (登記簿謄本):
+   - ea: Use the floor area from 表題部（専有部分の建物の表示）→ 床面積 for the specific unit floor (e.g. "2階部分 29.97㎡" → "29.97").
+     Do NOT use the 一棟の建物 total floor areas — those are the whole building.
+   - ba: バルコニー面積 from property summary sheet. Not typically in registry → null if absent.
+   From a property summary: 壁芯 33.42㎡ → "33.42", バルコニー面積 4.89㎡ → "4.89"
+   If no balcony stated → null
 
-7. YEAR BUILT (bd): Convert Japanese era to Western year + month.
-   - 平成10年9月 → "1998年9月"
-   - 令和3年4月 → "2021年4月"
-   - 昭和55年 → "1980年"
-   - 平成 = 1988 + year number (e.g. 平成10 = 1988+10 = 1998)
-   - 令和 = 2018 + year number (e.g. 令和3 = 2018+3 = 2021)
-   - 昭和 = 1925 + year number (e.g. 昭和55 = 1925+55 = 1980)
+8. YEAR BUILT (bd): Convert Japanese era to Western year + month.
+   When reading a registry (登記簿謄本):
+   - ⑥ Look in 表題部（専有部分の建物の表示）→ 原因及びその日付 column for the 新築 entry.
+     e.g. "令和4年12月15日新築" → extract year and month only → "2022年12月"
+     Ignore the 登記の日付 (registration date) — use only the 新築 construction date.
+   Era conversion:
+   - 平成 = 1988 + year number (平成10 = 1998)
+   - 令和 = 2018 + year number (令和4 = 2022)
+   - 昭和 = 1925 + year number
+   From a property summary sheet: use 築年月 field directly.
 
-8. FEES (mf, rf, tm, oc): Extract NUMBER ONLY — no yen sign, no commas, no 円/月.
+9. FEES (mf, rf, tm, oc): Extract NUMBER ONLY — no yen sign, no commas, no 円/月.
    - 管理費 14,600円/月 → "14600"
    - 修繕積立金 5,610円/月 → "5610"
    - 合計 20,210円/月 → "20210"
    - その他 0円/月 → "0"
+   - 確認中 / 未定 / 調査中 → use the literal string "確認中" (not null)
 
-9. RENT (re, ar): NUMBER ONLY.
-   - 月額賃料 250,000円 → "250000"
-   - 年間賃料 3,000,000円 → "3000000"
-   - If 空室 with no stated rent → null
+10. RENT (re, ar): For owner-change or sublease properties, extract the guaranteed/actual rent.
+    - 保証賃料 or 月額保証賃料 → use as re (NUMBER ONLY, no units)
+    - 年間保証賃料 or 年間賃料 → use as ar (NUMBER ONLY)
+    - 月額賃料 250,000円 → "250000"
+    - If 空室 with no stated rent → null
 
-10. YIELD (gy): Include the % sign.
-    - 表面利回 6.00% → "6.00%"
+11. YIELD (gy): Include the % sign.
+    - 表面利回 4.47% → "4.47%"
     - If not stated → null
 
-11. TRANSIT: Extract up to 2 lines.
-    - l1/l2: Full line name e.g. "東京メトロ銀座線"
-    - s1/s2: Station name only e.g. "外苑前" (no 駅, no 『』)
-    - m1/m2: Walk minutes as NUMBER ONLY e.g. "5"
+12. TRANSIT: Extract up to 2 transit lines from 交通 or アクセス section.
+    The format in the document may be: "東武東上線「中板橋」駅 徒歩10分"
+    Parse this into:
+    - l1/l2: Full line name only e.g. "東武東上線"
+    - s1/s2: Station name only, no 駅 suffix, no 「」 e.g. "中板橋"
+    - m1/m2: Walk minutes as NUMBER ONLY e.g. "10"
 
-12. NOTES (no): Extract 備考 section verbatim. Include ※ marks.
+13. NOTES (no): Extract 備考 section verbatim. Include ※ marks.
     - Remove duplicate whitespace.
     - If multiple lines, join with newline character.
+    - Do NOT include registry legal notes — only property sale remarks.
 
-13. HANDOVER (dl): 
+14. HANDOVER (dl):
     - 相談 → "相談"
     - Specific date → exact date
     - 即時 → "即時"
 
-14. ZONING (zo): Extract exact text from 用途制限 field.
+15. ZONING (zo): Extract exact text from 用途制限 field.
 
-15. NULL RULES: Use null (not "", not "—", not "null") for any field not found.
+16. TOTAL UNITS (tu): Extract 総戸数 as a NUMBER ONLY.
+    - 30戸 → "30"
+    - Never include 戸 or other text.
+    - In a registry, if no 総戸数 field exists, you can infer from the 専有部分の家屋番号 ranges
+      e.g. "8-46-101〜8-46-109, 8-46-201〜8-46-208, 8-46-301〜8-46-308, 8-46-401〜8-46-408"
+      = 9+8+8+8 = 33 units → "33". Only do this if the pattern is clear.
+    - If cannot determine → null
 
-16. ENGLISH TRANSLATIONS: For these free-text fields, ALSO provide a clean English version:
-    - pn_en: Romanized building name (アエリア南青山 → "Aeria Minami-Aoyama")
-    - ad_en: Address in English order (東京都港区南青山2-18-5 → "2-18-5 Minami-Aoyama, Minato-ku, Tokyo")
-    - st_en: Structure in English (RC造 8階建 1階部分 → "RC, 8 floors, 1st floor unit")
-    - zo_en: Zoning in English (住居もしくは事務所として使用するものとする → "For residential or office use")
-    - mc_en: Management company in English (株式会社日本ハウズイング → "Japan Housing Co., Ltd.")
-    - no_en: Notes fully translated to English
-    - dl_en: Handover in English (相談 → "Negotiable", 即時 → "Immediate")
+17. NULL RULES: Use null (not "", not "—", not "null") for any field not found.
+
+18. ENGLISH TRANSLATIONS: For these free-text fields, ALSO provide a clean English version:
+    - pn: Romanized building name (プレール・ドゥーク中板橋Ⅱ → "Prele Deux Nakaita II", アエリア南青山 → "Aeria Minami-Aoyama")
+    - ad: Address in English order (東京都板橋区栄町8-13 → "8-13 Sakae-cho, Itabashi-ku, Tokyo")
+    - st: Structure in English (RC造 4階建 2階部分 → "RC, 4 floors, 2nd floor unit")
+    - zo: Zoning in English (住宅 → "Residential", 住居もしくは事務所 → "Residential or office use")
+    - mc: Management company in English (株式会社キノシタコミュニティ → "Kinoshita Community Co., Ltd.")
+    - no: Notes fully translated to English
+    - dl: Handover in English (相談 → "Negotiable", 即時 → "Immediate")
     Put these in an "en" object: "en": {"pn":"...", "ad":"...", "st":"...", "zo":"...", "mc":"...", "no":"...", "dl":"..."}
 
-17. EXTRAS: If the document contains fields NOT covered above (e.g. 敷金, 礼金, 駐車場代, 保証金, 
-    賃貸借期間, ペット条件, 更新料, 契約期間, 解約予告, 入居可能日, 向き, 階数 etc.), 
+19. EXTRAS: If the document contains fields NOT covered above (e.g. 敷金, 礼金, 駐車場代, 保証金,
+    賃貸借期間, ペット条件, 更新料, 契約期間, 解約予告, 入居可能日, 向き, 階数 etc.),
     include them in an "extras" object using the Japanese field name as key and the value as-is.
     Example: "extras": {"敷金":"100000", "礼金":"1ヶ月", "ペット条件":"小型犬1匹可"}
+    Do NOT put 総戸数 or 手数料 in extras — use tu field instead.
     If no extra fields found, use "extras": null.
 
 SELF-CHECK before outputting:
 - Is pr a plain number with no units? ✓
-- Are mf/rf/tm/oc plain numbers? ✓  
-- Is bd in Western year format (e.g. 1998年9月)? ✓
-- Is st the complete structure string (not split)? ✓
-- Are s1/s2 station names without 駅 suffix? ✓
+- Is tu a plain number (no 戸)? ✓
+- Are mf/rf plain numbers OR the string "確認中" if stated as such? ✓
+- Is bd in Western year format (e.g. 2022年12月)? ✓
+- Is st the complete structure string combined into one field? ✓
+- Are l1/l2 line names only (no station name)? ✓
+- Are s1/s2 station names without 駅 suffix and without 「」? ✓
 - Are m1/m2 plain numbers? ✓
 - Is pt exactly one of the 4 allowed values? ✓
+- Is cs exactly one of 賃貸中/空室/居住中 (サブリース中 → 賃貸中)? ✓
+- Did I ignore registry legal sections (mortgage, ownership transfer)? ✓
 
 Return the JSON now:
 {"pn":null,"pr":null,"ad":null,"ly":null,"pt":null,"cs":null,"tx":null,"st":null,"ea":null,"ba":null,"zo":null,"lr":null,"tu":null,"bd":null,"re":null,"ar":null,"gy":null,"mc":null,"mf":null,"rf":null,"tm":null,"oc":null,"dl":null,"no":null,"l1":null,"s1":null,"m1":null,"l2":null,"s2":null,"m2":null,"extras":null,"en":null}`;
