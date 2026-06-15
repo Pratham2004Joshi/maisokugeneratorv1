@@ -68,6 +68,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f0f2f5;color:#111;min-hei
 .scan-result-row:last-child{border-bottom:none}
 .scan-result-key{color:#475569;font-weight:500}
 .scan-result-val{color:#111;font-weight:600;max-width:240px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#scan-apikey:focus{border-color:#7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,.15);}
 #scan-fields-preview{margin-top:16px;max-height:280px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px;display:none}
 .scan-err{background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:10px 14px;font-size:12px;color:#dc2626;margin-top:12px;display:none}
 #pp{padding:16px 20px;overflow-y:auto;max-height:calc(100vh - 56px);flex:1;overflow-x:auto}
@@ -217,6 +218,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f0f2f5;color:#111;min-hei
     <div id="scan-modal">
       <h3>✨ <span id="scan-modal-title">物件PDFをスキャン中…</span></h3>
       <p id="scan-modal-desc">AIが物件概要書を解析し、フォームに自動入力します。<br>数秒お待ちください。</p>
+      <div id="scan-apikey-row" style="margin-bottom:14px;display:none;">
+        <label style="font-size:11px;font-weight:700;color:#475569;display:block;margin-bottom:5px;">🔑 Anthropic API Key</label>
+        <input id="scan-apikey" type="password" placeholder="sk-ant-..." style="width:100%;padding:8px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;">
+        <div style="font-size:10px;color:#94a3b8;margin-top:4px;">APIキーはこのブラウザにのみ保存されます。外部に送信されません。</div>
+      </div>
       <div id="scan-progress">
         <div class="scan-bar-wrap"><div class="scan-bar" id="scan-bar"></div></div>
         <div class="scan-status" id="scan-status">PDFを解析中…</div>
@@ -429,6 +435,7 @@ ja:{appTitle:'マイソク ジェネレーター',
   btnPrev:'プレビュー →',btnBack:'← フォームに戻る',btnPrint:'システム印刷',btnPdf:'ワンクリックPDF出力',
   ioTitle:'物件データ保存 / 読込:',btnSaveTxt:'💾 本体の設定を保存する',btnPrevTxt:'プレビュー →',btnBackTxt:'← フォームに戻る',
   btnLoadTxt:'📂 保存したファイルを読み込む',
+  btnScanTxt:'✨ AIでPDFを読み込む',
   tabs:['基本情報','スペック','アクセス','画像','会社情報'],
   dLabel:'デザイン', designs:['クラシック（赤黒）','プレミアム（紺金）','モダンホライズン','銀座エディトリアル','エメラルド・エステート','京都トラディション','ネオ・ミニマリズム'],
   ft:['基本情報','スペック詳細','アクセス','画像アップロード','会社情報'],
@@ -471,6 +478,7 @@ en:{appTitle:'Maisoku Generator',
   btnPrev:'Preview →',btnBack:'← Back to Form',btnPrint:'System Print',btnPdf:'One-Click PDF Export',
   ioTitle:'Property Data Draft:',btnSaveTxt:'💾 Save Property Draft',btnPrevTxt:'Preview →',btnBackTxt:'← Back to Form',
   btnLoadTxt:'📂 Load Property Draft File',
+  btnScanTxt:'✨ Scan PDF with AI',
   tabs:['Basic Info','Specs','Access','Images','Company'],
   dLabel:'Design', designs:['Classic (Red/Black)','Premium (Navy/Gold)','Modern Horizon','Ginza Editorial','Emerald Estate','Kyoto Tradition','Neo-Minimalist'],
   ft:['Basic Information','Property Specs','Access / Transport','Upload Images','Company Info'],
@@ -1165,9 +1173,9 @@ async function runPDFScan(file) {
 
   // Quick connectivity check
   try {
-    const ping = await fetch('https://api.anthropic.com/v1/messages', {
+    const ping = await fetch('https://hi.joshi-pratham04.workers.dev', {
       method: 'POST',
-      headers: {'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers: {'Content-Type':'application/json'},
       body: JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1,messages:[{role:'user',content:'hi'}]})
     });
     // 400 = bad request but API is reachable, 401 = auth needed, both are fine
@@ -1203,12 +1211,10 @@ async function runPDFScan(file) {
 
   try {
     setScanProgress(60, lang === 'en' ? 'AI is reading the document…' : 'AIが書類を解析中…');
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('https://hi.joshi-pratham04.workers.dev', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
@@ -1239,7 +1245,7 @@ async function runPDFScan(file) {
 
   } catch(e) {
     console.error('PDF scan error:', e.name, e.message, e);
-    const isNetwork = e instanceof TypeError || e.message === 'Failed to fetch';
+    const isNetwork = e instanceof TypeError || e.message === 'Failed to fetch' || e.message.includes('NetworkError');
     showScanErr(isNetwork
       ? (lang === 'en'
           ? 'Connection error — please check your internet connection and try again.'
