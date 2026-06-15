@@ -1132,7 +1132,7 @@ function doExportPDF() {
    AI PDF SCAN ENGINE — inline, no popup needed
    Attach a hidden file input to the existing scan button.
    Reads PDF as base64, calls Anthropic API directly.
-   Works on localhost (python3 -m http.server) or any server.
+   Works on any HTTPS server (GitHub Pages, Netlify, etc).
    ════════════════════════════════════════════════════════ */
 let _scanData = null;
 
@@ -1162,6 +1162,28 @@ async function runPDFScan(file) {
   _scanData = null;
   openScanModal();
   setScanProgress(10, lang === 'en' ? 'Reading PDF…' : 'PDFを読み込み中…');
+
+  // Quick connectivity check
+  try {
+    const ping = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body: JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1,messages:[{role:'user',content:'hi'}]})
+    });
+    // 400 = bad request but API is reachable, 401 = auth needed, both are fine
+    if (!ping.ok && ping.status !== 400 && ping.status !== 401) {
+      const j = await ping.json().catch(()=>({}));
+      throw new Error(j.error?.message || 'API unreachable: ' + ping.status);
+    }
+  } catch(pingErr) {
+    if (pingErr.message && !pingErr.message.includes('API unreachable')) {
+      // Real network error
+      showScanErr(lang==='en'
+        ? 'Cannot reach Anthropic API. Check your internet connection.'
+        : 'Anthropic APIに接続できません。インターネット接続を確認してください。');
+      return;
+    }
+  }
 
   let base64;
   try {
@@ -1202,7 +1224,7 @@ async function runPDFScan(file) {
     if (!resp.ok) {
       let m = 'API error ' + resp.status;
       try { const j = await resp.json(); m = j.error?.message || m; } catch(_) {}
-      if (resp.status === 401) m = lang === 'en' ? 'Auth error — run via: python3 -m http.server 8888' : '認証エラー。ターミナルで python3 -m http.server 8888 を実行してください。';
+      if (resp.status === 401) m = lang === 'en' ? 'Authentication error — please contact your administrator.' : '認証エラー — 管理者にお問い合わせください。';
       if (resp.status === 429) m = lang === 'en' ? 'Rate limit — please wait and retry.' : 'レート制限。少し待ってから再試行してください。';
       throw new Error(m);
     }
@@ -1216,12 +1238,12 @@ async function runPDFScan(file) {
     showScanPreview(parsed);
 
   } catch(e) {
-    console.error('PDF scan error:', e);
+    console.error('PDF scan error:', e.name, e.message, e);
     const isNetwork = e instanceof TypeError || e.message === 'Failed to fetch';
     showScanErr(isNetwork
       ? (lang === 'en'
-          ? 'Network error: double-click 起動する.command to launch the app correctly, or open Chrome with: open -a "Google Chrome" --args --disable-web-security --user-data-dir=/tmp/maisoku file://'+window.location.pathname
-          : 'ネットワークエラー：「起動する.command」をダブルクリックしてアプリを起動してください。')
+          ? 'Connection error — please check your internet connection and try again.'
+          : '接続エラー — インターネット接続を確認して再試行してください。')
       : (lang === 'en' ? 'Scan failed: ' + e.message : 'スキャン失敗: ' + e.message)
     );
   }
