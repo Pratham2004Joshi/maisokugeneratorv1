@@ -97,7 +97,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f0f2f5;color:#111;min-hei
 
 #ms-foot{display:flex;align-items:center;padding:8px 14px;gap:12px;flex-wrap:nowrap;height:75px;border-top:1px solid #111;background:#fff;color:#111;position:absolute;bottom:0;left:0;right:0;z-index:20;overflow:hidden}
 .ms-fr-logo-container{display:flex;align-items:center;height:55px;gap:10px;flex-shrink:0;background:#fff}
-.ms-fr-sketch-logo{height:55px !important;width:auto !important;max-height:55px !important;object-fit:contain !important;display:block;mix-blend-mode:multiply}
+.ms-fr-logo-container img{background-color:#ffffff !important;mix-blend-mode:multiply}
+.ms-fr-sketch-logo{height:55px !important;width:auto !important;max-height:55px !important;object-fit:contain !important;display:block}
 .ms-fc-logo-img{height:32px !important;width:auto !important;max-height:32px !important;object-fit:contain !important;display:block}
 .ms-fi{border-left:1px solid #bbb;padding-left:12px;font-size:9px;line-height:1.5;flex:1;min-width:0;color:#333}
 .ms-fk{font-size:9px;line-height:1.5;border-left:1px solid #bbb;padding-left:12px;white-space:nowrap;color:#333}
@@ -1373,7 +1374,28 @@ function doPrint(){
 }
 
 function doExportPDF() {
-  doPrint();
+  const ms = el('ms'); if (!ms) return;
+  const btn = el('pdfBtn');
+  if (btn) { btn.textContent = '⏳ Generating…'; btn.disabled = true; }
+  html2canvas(ms, {
+    backgroundColor: '#ffffff',
+    scale: 2,
+    useCORS: true,
+    allowTaint: true,
+    logging: false
+  }).then(canvas => {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+    pdf.addImage(imgData, 'JPEG', 0, 0, 297, 210);
+    const pn = gv('f-pn') || 'Property';
+    pdf.save(pn + '_maisoku.pdf');
+    if (btn) { btn.textContent = T[lang].btnPdf; btn.disabled = false; }
+  }).catch(err => {
+    console.error('PDF export failed:', err);
+    if (btn) { btn.textContent = T[lang].btnPdf; btn.disabled = false; }
+    doPrint(); // fallback to system print
+  });
 }
 
 
