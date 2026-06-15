@@ -491,6 +491,7 @@ function compileSpecTable() {
   const pt = gv('f-pt');
   const isInvestmentType = pt.includes('オーナーチェンジ') || pt.toLowerCase().includes('owner-change')
     || pt.includes('投資用') || pt.toLowerCase().includes('investment');
+  const isOwnerChange = pt.includes('オーナーチェンジ') || pt.toLowerCase().includes('owner-change');
   
   function isVisible(row) {
     if (row.type === 'building' || row.type === 'notes') return true;
@@ -512,7 +513,7 @@ function compileSpecTable() {
   // Count how many rows will render. If extras push beyond safe limit,
   // move overflow extras into Notes text instead of rendering as rows.
   const visibleSchemaRows = ROW_SCHEMA.filter(isVisible).filter(r => r.type !== 'building' && r.type !== 'notes');
-  const extraKeys = Object.keys(activeExtras).filter(k => activeExtras[k] && activeExtras[k].trim() !== '');
+  const extraKeys = Object.keys(activeExtras).filter(k => { const v = activeExtras[k]; return v && v.trim() !== '' && v !== '-' && v !== '—' && v !== 'null'; });
   const MAX_EXTRA_ROWS = Math.max(0, 12 - visibleSchemaRows.length); // keep total data rows ≤ 12
   const visibleExtras = extraKeys.slice(0, MAX_EXTRA_ROWS);
   const overflowExtras = extraKeys.slice(MAX_EXTRA_ROWS);
@@ -534,7 +535,7 @@ function compileSpecTable() {
     
     if (row.type === 'full') {
       html += `<div style="display:flex;border-bottom:1px solid #111;flex:${fw};min-height:18px;max-height:30px;align-items:stretch;">
-        <div class="mth" id="${row.thId}" style="width:25%;padding:2px 4px;${thS}">${row.ja}</div>
+        <div class="mth" id="${row.thId}" style="width:25%;padding:2px 4px;${thS}">${lang==='en'?row.en:row.ja}</div>
         <div class="ms-td-val" id="${row.tdId}" style="flex:1;padding:2px 6px;${tdS}">—</div>
       </div>`;
     }
@@ -542,29 +543,29 @@ function compileSpecTable() {
       const L = row.left, R = row.right;
       const leftTdExtra = L.key === 'gy' ? 'font-weight:bold;color:#C8102E;' : '';
       html += `<div style="display:flex;border-bottom:1px solid #111;flex:${fw};min-height:18px;max-height:30px;align-items:stretch;">
-        <div class="mth" id="${L.thId}" style="width:25%;padding:4px 6px;${thS}">${L.ja}</div>
+        <div class="mth" id="${L.thId}" style="width:25%;padding:4px 6px;${thS}">${lang==='en'?((isOwnerChange&&L.enEst)?L.enEst:L.en):((isOwnerChange&&L.jaEst)?L.jaEst:L.ja)}</div>
         <div class="ms-td-val" id="${L.tdId}" style="flex:1;padding:4px 8px;${tdS}border-right:1px solid #111;${leftTdExtra}">—</div>
-        <div class="mth" id="${R.thId}" style="width:20%;padding:4px 6px;${thS}">${R.ja}</div>
+        <div class="mth" id="${R.thId}" style="width:20%;padding:4px 6px;${thS}">${lang==='en'?((isOwnerChange&&R.enEst)?R.enEst:R.en):((isOwnerChange&&R.jaEst)?R.jaEst:R.ja)}</div>
         <div class="ms-td-val" id="${R.tdId}" style="width:25%;padding:4px 8px;${tdS}">—</div>
       </div>`;
     }
     else if (row.type === 'building') {
       html += `<div style="display:flex;border-bottom:1px solid #111;height:63px;flex-shrink:0;align-items:stretch;">
-        <div class="mth" id="th-bd" style="width:25%;padding:2px 4px;${thS}">建物</div>
+        <div class="mth" id="th-bd" style="width:25%;padding:2px 4px;${thS}">${lang==='en'?'Building':'建物'}</div>
         <div style="flex:1;display:flex;flex-direction:column;background:#fff;">
           <div style="display:flex;border-bottom:1px solid #111;flex:1;align-items:stretch;">
-            <div class="mth" id="th-st" style="width:20%;font-size:10px;padding:2px 2px;${thS}">構造・規模</div>
+            <div class="mth" id="th-st" style="width:20%;font-size:10px;padding:2px 2px;${thS}">${lang==='en'?'Structure / Scale':'構造・規模'}</div>
             <div class="ms-td-val" id="td-st" style="flex:1;padding:2px 6px;${tdS}border-right:1px solid #111;">—</div>
             <div class="ms-td-val" id="td-ba" style="width:25%;padding:2px 6px;${tdS}justify-content:center;font-weight:bold;font-size:10px;white-space:nowrap;"></div>
           </div>
           <div style="display:flex;border-bottom:1px solid #111;flex:1;align-items:stretch;">
-            <div class="mth" id="th-ea" style="width:20%;font-size:10px;padding:2px 2px;${thS}">専有面積</div>
+            <div class="mth" id="th-ea" style="width:20%;font-size:10px;padding:2px 2px;${thS}">${lang==='en'?'Exclusive Area':'専有面積'}</div>
             <div class="ms-td-val" id="td-ea" style="flex:1;padding:2px 6px;${tdS}border-right:1px solid #111;">—</div>
-            <div class="mth" id="th-ba-lbl" style="width:20%;font-size:10px;padding:2px 2px;${thS}background:inherit;color:inherit;">バルコニー</div>
+            <div class="mth" id="th-ba-lbl" style="width:20%;font-size:10px;padding:2px 2px;${thS}background:inherit;color:inherit;">${lang==='en'?'Balcony':'バルコニー'}</div>
             <div class="ms-td-val" id="td-ba-val" style="width:25%;padding:2px 6px;${tdS}">—</div>
           </div>
           <div style="display:flex;flex:1;align-items:stretch;">
-            <div class="mth" id="th-zo" style="width:20%;font-size:10px;padding:2px 2px;${thS}">用途制限</div>
+            <div class="mth" id="th-zo" style="width:20%;font-size:10px;padding:2px 2px;${thS}">${lang==='en'?'Zoning':'用途制限'}</div>
             <div class="ms-td-val" id="td-zo" style="flex:1;padding:2px 6px;${tdS}">住宅</div>
           </div>
         </div>
@@ -582,7 +583,7 @@ function compileSpecTable() {
       }
       // ── Notes row (slack absorber — takes all remaining space) ──
       html += `<div style="display:flex;flex:${Math.max(20, 40 - visibleSchemaRows.length * 3)};min-height:28px;align-items:stretch;">
-        <div class="mth" id="${row.thId}" style="width:25%;${thS}font-weight:500;">${row.ja}</div>
+        <div class="mth" id="${row.thId}" style="width:25%;${thS}font-weight:500;">${lang==='en'?row.en:row.ja}</div>
         <div class="ms-td-val" id="${row.tdId}" style="flex:1;padding:4px 8px;font-size:10px;line-height:1.25;overflow:hidden;background:#fff;"></div>
       </div>`;
     }
@@ -1093,14 +1094,9 @@ function applyDesign() {
   const isOwnerChange = currentPType.includes('オーナーチェンジ') || currentPType.toLowerCase().includes('owner-change');
   const selectedMthArray = isOwnerChange ? t.mthEst : t.mth;
 
-  const mids=['th-ly','th-ad','th-bd','th-st','th-ea','th-zo','th-lr','th-tu','th-bd2','th-cs','th-tx','th-re','th-ar','th-gy','th-mc','th-mf','th-rf','th-tm','th-oc','th-dl','th-no'];
-  mids.forEach((id,i)=>{ if(el(id)) el(id).textContent = selectedMthArray[i]; });
+  // mids[] label update removed — compileSpecTable() now sets labels directly from ROW_SCHEMA
   
-  if (el('th-ba-lbl')) {
-    el('th-ba-lbl').style.background = d.thBg;
-    el('th-ba-lbl').style.color = d.thTx;
-    el('th-ba-lbl').textContent = lang === 'en' ? 'Balcony' : 'バルコニー';
-  }
+  // th-ba-lbl label now set by compileSpecTable()
 }
 
 function renderMap(lat,lon){
@@ -1149,7 +1145,17 @@ function upd(){
   st('ms-pn', gv('f-pn') || 'Property Name');
   
   const pr=gv('f-pr');
-  const prTxt=pr && !isNaN(parseFloat(pr)) ? t.prPfx+parseFloat(pr).toLocaleString()+t.prSfx : t.prEmpty;
+  let prTxt = t.prEmpty;
+  if (pr && !isNaN(parseFloat(pr))) {
+    const prNum = parseFloat(pr);
+    if (lang === 'en') {
+      // EN: show full yen amount e.g. ¥41,500,000
+      prTxt = '¥' + (prNum * 10000).toLocaleString() + ' (tax incl.)';
+    } else {
+      // JA: show 万円 format
+      prTxt = t.prPfx + prNum.toLocaleString() + t.prSfx;
+    }
+  }
   st('ms-pp',prTxt);
 
   // ── Spec table values: loop ROW_SCHEMA + formatValue dispatch ──
@@ -1210,6 +1216,27 @@ function upd(){
     }
   }
   
+
+  // ── Auto-scale: shrink font if text overflows cell ──
+  function autoScaleCells() {
+    document.querySelectorAll('#ms-spec .ms-td-val, #ms-spec .mth').forEach(cell => {
+      // Reset to default first
+      cell.style.fontSize = '';
+      cell.style.lineHeight = '';
+      // Check if content overflows
+      if (cell.scrollWidth > cell.clientWidth + 2 || cell.scrollHeight > cell.clientHeight + 2) {
+        const currentSize = parseFloat(getComputedStyle(cell).fontSize);
+        // Try progressively smaller sizes
+        for (let size = currentSize - 0.5; size >= 6; size -= 0.5) {
+          cell.style.fontSize = size + 'px';
+          cell.style.lineHeight = '1.15';
+          if (cell.scrollWidth <= cell.clientWidth + 2 && cell.scrollHeight <= cell.clientHeight + 2) break;
+        }
+      }
+    });
+  }
+  setTimeout(autoScaleCells, 50);
+
   st('ms-np-txt', ptDisplayVal || '—');
 
   let hasManualCoordinates = false;
