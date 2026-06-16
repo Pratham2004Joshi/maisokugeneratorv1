@@ -233,7 +233,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f0f2f5;color:#111;min-hei
       <div id="scan-fields-preview"></div>
       <div class="scan-err" id="scan-err"></div>
       <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end" id="scan-btns">
-        <button class="btn" style="background:#e2e8f0;color:#334155" onclick="closeScanModal()">キャンセル</button>
+        <button class="btn" id="scan-cancel-btn" style="background:#e2e8f0;color:#334155" onclick="closeScanModal()">キャンセル</button>
         <button class="btn btn-ai" id="scan-apply-btn" style="display:none;padding:8px 20px" onclick="applyScanResults()">✅ フォームに反映する</button>
       </div>
     </div>
@@ -376,7 +376,7 @@ ja:{appTitle:'マイソク ジェネレーター',
   pTx:['売主','媒介','代理'],
   upLbl:['📷 選択','📐 選択','🚪 選択','✅ アップロード済み'],
   mapTip:'💡 自動地図の画質が悪い場合、Google Maps等のスクリーンショットをここで直接アップロードできます。',
-  phint:'💡 PDF保存：印刷ダイアログで「PDFに保存」→ 余白「なし」→「背景グラフィック」ON を選択してください。',
+  scanCancel:'キャンセル', scanApply:'✅ フォームに反映する',
   mth:['間取りタイプ','所在地','建物','構造・規模','専有面積','用途制限',
        '土地権利','総戸数','築年月','現況','取引態様',
        '賃料(共益費込)','年間賃料','表面利回','管理会社','管理費','修繕積立金','合計','その他金額','引渡日','備考'],
@@ -419,7 +419,7 @@ en:{appTitle:'Maisoku Generator',
   pTx:['Vendor','Agent','Representative'],
   upLbl:['📷 Click to select','📐 Click to select','🚪 Click to select','✅ Uploaded'],
   mapTip:'💡 Map auto-generated from address (OpenStreetMap — free)',
-  phint:'💡 To save as PDF: In the print dialog → Destination: Save as PDF → Margins: None → ✅ Background graphics ON',
+  scanCancel:'Cancel', scanApply:'✅ Apply to Form',
   mth:['Layout','Address','Building','Structure / Scale','Exclusive Area','Zoning',
        'Land Rights','Total Units','Year Built','Status','Transaction Type',
        'Monthly Rent','Annual Rent','Gross Yield','Mgmt Company','Mgmt Fee','Repair Reserve','Total Monthly','Other Costs','Handover','Notes'],
@@ -907,6 +907,8 @@ function applyLang(){
   // Disclaimer bar — switches language with the rest of the sheet
   st('ms-disc', t.disc);
   st('phint', t.phint);
+  st('scan-cancel-btn', t.scanCancel);
+  st('scan-apply-btn', t.scanApply);
 }
 
 function buildAG(){
@@ -1867,6 +1869,7 @@ function showScanPreview(data) {
   preview.style.display = 'block';
   el('scan-progress').style.display = 'none';
   el('scan-apply-btn').style.display = 'inline-block';
+  el('scan-apply-btn').textContent = T[lang].scanApply;
   el('scan-modal-title').textContent = lang === 'en' ? 'Review & Apply' : '確認して反映する';
   el('scan-modal-desc').innerHTML = lang === 'en'
     ? 'Review the detected fields below, then click Apply to fill the form.'
