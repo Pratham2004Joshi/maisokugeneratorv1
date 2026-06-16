@@ -1454,9 +1454,20 @@ function doExportPDF() {
   const ms = el('ms'); if (!ms) return;
   const btn = el('pdfBtn');
   if (btn) { btn.textContent = '⏳ Generating…'; btn.disabled = true; }
+
+  // A4 landscape: 297mm × 210mm at 96dpi = 1122 × 794px
+  // Capture at 2x for sharpness → 2244 × 1588px
+  const A4_W_PX = 1122;
+  const A4_H_PX = 794;
+  const SCALE = 2;
+
   html2canvas(ms, {
     backgroundColor: '#ffffff',
-    scale: 2,
+    scale: SCALE,
+    width: A4_W_PX,
+    height: A4_H_PX,
+    windowWidth: A4_W_PX,
+    windowHeight: A4_H_PX,
     useCORS: true,
     allowTaint: true,
     logging: false
@@ -1464,6 +1475,7 @@ function doExportPDF() {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
     const imgData = canvas.toDataURL('image/jpeg', 0.95);
+    // Fill exactly A4 landscape — no stretch, no margins
     pdf.addImage(imgData, 'JPEG', 0, 0, 297, 210);
     const pn = gv('f-pn') || 'Property';
     pdf.save(pn + '_maisoku.pdf');
@@ -1471,7 +1483,7 @@ function doExportPDF() {
   }).catch(err => {
     console.error('PDF export failed:', err);
     if (btn) { btn.textContent = T[lang].btnPdf; btn.disabled = false; }
-    doPrint(); // fallback to system print
+    doPrint();
   });
 }
 
