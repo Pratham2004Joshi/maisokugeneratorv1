@@ -532,6 +532,12 @@ function compileSpecTable() {
   function rowFlex(w) {
     return Math.max(1, Math.round((w / totalWeight) * flexScale * 10));
   }
+  // Notes flex sized ~1.4x an average data row so leftover height spreads
+  // evenly across rows instead of all collapsing into one giant empty cell.
+  const avgRowFlex = visibleWeighted.length
+    ? Math.round(visibleWeighted.reduce((s, r) => s + rowFlex(r.w), 0) / visibleWeighted.length)
+    : 10;
+  const notesFlex = Math.max(10, Math.round(avgRowFlex * 1.4));
   
   let html = '<div id="ms-spec" style="display:flex;flex-direction:column;width:100%;height:100%;border:1px solid #111;background:#fff;overflow:hidden;">';
   
@@ -540,7 +546,7 @@ function compileSpecTable() {
     const fw = row.w > 0 ? rowFlex(row.w) : 0;
     
     if (row.type === 'full') {
-      html += `<div style="display:flex;border-bottom:1px solid #111;flex:${fw};min-height:18px;max-height:30px;align-items:stretch;">
+      html += `<div style="display:flex;border-bottom:1px solid #111;flex:${fw};min-height:18px;max-height:52px;align-items:stretch;">
         <div class="mth" id="${row.thId}" style="width:25%;padding:2px 4px;${thS}">${lang==='en'?row.en:row.ja}</div>
         <div class="ms-td-val" id="${row.tdId}" style="flex:1;padding:2px 6px;${tdS}">—</div>
       </div>`;
@@ -548,7 +554,7 @@ function compileSpecTable() {
     else if (row.type === 'paired') {
       const L = row.left, R = row.right;
       const leftTdExtra = L.key === 'gy' ? 'font-weight:bold;color:#C8102E;' : '';
-      html += `<div style="display:flex;border-bottom:1px solid #111;flex:${fw};min-height:18px;max-height:30px;align-items:stretch;">
+      html += `<div style="display:flex;border-bottom:1px solid #111;flex:${fw};min-height:18px;max-height:52px;align-items:stretch;">
         <div class="mth" id="${L.thId}" style="width:25%;padding:4px 6px;${thS}">${lang==='en'?((isOwnerChange&&L.enEst)?L.enEst:L.en):((isOwnerChange&&L.jaEst)?L.jaEst:L.ja)}</div>
         <div class="ms-td-val" id="${L.tdId}" style="flex:1;padding:4px 8px;${tdS}border-right:1px solid #111;${leftTdExtra}">—</div>
         <div class="mth" id="${R.thId}" style="width:20%;padding:4px 6px;${thS}">${lang==='en'?((isOwnerChange&&R.enEst)?R.enEst:R.en):((isOwnerChange&&R.jaEst)?R.jaEst:R.ja)}</div>
@@ -592,13 +598,13 @@ function compileSpecTable() {
           const reg = EXTRA_ROWS[ek];
           label = lang === 'en' ? (reg ? reg.en : ek) : ek;
         }
-        html += `<div class="extra-row" data-extra-key="${ek}" style="display:flex;border-bottom:1px solid #111;flex:${rowFlex(1)};min-height:18px;max-height:30px;align-items:stretch;">
+        html += `<div class="extra-row" data-extra-key="${ek}" style="display:flex;border-bottom:1px solid #111;flex:${rowFlex(1)};min-height:18px;max-height:52px;align-items:stretch;">
           <div class="mth" style="width:25%;padding:4px 6px;${thS}">${label}</div>
           <div class="ms-td-val" data-extra-td="${ek}" style="flex:1;padding:4px 8px;${tdS}">—</div>
         </div>`;
       }
       // ── Notes row (slack absorber — takes all remaining space) ──
-      html += `<div style="display:flex;flex:${Math.max(20, 40 - visibleSchemaRows.length * 3)};min-height:28px;align-items:stretch;">
+      html += `<div style="display:flex;flex:${notesFlex};min-height:28px;align-items:stretch;">
         <div class="mth" id="${row.thId}" style="width:25%;${thS}font-weight:500;">${lang==='en'?row.en:row.ja}</div>
         <div class="ms-td-val" id="${row.tdId}" style="flex:1;padding:4px 8px;font-size:10px;line-height:1.25;overflow:hidden;background:#fff;"></div>
       </div>`;
