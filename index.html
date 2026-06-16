@@ -125,20 +125,20 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f0f2f5;color:#111;min-hei
 .lb-amenity-strip .ms-ar { padding: 0; border: none; background: transparent; width: auto; display: inline-flex !important; height: 100%; align-items: center; }
 .lb-bottom-strip { flex-shrink: 0; display: grid; grid-template-columns: 30% 35% 35%; height: 155px; border-bottom: 1px solid #111; background: #fff; }
 
-.lc-wrapper-shell { display: flex; flex-direction: column; width: 100%; height: 100%; gap: 10px; padding: 10px; background: inherit; box-sizing: border-box; overflow: hidden; }
-.lc-top-split { display: grid; grid-template-columns: 55% calc(45% - 10px); gap: 10px; flex: 53; min-height: 0; }
-.lc-banner-left { position: relative; height: 100%; overflow: hidden; background: #fff; border: 1px solid rgba(0,0,0,0.15); }
+.lc-wrapper-shell { display: flex; flex-direction: column; width: 100%; height: 100%; gap: 10px; padding: 10px; background: inherit; box-sizing: border-box; overflow: hidden; position: absolute; inset: 0; }
+.lc-top-split { display: grid; grid-template-columns: 55% calc(45% - 10px); gap: 10px; flex: 53; min-height: 0; overflow: hidden; }
+.lc-banner-left { position: relative; overflow: hidden; background: #fff; border: 1px solid rgba(0,0,0,0.15); }
 .lc-banner-text { position: absolute; inset: 0; padding: 24px; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(to right, rgba(0,0,0,0.85) 50%, transparent 100%); z-index: 5; color: #fff; }
 .lc-banner-text .pt { color: rgba(255,255,255,0.85); font-size: 11px; font-weight: 700; margin-bottom: 2px; }
 .lc-banner-text .pn { font-size: 26px; font-weight: 900; font-family: 'Noto Serif JP', serif; margin-bottom: 4px; }
 .lc-banner-text .pp { font-size: 16px; font-weight: 700; }
 .lc-spec-box { height: 100%; background: #fff; overflow: hidden; font-size: 8.5px; }
-.lc-bottom-shell { display: grid; grid-template-columns: 33% 27% calc(40% - 20px); gap: 10px; flex: 47; min-height: 0; }
-.lc-floorplan-panel { background: #fff; border: 1px solid rgba(0,0,0,0.15); height: 100%; }
-.lc-amenities-panel { background: #fff; border: 1px solid rgba(0,0,0,0.15); height: 100%; overflow: hidden; display: flex; flex-direction: column; }
-.lc-right-subrow { display: grid; grid-template-rows: 1fr 1fr; gap: 10px; height: 100%; }
-.lc-entrance-box { border: 1px solid rgba(0,0,0,0.15); height: 100%; background: #fff; overflow: hidden; }
-.lc-transport-map { display: grid; grid-template-columns: 1fr 140px; height: 100%; background: #fff; border: 1px solid rgba(0,0,0,0.15); overflow: hidden; }
+.lc-bottom-shell { display: grid; grid-template-columns: 33% 27% calc(40% - 20px); gap: 10px; flex: 47; min-height: 0; overflow: hidden; }
+.lc-floorplan-panel { background: #fff; border: 1px solid rgba(0,0,0,0.15); overflow: hidden; }
+.lc-amenities-panel { background: #fff; border: 1px solid rgba(0,0,0,0.15); overflow: hidden; display: flex; flex-direction: column; }
+.lc-right-subrow { display: grid; grid-template-rows: 1fr 1fr; gap: 10px; overflow: hidden; }
+.lc-entrance-box { border: 1px solid rgba(0,0,0,0.15); overflow: hidden; background: #fff; }
+.lc-transport-map { display: grid; grid-template-columns: 1fr 140px; background: #fff; border: 1px solid rgba(0,0,0,0.15); overflow: hidden; }
 .lc-trans-list { padding: 8px; display: flex; flex-direction: column; justify-content: center; gap: 4px; background: #fff; }
 
 .ld-main-shell { display: grid; grid-template-columns: 50% 50%; height: 100%; border-bottom: 1px solid #111; }
