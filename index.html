@@ -75,8 +75,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f0f2f5;color:#111;min-hei
 .phint{background:#fff3cd;border:1px solid #ffc107;border-radius:5px;padding:9px 14px;font-size:12px;margin-bottom:14px}
 
 /* ═══ MAISOKU CANVAS CORE STRUCTURE ═══ */
-#ms{font-family:'Noto Sans JP',sans-serif;font-size:11px;border:1px solid #ccc;position:relative;overflow:hidden;width:1047px;height:740px;min-width:1047px;min-height:740px;background:#fff;display:flex;flex-direction:column}
-#ms-canvas-body{flex:1;position:relative;overflow:hidden}
+#ms{font-family:'Noto Sans JP',sans-serif;font-size:11px;border:1px solid #ccc;position:relative;overflow:hidden;width:1122px;height:794px;min-width:1122px;min-height:794px;background:#fff;display:flex;flex-direction:column}
+#ms-canvas-body{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column}
 
 .ms-tbl table{width:100%;border-collapse:collapse;font-size:9.5px;table-layout:fixed;letter-spacing:-0.01em}
 .ms-tbl th, .ms-tbl .mth {padding:2px 4px;font-size:8.5px !important;font-weight:500;white-space:normal;line-height:1.1 !important;text-align:center;letter-spacing:-0.01em}
@@ -95,7 +95,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f0f2f5;color:#111;min-hei
 .ms-map { flex-shrink: 0; overflow: hidden; background: #e2e8f0; position: relative; width: 100%; height: 100%; }
 .ms-map-canvas-box { width: 100%; height: 100%; position: relative; }
 
-#ms-foot{display:flex;align-items:center;padding:8px 14px;gap:12px;flex-wrap:nowrap;height:75px;border-top:1px solid #111;background-color:#ffffff;background:#ffffff;color:#111;position:absolute;bottom:0;left:0;right:0;z-index:20;overflow:hidden}
+#ms-foot{display:flex;align-items:center;padding:8px 14px;gap:12px;flex-wrap:nowrap;height:75px;border-top:1px solid #111;background-color:#ffffff;background:#ffffff;color:#111;position:relative;flex-shrink:0;z-index:20;overflow:hidden}
 .ms-fr-logo-container{display:flex;align-items:center;height:55px;gap:10px;flex-shrink:0;background-color:#ffffff;padding:0 4px}
 .ms-fr-logo-container img{background-color:#ffffff !important}
 .ms-fr-sketch-logo{height:44px !important;width:44px !important;max-height:44px !important;object-fit:contain !important;object-position:center center;display:block;mix-blend-mode:multiply;isolation:isolate;flex-shrink:0}
@@ -105,8 +105,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f0f2f5;color:#111;min-hei
 .ms-ff{font-size:9px;line-height:1.5;padding-left:12px;white-space:nowrap;color:#333}
 
 /* ═════ CORE GEOMETRY ARCHETYPE SWITCHES ═════ */
-.la-layout-grid { display: grid; grid-template-columns: 46% 54%; height: 430px; border-bottom: 1px solid #111; }
-.la-bottom-grid { display: grid; grid-template-columns: 27% 15% 25% 33%; height: 215px; border-bottom: 1px solid #111; background: #fff; }
+.la-layout-grid { display: grid; grid-template-columns: 46% 54%; flex: 3; border-bottom: 1px solid #111; min-height: 0; }
+.la-bottom-grid { display: grid; grid-template-columns: 27% 15% 25% 33%; flex: 2; border-bottom: 1px solid #111; background: #fff; min-height: 0; }
 .la-hero-text { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%); z-index: 5; }
 .la-hero-text .pt { color: rgba(255,255,255,0.85); font-size: 11px; font-weight: 700; margin-bottom: 2px; }
 .la-hero-text .pn { color: #fff; font-size: 24px; font-weight: 900; font-family: 'Noto Serif JP', serif; line-height: 1.2; margin-bottom: 4px; }
@@ -115,35 +115,35 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f0f2f5;color:#111;min-hei
 .la-sub-split { display: flex; flex-direction: column; height: 100%; width: 100%; border-left: 1px solid #ddd; background: #fff; overflow: hidden; position: relative; }
 .la-map-box { height: 100%; width: 100%; position: relative; overflow: hidden; }
 
-.lb-banner { height: 120px; width: 100%; border-bottom: 1px solid #111; position: relative; }
+.lb-banner { flex-shrink: 0; height: 120px; width: 100%; border-bottom: 1px solid #111; position: relative; }
 .lb-banner-text { position: absolute; inset: 0; padding: 0 24px; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(to right, rgba(0,0,0,0.9) 45%, transparent 100%); z-index: 5; }
 .lb-banner-text .pt { color: rgba(255,255,255,0.85); font-size: 11px; font-weight: 700; margin-bottom: 2px; }
 .lb-banner-text .pn { color: #fff; font-size: 26px; font-weight: 900; font-family: 'Noto Serif JP', serif; margin-bottom: 4px; }
 .lb-banner-text .pp { font-size: 16px; font-weight: 700; }
-.lb-middle-grid { display: grid; grid-template-columns: 44% 56%; height: 355px; border-bottom: 1px solid #111; overflow: hidden; }
-.lb-amenity-strip { height: 32px; width: 100%; border-bottom: 1px solid #111; display: flex; align-items: center; justify-content: space-around; padding: 0 35px; background: #fff; z-index: 10; position: relative; }
+.lb-middle-grid { display: grid; grid-template-columns: 44% 56%; flex: 1; border-bottom: 1px solid #111; overflow: hidden; min-height: 0; }
+.lb-amenity-strip { flex-shrink: 0; height: 32px; width: 100%; border-bottom: 1px solid #111; display: flex; align-items: center; justify-content: space-around; padding: 0 35px; background: #fff; z-index: 10; position: relative; }
 .lb-amenity-strip .ms-ar { padding: 0; border: none; background: transparent; width: auto; display: inline-flex !important; height: 100%; align-items: center; }
-.lb-bottom-strip { display: grid; grid-template-columns: 30% 35% 35%; height: 138px; border-bottom: 1px solid #111; background: #fff; }
+.lb-bottom-strip { flex-shrink: 0; display: grid; grid-template-columns: 30% 35% 35%; height: 155px; border-bottom: 1px solid #111; background: #fff; }
 
-.lc-wrapper-shell { display: flex; flex-direction: column; width: 100%; height: 645px; gap: 10px; padding: 10px; background: inherit; }
-.lc-top-split { display: grid; grid-template-columns: 55% calc(45% - 10px); gap: 10px; height: 325px; }
+.lc-wrapper-shell { display: flex; flex-direction: column; width: 100%; height: 100%; gap: 10px; padding: 10px; background: inherit; box-sizing: border-box; }
+.lc-top-split { display: grid; grid-template-columns: 55% calc(45% - 10px); gap: 10px; flex: 1.1; min-height: 0; }
 .lc-banner-left { position: relative; height: 100%; overflow: hidden; background: #fff; border: 1px solid rgba(0,0,0,0.15); }
 .lc-banner-text { position: absolute; inset: 0; padding: 24px; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(to right, rgba(0,0,0,0.85) 50%, transparent 100%); z-index: 5; color: #fff; }
 .lc-banner-text .pt { color: rgba(255,255,255,0.85); font-size: 11px; font-weight: 700; margin-bottom: 2px; }
 .lc-banner-text .pn { font-size: 26px; font-weight: 900; font-family: 'Noto Serif JP', serif; margin-bottom: 4px; }
 .lc-banner-text .pp { font-size: 16px; font-weight: 700; }
 .lc-spec-box { height: 100%; background: #fff; overflow: hidden; font-size: 8.5px; }
-.lc-bottom-shell { display: grid; grid-template-columns: 33% 27% calc(40% - 20px); gap: 10px; height: 290px; }
+.lc-bottom-shell { display: grid; grid-template-columns: 33% 27% calc(40% - 20px); gap: 10px; flex: 1; min-height: 0; }
 .lc-floorplan-panel { background: #fff; border: 1px solid rgba(0,0,0,0.15); height: 100%; }
 .lc-amenities-panel { background: #fff; border: 1px solid rgba(0,0,0,0.15); height: 100%; overflow: hidden; display: flex; flex-direction: column; }
-.lc-right-subrow { display: grid; grid-template-rows: 135px calc(155px - 10px); gap: 10px; height: 100%; }
-.lc-entrance-box { border: 1px solid rgba(0,0,0,0.15); height: 135px; background: #fff; }
-.lc-transport-map { display: grid; grid-template-columns: 1fr 140px; height: 145px; background: #fff; border: 1px solid rgba(0,0,0,0.15); }
+.lc-right-subrow { display: grid; grid-template-rows: 1fr 1fr; gap: 10px; height: 100%; }
+.lc-entrance-box { border: 1px solid rgba(0,0,0,0.15); height: 100%; background: #fff; }
+.lc-transport-map { display: grid; grid-template-columns: 1fr 140px; height: 100%; background: #fff; border: 1px solid rgba(0,0,0,0.15); }
 .lc-trans-list { padding: 8px; display: flex; flex-direction: column; justify-content: center; gap: 4px; background: #fff; }
 
-.ld-main-shell { display: grid; grid-template-columns: 50% 50%; height: 645px; border-bottom: 1px solid #111; }
+.ld-main-shell { display: grid; grid-template-columns: 50% 50%; height: 100%; border-bottom: 1px solid #111; }
 .ld-left-table-pane { height: 100%; border-right: 1px solid #111; background: #fff; overflow: hidden; }
-.ld-right-assets-pane { display: grid; grid-template-rows: 240px 240px 165px; height: 100%; }
+.ld-right-assets-pane { display: grid; grid-template-rows: 34% 33% 33%; height: 100%; }
 .ld-hero-banner { position: relative; border-bottom: 1px solid #111; }
 .ld-floorplan-box { border-bottom: 1px solid #111; background: #fff; }
 .ld-bottom-subrow { display: grid; grid-template-columns: 33% 33% 34%; height: 100%; background: #fff; }
@@ -151,7 +151,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f0f2f5;color:#111;min-hei
 .ld-entrance-card { border-right: 1px solid #ddd; height: 100%; }
 .ld-map-card { height: 100%; position: relative; }
 
-.ms-disc-bar { padding: 2px 14px; font-size: 8px; text-align: right; color: #555; background: #fff; height: 20px; line-height: 16px; position: absolute; bottom: 75px; left:0; right:0; border-top: 1px solid #ddd; z-index: 10; }
+.ms-disc-bar { padding: 2px 14px; font-size: 8px; text-align: right; color: #555; background: #fff; height: 20px; line-height: 16px; position: absolute; bottom: 0; left:0; right:0; border-top: 1px solid #ddd; z-index: 10; }
 
 @media print{
   @page{size:A4 landscape;margin:0}
@@ -162,17 +162,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f0f2f5;color:#111;min-hei
   #pp{all:unset;display:block;padding:0!important;margin:0!important;overflow:visible!important;max-height:none!important;width:297mm!important;height:210mm!important}
   .phint{display:none!important}
   #ms{border:none!important;box-shadow:none!important;position:relative!important;top:0!important;left:0!important;margin:0!important;padding:0!important;width:297mm!important;height:210mm!important;min-width:0!important;min-height:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
-  #ms-canvas-body{height:calc(210mm - 75px)!important;max-height:calc(210mm - 75px)!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
-  #ms-foot{position:relative!important;flex-shrink:0!important}
-  .ms-disc-bar{bottom:0!important}
-  .la-layout-grid{height:59%!important;flex-shrink:0!important}
-  .la-bottom-grid{flex:1!important;height:auto!important}
-  .lb-banner{flex-shrink:0!important}
-  .lb-middle-grid{flex:1!important;height:auto!important}
-  .lb-amenity-strip{flex-shrink:0!important}
-  .lb-bottom-strip{flex-shrink:0!important}
-  .lc-wrapper-shell{height:100%!important}
-  .ld-main-shell{height:100%!important}
+  #ms-canvas-body{flex:1!important;min-height:0!important;overflow:hidden!important}
+  #ms-foot{flex-shrink:0!important;position:relative!important}
 }
 </style>
 </head>
@@ -335,7 +326,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#f0f2f5;color:#111;min-hei
   <div class="phint" id="phint">💡 印刷：用紙A4・横・余白なし・「ページに合わせる」</div>
   <div id="ms" class="la">
     <div id="ms-bg" style="position:absolute; inset:0; z-index:1; pointer-events:none; display:none; opacity:0.18;"></div>
-    <div id="ms-canvas-body" style="position:relative; z-index:2; height:645px;"></div>
+    <div id="ms-canvas-body" style="position:relative; z-index:2; flex:1;"></div>
     <div class="ms-disc-bar" id="ms-disc"></div>
     <div id="ms-foot">
       <div class="ms-fr-logo-container" style="background-color:#ffffff">
