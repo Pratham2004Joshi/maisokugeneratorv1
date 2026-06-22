@@ -948,12 +948,13 @@ function processImageBinary(key, input, btnId, previewId) {
   reader.readAsDataURL(file);
 }
 
-// Aspect ratios for each image slot (width/height of how it appears in the maisoku)
+// Aspect ratios (width/height) matching the actual slot dimensions in the maisoku canvas.
+// Using the primary/largest usage per image type across all designs.
 const CROP_ASPECTS = {
-  exterior:  4/3,   // wide landscape hero
-  floorplan: 1/1,   // roughly square
-  entrance:  3/4,   // portrait
-  mapcustom: 4/3    // wide
+  exterior:  1122/140, // full-width banner in Design 2 (most demanding crop)
+  floorplan: 494/355,  // Design 2 middle grid: 44% × 355px = ~1.39
+  entrance:  337/187,  // Design 2 bottom strip: 30% × 187px = ~1.80
+  mapcustom: 4/3       // map slot is roughly 4:3
 };
 
 // Modal state
@@ -1395,7 +1396,7 @@ function compileActiveTemplateHTML() {
       </div>
       <div class="lb-amenity-strip" style="display:none;"></div>
       <div class="lb-bottom-strip">
-        <div class="img-contain-box" style="border-right:1px solid #ddd;">${fpPhoto}</div>
+        <div class="img-cover-box" style="border-right:1px solid #ddd;">${entPhoto}</div>
         <div id="ms-map-wrapper-lb" style="position:relative; width:100%; height:100%; overflow:hidden; border-right:1px solid #ddd;">
           ${sharedAccessOverlayBlock}
           ${mapOverlayPhoto ? mapOverlayPhoto : ''}
