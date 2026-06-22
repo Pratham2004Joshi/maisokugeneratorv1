@@ -1739,6 +1739,9 @@ function upd(){
     if (noEl) {
       let overflowHtml = '';
       for (const ek of window._overflowExtras) {
+        // __rv__ review items must never leak into Notes as raw text —
+        // they render as proper extra rows or are silently dropped if no space
+        if (ek.startsWith('__rv__')) continue;
         const val = activeExtras[ek];
         if (!val) continue;
         const reg = EXTRA_ROWS[ek];
@@ -2443,16 +2446,34 @@ function applyScanResults() {
   }
 
   // ── 4. Review items — collect ticked checkboxes ──
+  // Build a set of all standard field keys already in ROW_SCHEMA so we
+  // never add a review item that duplicates a field already in the spec table.
+  const SCHEMA_FIELD_KEYS = new Set();
+  for (const row of ROW_SCHEMA) {
+    if (row.key) SCHEMA_FIELD_KEYS.add(row.key);
+    if (row.left) SCHEMA_FIELD_KEYS.add(row.left.key);
+    if (row.right) SCHEMA_FIELD_KEYS.add(row.right.key);
+  }
+  // Also block by common label aliases the AI might return (e.g. "land_rights", "lr")
+  const SCHEMA_LABEL_ALIASES = new Set(['land_rights','lr','zoning','zo','structure','st',
+    'layout','ly','price','pr','address','ad','property_name','pn','transaction','tx',
+    'status','cs','year_built','bd','area','ea','balcony','ba','rent','re','annual_rent','ar',
+    'yield','gy','mgmt_fee','mf','repair_reserve','rf','total_monthly','tm','other_costs','oc',
+    'handover','dl','notes','no','mgmt_company','mc','total_units','tu','land_rights_type']);
+
   const reviewItems = Array.isArray(d.review) ? d.review : [];
   reviewItems.forEach((item, i) => {
     const chk = el('rv-chk-' + i);
     if (chk && chk.checked) {
+      const itemKey = item.key || String(i);
+      // Skip if this review item duplicates a standard ROW_SCHEMA field
+      if (SCHEMA_FIELD_KEYS.has(itemKey) || SCHEMA_LABEL_ALIASES.has(itemKey)) return;
       // Store with a namespaced key so it never collides with EXTRA_ROWS
-      const key = '__rv__' + (item.key || i);
+      const key = '__rv__' + itemKey;
       activeExtras[key] = item.value_ja || item.value_en || '';
       enExtras[key] = {
-        label_ja: item.key,
-        label_en: item.label_en || item.key,
+        label_ja: itemKey,
+        label_en: item.label_en || itemKey,
         value_en: item.value_en || item.value_ja || ''
       };
     }
