@@ -109,6 +109,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .fi{flex:1}
 .fi input,.fi fill,.fi select,.fi textarea{width:100%;padding:6px 9px;border:1px solid var(--border-input);border-radius:4px;font-size:12px;font-family:inherit;outline:none;background:var(--bg-input);color:var(--text-body);transition:background .25s,border-color .15s,color .25s}
 .fi input:focus,.fi select:focus,.fi textarea:focus{border-color:#C8102E}
+.fi input::placeholder,.fi textarea::placeholder{color:#aaa;opacity:1;font-style:italic}
 .fi textarea{resize:vertical}
 .ag{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
 .ac{display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer;background:var(--bg-chip);border:1px solid var(--border-chip);padding:4px 9px;border-radius:4px;user-select:none;transition:all .15s;color:var(--text-body)}
@@ -533,7 +534,20 @@ ja:{appTitle:'マイソク ジェネレーター',
   coordDesc:'住所自動生成のピンがずれる場合、ここにGoogleマップ等からコピーした座標を入力してください。',
   coordLabel:'緯度経度 (カンマ区切り)',
   mapUpload:'🗺️ 地図写真 (高画質)',
-  mapUploadTip:'💡 自動地図の画質が悪い場合、Google Maps等のスクリーンショットをここで直接アップロードできます。'},
+  mapUploadTip:'💡 自動地図の画質が悪い場合、Google Maps等のスクリーンショットをここで直接アップロードできます。',
+  phint:'💡 印刷：用紙A4・横・余白なし・「ページに合わせる」',
+  grpH:'── 横型写真', grpV:'── 縦型写真',
+  defZo:'住宅', defLr:'所有権', defOc:'-', defDl:'相談', defAg:'舛岡',
+  ph:{pn:'グラントレゾール広尾',pr:'5000',ad:'東京都渋谷区恵比寿2-38-3',ly:'1DK（メゾネット型 2階・3階部分）',
+      st:'RC造 地下1階付き5階建 2階3階部分',ea:'50.30',ba:'2.00',
+      tu:'27',bd:'2011年3月',re:'250,000',ar:'3,000,000',
+      gy:'自動計算されます（手入力も可）',mc:'日本ハウズイング株式会社',
+      mf:'23,610円/月',rf:'（空欄可）',tm:'23,610円/月',oc:'0円/月',dl:'相談',
+      no:'※司法書士は売主様指定となります（応相談）
+管理費修繕積立金は内訳不明の為、合算',ag:'舛岡',
+      l1:'東京メトロ日比谷線',s1:'広尾',m1:'8',
+      l2:'JR山手線',s2:'恵比寿',m2:'15',
+      coords:'例: 35.6517, 139.6645'}},
 en:{appTitle:'Maisoku Generator',
   btnPrev:'Preview →',btnBack:'← Back to Form',btnPrint:'System Print',btnPdf:'One-Click PDF Export',
   ioTitle:'Property Data Draft:',btnSaveTxt:'💾 Save Property Draft',btnPrevTxt:'Preview →',btnBackTxt:'← Back to Form',
@@ -563,6 +577,8 @@ en:{appTitle:'Maisoku Generator',
   accTitle:'Transit',
   clientLbl:'[To Co-Broking Agencies]',noad:'Advertisement Not Allowed',agPfx:'Agent in charge: ',feeLbl:'Commission',txLbl:'Transaction Type',
   disc:'※ Images are for reference only. Actual conditions take precedence.',
+  valCommission:'Commission: Split Fee',
+  valTransaction:'General Brokerage',
   mapLoad:'🗺️ Loading map...',mapNF:'Address not found',
   extPh:'Exterior Photo',fpPh:'Floor Plan',entPh:'Entrance Photo',
   prPfx:'Price ',prSfx:' (¥10k, tax incl.)',prEmpty:'Price TBD',
@@ -576,7 +592,20 @@ en:{appTitle:'Maisoku Generator',
   coordDesc:'If the auto-generated pin misaligns, copy and paste coordinates from Google Maps here.',
   coordLabel:'Latitude, Longitude (Comma separated)',
   mapUpload:'🗺️ Custom Map Image (High-Res)',
-  mapUploadTip:'💡 If the default map quality is insufficient, take a high-res screenshot from Google Maps and upload it here.'}
+  mapUploadTip:'💡 If the default map quality is insufficient, take a high-res screenshot from Google Maps and upload it here.',
+  phint:'💡 Print: A4 · Landscape · No margins · Scale to fit page',
+  grpH:'── Landscape Photos', grpV:'── Portrait Photos',
+  defZo:'Residential', defLr:'Freehold', defOc:'-', defDl:'Negotiable', defAg:'Masuoka',
+  ph:{pn:'Grand Tresor Hiroo',pr:'5000',ad:'2-38-3 Ebisu, Shibuya-ku, Tokyo',ly:'1DK (Maisonette, 2nd & 3rd floor)',
+      st:'RC, 5F + B1F, 2nd & 3rd floor unit',ea:'50.30',ba:'2.00',
+      tu:'27',bd:'March 2011',re:'250,000',ar:'3,000,000',
+      gy:'Auto-calculated (manual entry OK)',mc:'Nihon Housing Co., Ltd.',
+      mf:'¥23,610/month',rf:'(optional)',tm:'¥23,610/month',oc:'¥0/month',dl:'Negotiable',
+      no:'* Notary public designated by seller (negotiable)
+* Management fee and repair reserve combined',ag:'Masuoka',
+      l1:'Tokyo Metro Hibiya Line',s1:'Hiro-o',m1:'8',
+      l2:'JR Yamanote Line',s2:'Ebisu',m2:'15',
+      coords:'e.g. 35.6517, 139.6645'}}
 };
 
 const DS=[
@@ -1297,6 +1326,53 @@ function applyLang(){
   st('phint', t.phint);
   st('scan-cancel-btn', t.scanCancel);
   st('scan-apply-btn', t.scanApply);
+
+  // ── Placeholder text: switch with language ──
+  if (t.ph) {
+    const phMap = {
+      'f-pn':t.ph.pn,'f-pr':t.ph.pr,'f-ad':t.ph.ad,'f-ly':t.ph.ly,
+      'f-st':t.ph.st,'f-ea':t.ph.ea,'f-ba':t.ph.ba,
+      'f-tu':t.ph.tu,'f-bd':t.ph.bd,'f-re':t.ph.re,'f-ar':t.ph.ar,
+      'f-gy':t.ph.gy,'f-mc':t.ph.mc,
+      'f-mf':t.ph.mf,'f-rf':t.ph.rf,'f-tm':t.ph.tm,
+      'f-no':t.ph.no,
+      'f-l1':t.ph.l1,'f-s1':t.ph.s1,'f-m1':t.ph.m1,
+      'f-l2':t.ph.l2,'f-s2':t.ph.s2,'f-m2':t.ph.m2,
+      'f-coords':t.ph.coords
+    };
+    Object.entries(phMap).forEach(([id, ph]) => {
+      const el2 = el(id); if (el2) el2.placeholder = ph;
+    });
+  }
+
+  // ── Design group labels (横型写真 / 縦型写真) ──
+  const grpLabels = document.querySelectorAll('.di-group-label');
+  if (grpLabels.length >= 2 && t.grpH) {
+    grpLabels[0].textContent = t.grpH;
+    grpLabels[1].textContent = t.grpV;
+  }
+
+  // ── Default field values that must switch with language ──
+  // Only update if the field still has the DEFAULT value (don't overwrite user data)
+  const defFields = [
+    {id:'f-zo', jaVal:'住宅',     enVal:'Residential'},
+    {id:'f-lr', jaVal:'所有権',   enVal:'Freehold'},
+    {id:'f-oc', jaVal:'-',        enVal:'-'},
+    {id:'f-dl', jaVal:'相談',     enVal:'Negotiable'},
+    {id:'f-ag', jaVal:'舛岡',     enVal:'Masuoka'},
+    {id:'f-hf', jaVal:'分かれ',   enVal:'Split Fee'},
+    {id:'f-tf', jaVal:'一般',     enVal:'General Brokerage'}
+  ];
+  defFields.forEach(({id, jaVal, enVal}) => {
+    const fld = el(id); if (!fld) return;
+    const cur = fld.value.trim();
+    // Switch if it currently holds either default (user hasn't overridden it)
+    if (cur === jaVal || cur === enVal || cur === '') {
+      fld.value = (lang === 'en') ? enVal : jaVal;
+    }
+    // Also update placeholder for f-ag
+    if (id === 'f-ag' && t.ph && t.ph.ag) fld.placeholder = t.ph.ag;
+  });
 }
 
 function buildAG(){
