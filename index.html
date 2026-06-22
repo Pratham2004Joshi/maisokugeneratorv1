@@ -119,6 +119,15 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .ub:hover{border-color:#C8102E;color:#C8102E}
 .ub.done{border-style:solid;border-color:#22c55e;color:#22c55e;background:#f0fff4}
 .uprev{max-height:90px;border-radius:4px;border:1px solid #eee;margin-top:7px;display:none}
+.crop-ctrl{margin-top:8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px 10px;}
+.crop-grid{display:grid;grid-template-columns:repeat(3,26px);grid-template-rows:repeat(3,26px);gap:3px;margin-bottom:8px;}
+.crop-btn{width:26px;height:26px;border:1px solid #cbd5e1;border-radius:4px;background:#fff;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.crop-btn:hover{background:#e0e7ff;}
+.crop-btn.active{background:#7c3aed;border-color:#7c3aed;color:#fff;}
+.crop-zoom-row{display:flex;align-items:center;gap:8px;font-size:11px;color:#475569;}
+.crop-zoom-row input[type=range]{flex:1;accent-color:#7c3aed;height:4px;}
+.crop-reset{font-size:10px;color:#94a3b8;cursor:pointer;text-decoration:underline;margin-left:6px;}
+.crop-reset:hover{color:#475569;}
 .tip{background:#fff8e1;border:1px solid #ffe082;border-radius:5px;padding:10px;font-size:11px;color:#795548;margin-top:10px}
 .btn-ai{background:linear-gradient(135deg,#7c3aed,#C8102E);color:#fff;font-weight:700;letter-spacing:.04em;border:none;cursor:pointer;transition:opacity .2s}
 .btn-ai:hover{opacity:.88}
@@ -385,10 +394,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
   
   <div id="tab3" class="tc" style="display:none">
     <div class="stitle" id="ft3">画像アップロード</div>
-    <div class="fr"><div class="fl" id="l-ex">外観写真</div><div class="fi"><label><div class="ub" id="ub-ex">📷 選択</div><input type="file" accept="image/*" style="display:none" onchange="processImageBinary('exterior',this,'ub-ex','pv-ex')"></label><br><img id="pv-ex" class="uprev"></div></div>
-    <div class="fr"><div class="fl" id="l-fp">間取り図</div><div class="fi"><label><div class="ub" id="ub-fp">📐 選択</div><input type="file" accept="image/*" style="display:none" onchange="processImageBinary('floorplan',this,'ub-fp','pv-fp')"></label><br><img id="pv-fp" class="uprev"></div></div>
-    <div class="fr"><div class="fl" id="l-en">エントランス写真</div><div class="fi"><label><div class="ub" id="ub-en">🚪 選択</div><input type="file" accept="image/*" style="display:none" onchange="processImageBinary('entrance',this,'ub-en','pv-en')"></label><br><img id="pv-en" class="uprev"></div></div>
-    <div class="fr"><div class="fl" id="l-map-upload">🗺️ 地図写真 (高画質)</div><div class="fi"><label><div class="ub" id="ub-map">🗺️ 選択</div><input type="file" accept="image/*" style="display:none" onchange="processImageBinary('mapcustom',this,'ub-map','pv-map')"></label><br><img id="pv-map" class="uprev"></div></div>
+    <div class="fr"><div class="fl" id="l-ex">外観写真</div><div class="fi"><label><div class="ub" id="ub-ex">📷 選択</div><input type="file" accept="image/*" style="display:none" onchange="processImageBinary('exterior',this,'ub-ex','pv-ex')"></label><br><img id="pv-ex" class="uprev"><div id="crop-ex" class="crop-ctrl" style="display:none"></div></div></div>
+    <div class="fr"><div class="fl" id="l-fp">間取り図</div><div class="fi"><label><div class="ub" id="ub-fp">📐 選択</div><input type="file" accept="image/*" style="display:none" onchange="processImageBinary('floorplan',this,'ub-fp','pv-fp')"></label><br><img id="pv-fp" class="uprev"><div id="crop-fp" class="crop-ctrl" style="display:none"></div></div></div>
+    <div class="fr"><div class="fl" id="l-en">エントランス写真</div><div class="fi"><label><div class="ub" id="ub-en">🚪 選択</div><input type="file" accept="image/*" style="display:none" onchange="processImageBinary('entrance',this,'ub-en','pv-en')"></label><br><img id="pv-en" class="uprev"><div id="crop-en" class="crop-ctrl" style="display:none"></div></div></div>
+    <div class="fr"><div class="fl" id="l-map-upload">🗺️ 地図写真 (高画質)</div><div class="fi"><label><div class="ub" id="ub-map">🗺️ 選択</div><input type="file" accept="image/*" style="display:none" onchange="processImageBinary('mapcustom',this,'ub-map','pv-map')"></label><br><img id="pv-map" class="uprev"><div id="crop-map" class="crop-ctrl" style="display:none"></div></div></div>
     <div class="tip" id="map-tip">💡 自動地図の画質が悪い場合、Google Maps等のスクリーンショットをここで直接アップロードできます。</div>
   </div>
   
@@ -850,6 +859,13 @@ function autoEnFields() {
 
 let lang='ja', design=0, isPrev=false;
 const imgs={exterior:null,floorplan:null,entrance:null,mapcustom:null};
+// Crop/zoom state per image: pos = CSS object-position value, zoom = scale multiplier
+const imgCrop={
+  exterior: { pos:'center center', zoom:1 },
+  floorplan:{ pos:'center center', zoom:1 },
+  entrance: { pos:'center center', zoom:1 },
+  mapcustom:{ pos:'center center', zoom:1 }
+};
 const mapCache={};
 const AJ=["室内洗濯機置場","メールボックス","エレベーター","オートロック","宅配ボックス","バルコニー","駐車場","駐輪場","24時間セキュリティ","ペット可","楽器可"];
 const AE=["Indoor Laundry","Mailbox","Elevator","Auto-lock","Parcel Box","Balcony","Parking","Bicycle Parking","24hr Security","Pets Allowed","Instruments OK"];
@@ -907,9 +923,65 @@ function processImageBinary(key, input, btnId, previewId) {
       pv.src = e.target.result;
       pv.style.display = 'block';
     }
+    // Reset crop and show controls
+    imgCrop[key] = { pos: 'center center', zoom: 1 };
+    const cropMap = { exterior:'crop-ex', floorplan:'crop-fp', entrance:'crop-en', mapcustom:'crop-map' };
+    if (cropMap[key]) renderCropControl(key, cropMap[key]);
     upd();
   };
   reader.readAsDataURL(file);
+}
+
+// Position button config: [label, CSS object-position value]
+const CROP_POSITIONS = [
+  ['↖','top left'],    ['↑','top center'],    ['↗','top right'],
+  ['←','center left'], ['·','center center'], ['→','center right'],
+  ['↙','bottom left'], ['↓','bottom center'], ['↘','bottom right']
+];
+
+function renderCropControl(key, panelId) {
+  const panel = el(panelId);
+  if (!panel) return;
+  const c = imgCrop[key];
+  const zoomPct = Math.round((c.zoom - 1) / 1 * 100); // 0–100
+
+  const btns = CROP_POSITIONS.map(([lbl, pos]) =>
+    `<button class="crop-btn${c.pos === pos ? ' active' : ''}" onclick="setCropPos('${key}','${panelId}','${pos}')" title="${pos}">${lbl}</button>`
+  ).join('');
+
+  panel.innerHTML = `
+    <div style="font-size:10px;font-weight:700;color:#475569;margin-bottom:6px;letter-spacing:.04em">
+      🖼 フレーム調整
+      <span class="crop-reset" onclick="resetCrop('${key}','${panelId}')">リセット</span>
+    </div>
+    <div class="crop-grid">${btns}</div>
+    <div class="crop-zoom-row">
+      <span>🔍</span>
+      <input type="range" min="0" max="100" value="${zoomPct}"
+        oninput="setCropZoom('${key}','${panelId}',this.value)">
+      <span id="crop-zoom-lbl-${key}">${c.zoom.toFixed(2)}×</span>
+    </div>`;
+  panel.style.display = 'block';
+}
+
+function setCropPos(key, panelId, pos) {
+  imgCrop[key].pos = pos;
+  renderCropControl(key, panelId);
+  upd();
+}
+
+function setCropZoom(key, panelId, val) {
+  // val 0–100 maps to zoom 1.0–2.0
+  imgCrop[key].zoom = 1 + parseFloat(val) / 100;
+  const lbl = el('crop-zoom-lbl-' + key);
+  if (lbl) lbl.textContent = imgCrop[key].zoom.toFixed(2) + '×';
+  upd();
+}
+
+function resetCrop(key, panelId) {
+  imgCrop[key] = { pos: 'center center', zoom: 1 };
+  renderCropControl(key, panelId);
+  upd();
 }
 
 function runYieldCalc() {
@@ -1039,10 +1111,15 @@ function compileActiveTemplateHTML() {
   const body=el('ms-canvas-body');
   if(!body) return;
   
-  const extPhoto = imgs.exterior ? `<img src="${imgs.exterior}">` : `<div style="color:#555;font-size:12px">${t.extPh}</div>`;
-  const fpPhoto = imgs.floorplan ? `<img src="${imgs.floorplan}">` : `<div style="color:#bbb;font-size:11px">${t.fpPh}</div>`;
-  const entPhoto = imgs.entrance ? `<img src="${imgs.entrance}">` : `<div style="color:#aaa;font-size:11px">${t.entPh}</div>`;
-  const mapOverlayPhoto = imgs.mapcustom ? `<img src="${imgs.mapcustom}" style="width:100%;height:100%;object-fit:cover;">` : null;
+  function cropStyle(key) {
+    const c = imgCrop[key];
+    if (!c || c.zoom === 1 && c.pos === 'center center') return '';
+    return ` style="object-position:${c.pos};transform:scale(${c.zoom});transform-origin:${c.pos}"`;
+  }
+  const extPhoto = imgs.exterior ? `<img src="${imgs.exterior}"${cropStyle('exterior')}>` : `<div style="color:#555;font-size:12px">${t.extPh}</div>`;
+  const fpPhoto = imgs.floorplan ? `<img src="${imgs.floorplan}"${cropStyle('floorplan')}>` : `<div style="color:#bbb;font-size:11px">${t.fpPh}</div>`;
+  const entPhoto = imgs.entrance ? `<img src="${imgs.entrance}"${cropStyle('entrance')}>` : `<div style="color:#aaa;font-size:11px">${t.entPh}</div>`;
+  const mapOverlayPhoto = imgs.mapcustom ? `<img src="${imgs.mapcustom}" style="width:100%;height:100%;object-fit:cover;object-position:${imgCrop.mapcustom.pos};transform:scale(${imgCrop.mapcustom.zoom});transform-origin:${imgCrop.mapcustom.pos}">` : null;
 
   const STN_MAP = {
     "池ノ上":"Ikenoue","池尻大橋":"Ikejiri-Ohashi","渋谷":"Shibuya","新宿":"Shinjuku",
@@ -2258,7 +2335,7 @@ function applyScanResults() {
 
 function saveDataDraft(){
   const payload={
-    metaVersion:"2026.4", designIndex:design, selectedLang:lang, amenities:selAm, images:imgs, extras:activeExtras, enFields:enFields, enExtras:enExtras,
+    metaVersion:"2026.4", designIndex:design, selectedLang:lang, amenities:selAm, images:imgs, imgCrop:imgCrop, extras:activeExtras, enFields:enFields, enExtras:enExtras,
     fields:{
       pt:gv('f-pt'), pn:gv('f-pn'), pr:gv('f-pr'), ad:gv('f-ad'), ly:gv('f-ly'), cs:gv('f-cs'), tx:gv('f-tx'),
       st:gv('f-st'), ea:gv('f-ea'), ba:gv('f-ba'), zo:gv('f-zo'), lr:gv('f-lr'), tu:gv('f-tu'), bd:gv('f-bd'),
@@ -2286,11 +2363,26 @@ function loadDataDraft(inputElement){
       lang=parsed.selectedLang||'ja'; selAm=parsed.amenities||[];
       if(parsed.images){
         ['exterior','floorplan','entrance','mapcustom'].forEach(k=>{ imgs[k]=parsed.images[k]||null; });
+        // Restore crop settings
+        const cropPanelMap = {exterior:'crop-ex',floorplan:'crop-fp',entrance:'crop-en',mapcustom:'crop-map'};
+        if(parsed.imgCrop){
+          ['exterior','floorplan','entrance','mapcustom'].forEach(k=>{
+            if(parsed.imgCrop[k]) imgCrop[k]=parsed.imgCrop[k];
+            else imgCrop[k]={pos:'center center',zoom:1};
+          });
+        }
         const mapKeys=[{k:'exterior',b:'ub-ex',p:'pv-ex'},{k:'floorplan',b:'ub-fp',p:'pv-fp'},{k:'entrance',b:'ub-en',p:'pv-en'},{k:'mapcustom',b:'ub-map',p:'pv-map'}];
         mapKeys.forEach(m=>{
           const btn=el(m.b), pv=el(m.p);
-          if(imgs[m.k]){ if(btn){btn.textContent=T[lang].upLbl[3]; btn.classList.add('done');} if(pv){pv.src=imgs[m.k]; pv.style.display='block';} }
-          else{ if(btn) btn.classList.remove('done'); if(pv){pv.src=''; pv.style.display='none';} }
+          if(imgs[m.k]){
+            if(btn){btn.textContent=T[lang].upLbl[3]; btn.classList.add('done');}
+            if(pv){pv.src=imgs[m.k]; pv.style.display='block';}
+            if(cropPanelMap[m.k]) renderCropControl(m.k, cropPanelMap[m.k]);
+          } else{
+            if(btn) btn.classList.remove('done');
+            if(pv){pv.src=''; pv.style.display='none';}
+            const cp=el(cropPanelMap[m.k]); if(cp) cp.style.display='none';
+          }
         });
       }
       const f=parsed.fields;
