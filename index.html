@@ -1175,6 +1175,7 @@ function runYieldCalc() {
 
 function setLang(l){
   lang=l;
+  try{localStorage.setItem('maisoku-lang',l);}catch(e){}
   if(el('lj')) el('lj').className='lang-btn'+(l==='ja'?' on':'');
   if(el('le')) el('le').className='lang-btn'+(l==='en'?' on':'');
   applyLang(); buildAG(); upd();
@@ -2581,6 +2582,7 @@ function showTab(i,e){
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  try{ const saved=localStorage.getItem('maisoku-lang'); if(saved==='en'||saved==='ja') lang=saved; }catch(e){}
   buildAG(); applyLang(); autoEnFields(); applyDesign();
 });
 </script>
