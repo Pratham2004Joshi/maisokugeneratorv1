@@ -243,6 +243,33 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .ld-entrance-card { border-right: 1px solid #ddd; height: 100%; }
 .ld-map-card { height: 100%; position: relative; }
 
+/* ── VERTICAL PHOTO LAYOUTS (lv / lw / lx) ──
+   These share the same structural grid, only palette differs.
+   Key design: 3-column body where col1=portrait exterior, col2=spec, col3=floor plan
+   Bottom strip: entrance | amenities | map
+*/
+/* lv = Classic vertical (red/black), lw = Premium vertical (navy/gold), lx = Modern vertical */
+.lvert-header { flex-shrink:0; display:grid; grid-template-columns:36% 64%; height:80px; border-bottom:1px solid #111; }
+.lvert-header-photo { position:relative; overflow:hidden; border-right:1px solid #111; background:#111; }
+.lvert-header-photo img { width:100%; height:100%; object-fit:cover; object-position:center 30%; }
+.lvert-header-text { display:flex; flex-direction:column; justify-content:center; padding:0 20px; background:#fff; }
+.lvert-header-text .pt { font-size:10px; font-weight:700; margin-bottom:2px; opacity:.75; }
+.lvert-header-text .pn { font-size:22px; font-weight:900; font-family:'Noto Serif JP',serif; line-height:1.15; margin-bottom:3px; }
+.lvert-header-text .pp { font-size:14px; font-weight:700; }
+/* 3-column body */
+.lvert-body { display:grid; grid-template-columns:24% 46% 30%; flex:1; min-height:0; border-bottom:1px solid #111; }
+.lvert-ext-col { position:relative; overflow:hidden; background:#111; border-right:1px solid #111; }
+.lvert-ext-col img { width:100%; height:100%; object-fit:cover; object-position:center center; }
+.lvert-spec-col { overflow:hidden; border-right:1px solid #111; display:flex; flex-direction:column; }
+.lvert-fp-col { display:flex; align-items:center; justify-content:center; overflow:hidden; background:#fff; position:relative; height:100%; }
+.lvert-fp-col img { max-width:100%; max-height:100%; object-fit:contain; display:block; margin:auto; }
+/* Bottom strip */
+.lvert-bottom { flex-shrink:0; display:grid; grid-template-columns:30% 35% 35%; height:155px; border-bottom:1px solid #111; background:#fff; }
+.lvert-ent-box { position:relative; overflow:hidden; border-right:1px solid #ddd; background:#222; }
+.lvert-ent-box img { width:100%; height:100%; object-fit:cover; }
+.lvert-am-col { border-right:1px solid #ddd; overflow:hidden; }
+.lvert-map-box { position:relative; overflow:hidden; }
+
 .ms-disc-bar { padding: 2px 14px; font-size: 8px; text-align: right; color: #555; background: #fff; height: 20px; line-height: 16px; flex-shrink: 0; border-top: 1px solid #ddd; z-index: 10; width: 100%; box-sizing: border-box; }
 
 @media print{
@@ -287,13 +314,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
   <div class="ti" id="st4" onclick="showTab(4,this)">会社情報</div>
   <div class="sb-sec">
     <div class="sb-lbl" id="sb-dl">デザイン</div>
+    <div class="di-group-label" style="font-size:9px;color:#888;padding:4px 8px 2px;letter-spacing:.05em;">── 横型写真</div>
     <div class="di on" id="d0" onclick="setDesign(0,this)">クラシック（赤黒）</div>
     <div class="di" id="d1" onclick="setDesign(1,this)">プレミアム（紺金）</div>
     <div class="di" id="d2" onclick="setDesign(2,this)">モダンホライズン</div>
-    <div class="di" id="d3" onclick="setDesign(3,this)">銀座エディトリアル</div>
-    <div class="di" id="d4" onclick="setDesign(4,this)">エメラルド・エステート</div>
-    <div class="di" id="d5" onclick="setDesign(5,this)">京都トラディション</div>
-    <div class="di" id="d6" onclick="setDesign(6,this)">ネオ・ミニマリズム</div>
+    <div class="di-group-label" style="font-size:9px;color:#888;padding:6px 8px 2px;letter-spacing:.05em;">── 縦型写真</div>
+    <div class="di" id="d3" onclick="setDesign(3,this)">クラシック縦型（赤黒）</div>
+    <div class="di" id="d4" onclick="setDesign(4,this)">プレミアム縦型（紺金）</div>
+    <div class="di" id="d5" onclick="setDesign(5,this)">モダン縦型</div>
   </div>
 </div>
 
@@ -469,7 +497,7 @@ ja:{appTitle:'マイソク ジェネレーター',
   btnLoadTxt:'📂 保存したファイルを読み込む',
   btnScanTxt:'✨ AIでPDFを読み込む',
   tabs:['基本情報','スペック','アクセス','画像','会社情報'],
-  dLabel:'デザイン', designs:['クラシック（赤黒）','プレミアム（紺金）','モダンホライズン','銀座エディトリアル','エメラルド・エステート','京都トラディション','ネオ・ミニマリズム'],
+  dLabel:'デザイン', designs:['クラシック（赤黒）','プレミアム（紺金）','モダンホライズン','クラシック縦型（赤黒）','プレミアム縦型（紺金）','モダン縦型'],
   ft:['基本情報','スペック詳細','アクセス','画像アップロード','会社情報'],
   sb1:'路線 1',sb2:'路線 2',
   fl:['物件種別','物件名','販売価格（万円）','所在地','間取りタイプ','現況','取引態様','設備',
@@ -512,7 +540,7 @@ en:{appTitle:'Maisoku Generator',
   btnLoadTxt:'📂 Load Property Draft File',
   btnScanTxt:'✨ Scan PDF with AI',
   tabs:['Basic Info','Specs','Access','Images','Company'],
-  dLabel:'Design', designs:['Classic (Red/Black)','Premium (Navy/Gold)','Modern Horizon','Ginza Editorial','Emerald Estate','Kyoto Tradition','Neo-Minimalist'],
+  dLabel:'Design', designs:['Classic (Red/Black)','Premium (Navy/Gold)','Modern Horizon','Classic Vertical (Red/Black)','Premium Vertical (Navy/Gold)','Modern Vertical'],
   ft:['Basic Information','Property Specs','Access / Transport','Upload Images','Company Info'],
   sb1:'Line 1',sb2:'Line 2',
   fl:['Property Type','Property Name','Sale Price (¥10k)','Address','Layout Type','Status','Transaction Type','Amenities',
@@ -555,10 +583,9 @@ const DS=[
   {layout:'la',thBg:'#C8102E',thTx:'#fff',footBg:'#fff',footTx:'#111',prColor:'#C8102E',botBorder:'#111',bg:'#fff',tdBg:'',footBorder:'#ccc',npBg:'#C8102E'},
   {layout:'lb',thBg:'#0D1B2A',thTx:'#C9A84C',footBg:'#fff',footTx:'#111',prColor:'#C9A84C',botBorder:'#0D1B2A',bg:'#fff',tdBg:'',footBorder:'#ccc',npBg:'#0D1B2A'},
   {layout:'lc',thBg:'#22252a',thTx:'#fff',footBg:'#fff',footTx:'#111',prColor:'#C8102E',botBorder:'#111',bg:'#e2e8f0',tdBg:'#fff',footBorder:'#ccc',npBg:'#1a1a1a'},
-  {layout:'ld',thBg:'#000000',thTx:'#ffffff',footBg:'#fff',footTx:'#111',prColor:'#000',botBorder:'#111',bg:'#fff',tdBg:'#fff',footBorder:'#eee',npBg:'#1a1a1a'},
-  {layout:'lc',thBg:'#064e3b',thTx:'#fef08a',footBg:'#fff',footTx:'#064e3b',prColor:'#064e3b',botBorder:'#064e3b',bg:'#f0fdf4',tdBg:'#fff',footBorder:'#bbf7d0',npBg:'#064e3b'},
-  {layout:'lc',thBg:'#b91c1c',thTx:'#ffffff',footBg:'#fff',footTx:'#111',prColor:'#b91c1c',botBorder:'#b91c1c',bg:'#fffbf7',tdBg:'#fff',footBorder:'#fed7aa',npBg:'#b91c1c'},
-  {layout:'lb',thBg:'#f8fafc',thTx:'#0f172a',footBg:'#fff',footTx:'#0f172a',prColor:'#ffb020',botBorder:'#e2e8f0',bg:'#fff',tdBg:'',footBorder:'#f1f5f9',npBg:'#0f172a'}
+  {layout:'lv',thBg:'#C8102E',thTx:'#fff',footBg:'#fff',footTx:'#111',prColor:'#C8102E',botBorder:'#111',bg:'#fff',tdBg:'',footBorder:'#ccc',npBg:'#C8102E'},
+  {layout:'lw',thBg:'#0D1B2A',thTx:'#C9A84C',footBg:'#fff',footTx:'#111',prColor:'#C9A84C',botBorder:'#0D1B2A',bg:'#fff',tdBg:'',footBorder:'#ccc',npBg:'#0D1B2A'},
+  {layout:'lx',thBg:'#22252a',thTx:'#fff',footBg:'#fff',footTx:'#111',prColor:'#C8102E',botBorder:'#111',bg:'#e2e8f0',tdBg:'#fff',footBorder:'#ccc',npBg:'#1a1a1a'}
 ];
 
 
@@ -954,9 +981,12 @@ function processImageBinary(key, input, btnId, previewId) {
 // DS[design].layout tells us which layout is active.
 const CROP_ASPECTS_BY_LAYOUT = {
   la: { exterior: 516/422, entrance: 280/282, mapcustom: 370/282 },  // Design 0
-  lb: { exterior: 1122/120, entrance: 337/187, mapcustom: 393/187 }, // Design 1, 6
-  lc: { exterior: 617/373, entrance: 449/165, mapcustom: 449/165 },  // Design 2, 4, 5
-  ld: { exterior: 561/239, entrance: 185/232, mapcustom: 185/232 }   // Design 3
+  lb: { exterior: 1122/120, entrance: 337/187, mapcustom: 393/187 }, // Design 1
+  lc: { exterior: 617/373, entrance: 449/165, mapcustom: 449/165 },  // Design 2
+  // Vertical photo layouts — exterior is portrait (narrow tall), fp is also portrait
+  lv: { exterior: 270/390, entrance: 330/155, mapcustom: 385/155 },  // Design 3
+  lw: { exterior: 270/390, entrance: 330/155, mapcustom: 385/155 },  // Design 4
+  lx: { exterior: 270/390, entrance: 330/155, mapcustom: 385/155 }   // Design 5
 };
 function getCropAspect(key) {
   const layout = (DS[design] || DS[0]).layout;
@@ -1475,6 +1505,33 @@ function compileActiveTemplateHTML() {
         </div>
       </div>`;
   }
+  // ── VERTICAL PHOTO LAYOUTS (lv / lw / lx) ──
+  // lv=Classic, lw=Premium, lx=Modern — same structure, palette varies via DS[]
+  else if(targetLayout === 'lv' || targetLayout === 'lw' || targetLayout === 'lx') {
+    const dockId = targetLayout + '-table-dock';
+    const mapId  = 'ms-map-wrapper-' + targetLayout;
+    body.innerHTML = `
+      <div class="lvert-header" style="grid-template-columns:100%;">
+        <div class="lvert-header-text" style="border-right:none;">
+          <div class="pt" id="ms-pt"></div>
+          <div class="pn" id="ms-pn"></div>
+          <div class="pp" id="ms-pp"></div>
+        </div>
+      </div>
+      <div class="lvert-body">
+        <div class="lvert-ext-col img-cover-box">${extPhoto}</div>
+        <div class="lvert-spec-col ms-tbl" id="${dockId}"></div>
+        <div class="lvert-fp-col">${fpPhoto}</div>
+      </div>
+      <div class="lvert-bottom">
+        <div class="lvert-ent-box">${entPhoto}</div>
+        <div class="lvert-am-col ms-am">${amenitiesRendered}</div>
+        <div class="lvert-map-box" id="${mapId}" style="position:relative;">
+          ${sharedAccessOverlayBlock}
+          ${mapOverlayPhoto ? mapOverlayPhoto : ''}
+        </div>
+      </div>`;
+  }
 }
 
 function initMapContainer(layoutId) {
@@ -1488,6 +1545,7 @@ function initMapContainer(layoutId) {
   if (layoutId === 'lb') mapHeight = "138px";
   if (layoutId === 'lc') mapHeight = "145px";
   if (layoutId === 'la') { mapHeight = "215px"; mapWidth = "100%"; }
+  if (layoutId === 'lv' || layoutId === 'lw' || layoutId === 'lx') mapHeight = "155px";
 
   wrapper.style.height = mapHeight;
   wrapper.style.width = mapWidth;
@@ -1525,11 +1583,8 @@ function applyDesign() {
   }
   ss('ms-pp','color',d.prColor);
   
-  if (design === 3 || design === 5) {
-    ms.style.fontFamily = "'Noto Serif JP', serif";
-  } else {
-    ms.style.fontFamily = "'Noto Sans JP', sans-serif";
-  }
+  // Designs 0-5: all use sans; none of the current designs use serif by default
+  ms.style.fontFamily = "'Noto Sans JP', sans-serif";
 
   document.querySelectorAll('.mth').forEach(th=>{th.style.background=d.thBg; th.style.color=d.thTx;});
   document.querySelectorAll('#ms-spec td').forEach(td=>{td.style.background=d.tdBg || '#ffffff';});
@@ -1543,7 +1598,19 @@ function applyDesign() {
   const innerSpec = el('ms-spec');
   if(innerSpec) innerSpec.style.borderColor = d.botBorder;
 
-  if (design === 2 || design === 4) {
+  // ── Vertical layout header: apply accent background ──
+  const lvertHeader = document.querySelector('.lvert-header');
+  if (lvertHeader) {
+    lvertHeader.style.background = d.npBg;
+    const lvertPt = lvertHeader.querySelector('.pt');
+    const lvertPn = lvertHeader.querySelector('.pn');
+    const lvertPp = lvertHeader.querySelector('.pp');
+    if (lvertPt) { lvertPt.style.color = 'rgba(255,255,255,0.8)'; }
+    if (lvertPn) { lvertPn.style.color = '#fff'; }
+    if (lvertPp) { lvertPp.style.color = d.thTx; }
+  }
+
+  if (DS[design] && DS[design].bg && DS[design].bg !== '#fff') {
     ms.style.background = d.bg;
     if (bgLayer && imgs.exterior) {
       bgLayer.style.display = 'block';
