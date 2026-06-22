@@ -191,7 +191,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .lb-middle-grid { display: grid; grid-template-columns: 44% 56%; flex: 1; border-bottom: 1px solid #111; overflow: hidden; min-height: 0; }
 .lb-amenity-strip { flex-shrink: 0; height: 32px; width: 100%; border-bottom: 1px solid #111; display: flex; align-items: center; justify-content: space-around; padding: 0 35px; background: #fff; z-index: 10; position: relative; }
 .lb-amenity-strip .ms-ar { padding: 0; border: none; background: transparent; width: auto; display: inline-flex !important; height: 100%; align-items: center; }
-.lb-bottom-strip { flex-shrink: 0; display: grid; grid-template-columns: 30% 35% 35%; height: 155px; border-bottom: 1px solid #111; background: #fff; }
+.lb-bottom-strip { flex-shrink: 0; display: grid; grid-template-columns: 30% 35% 35%; height: 187px; border-bottom: 1px solid #111; background: #fff; }
+.lb-amenity-col { display: flex; flex-direction: column; justify-content: center; padding: 8px 10px; gap: 5px; border-left: 1px solid #ddd; overflow: hidden; background: #fff; }
+.lb-amenity-col .ms-ar { padding: 2px 0; border: none; background: transparent; width: auto; display: flex !important; height: auto; align-items: center; font-size: 10.5px; }
 
 .lc-wrapper-shell { display: flex; flex-direction: column; width: 100%; height: 100%; gap: 10px; padding: 10px; background: inherit; box-sizing: border-box; overflow: hidden; position: absolute; inset: 0; }
 .lc-top-split { display: grid; grid-template-columns: 55% calc(45% - 10px); gap: 10px; flex: 53; min-height: 0; overflow: hidden; }
@@ -1156,13 +1158,14 @@ function compileActiveTemplateHTML() {
         <div class="img-contain-box" style="height:355px;">${fpPhoto}</div>
         <div class="ms-tbl" id="lb-table-dock"></div>
       </div>
-      <div class="lb-amenity-strip" style="background:#fff;">${amenitiesRendered}</div>
+      <div class="lb-amenity-strip" style="display:none;"></div>
       <div class="lb-bottom-strip">
-        <div class="img-cover-box" style="border-right:1px solid #ddd;">${entPhoto}</div>
-        <div id="ms-map-wrapper-lb" style="position:relative; width:100%; height:100%; overflow:hidden;">
+        <div class="img-contain-box" style="border-right:1px solid #ddd;">${fpPhoto}</div>
+        <div id="ms-map-wrapper-lb" style="position:relative; width:100%; height:100%; overflow:hidden; border-right:1px solid #ddd;">
           ${sharedAccessOverlayBlock}
           ${mapOverlayPhoto ? mapOverlayPhoto : ''}
         </div>
+        <div class="lb-amenity-col ms-am">${amenitiesRendered}</div>
       </div>`;
   } 
   else if(targetLayout === 'lc') {
