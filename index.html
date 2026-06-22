@@ -73,8 +73,8 @@ body.dark {
   --toggle-icon: '☀';
 }
 
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(--text-body);height:100vh;overflow:hidden;display:flex;flex-direction:column;transition:background .25s,color .25s}
-#topbar{background:var(--bg-top);color:var(--text-top);padding:8px 20px;display:flex;align-items:center;justify-content:space-between;z-index:100;gap:10px;transition:background .25s;flex-shrink:0}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(--text-body);min-height:100vh;transition:background .25s,color .25s}
+#topbar{background:var(--bg-top);color:var(--text-top);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:10px;transition:background .25s}
 .logo{display:flex;align-items:center;gap:10px}
 .logo img{height:24px;width:auto;object-fit:contain}
 .logo-title{font-weight:700;font-size:14px;color:var(--text-top)}
@@ -90,9 +90,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 /* ── Dark mode toggle ── */
 #darkToggle{background:none;border:1px solid var(--lang-border);border-radius:4px;color:var(--text-top);padding:5px 9px;cursor:pointer;font-size:13px;line-height:1;transition:all .2s;flex-shrink:0}
 #darkToggle:hover{opacity:.8}
-#app{flex:1;display:flex;background:var(--bg-app);overflow:hidden;box-shadow:var(--shadow-app);transition:background .25s,box-shadow .25s;min-height:0}
-#sidebar{width:150px;background:var(--bg-side);padding:12px 0;flex-shrink:0;transition:background .25s;overflow-y:auto}
-.ti{padding:8px 14px;cursor:pointer;font-size:12px;color:var(--text-side);border-left:3px solid transparent;transition:all .15s}
+#app{max-width:1150px;margin:20px auto;display:flex;background:var(--bg-app);border-radius:8px;overflow:hidden;box-shadow:var(--shadow-app);transition:background .25s,box-shadow .25s}
+#sidebar{width:160px;background:var(--bg-side);padding:18px 0;flex-shrink:0;transition:background .25s}
+.ti{padding:11px 18px;cursor:pointer;font-size:12px;color:var(--text-side);border-left:3px solid transparent;transition:all .15s}
 .ti:hover{color:#ddd;background:var(--bg-side-hover)}
 .ti.on{color:var(--text-side-active);font-weight:700;border-left-color:#C8102E;background:var(--bg-side-active)}
 .sb-sec{margin:18px 10px 6px;border-top:1px solid var(--border-side);padding-top:12px}
@@ -100,11 +100,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .di{padding:5px 8px;cursor:pointer;font-size:11px;color:var(--text-side);border-left:3px solid transparent;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .di:hover{color:#ddd;background:var(--bg-side-hover)}
 .di.on{color:var(--text-side-active);font-weight:700;border-left-color:#C8102E;background:var(--bg-side-active)}
-#fp{flex:1;padding:16px 20px;overflow-y:auto;background:var(--bg-app);transition:background .25s;min-height:0}
-.io-row{display:flex;gap:8px;background:var(--bg-iorow);border:1px dashed var(--border-iorow);padding:8px 12px;border-radius:6px;margin-bottom:14px;align-items:center;flex-wrap:nowrap;overflow-x:auto}
+#fp{flex:1;padding:24px;overflow-y:auto;max-height:calc(100vh - 56px);background:var(--bg-app);transition:background .25s}
+.io-row{display:flex;gap:8px;background:var(--bg-iorow);border:1px dashed var(--border-iorow);padding:10px 12px;border-radius:6px;margin-bottom:20px;align-items:center;flex-wrap:nowrap;overflow-x:auto}
 .btn-save{background:#475569;color:#fff}.btn-save:hover{background:#334155}
-.stitle{font-weight:900;font-size:14px;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #C8102E;color:var(--text-body)}
-.fr{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px}
+.stitle{font-weight:900;font-size:15px;margin-bottom:18px;padding-bottom:7px;border-bottom:2px solid #C8102E;color:var(--text-body)}
+.fr{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
 .fl{width:150px;flex-shrink:0;font-size:12px;color:var(--text-label);font-weight:500;padding-top:8px}
 .fi{flex:1}
 .fi input,.fi fill,.fi select,.fi textarea{width:100%;padding:6px 9px;border:1px solid var(--border-input);border-radius:4px;font-size:12px;font-family:inherit;outline:none;background:var(--bg-input);color:var(--text-body);transition:background .25s,border-color .15s,color .25s}
@@ -139,7 +139,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 #scan-apikey:focus{border-color:#7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,.15);}
 #scan-fields-preview{margin-top:16px;max-height:280px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px;display:none}
 .scan-err{background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:10px 14px;font-size:12px;color:#dc2626;margin-top:12px;display:none}
-#pp{padding:12px 16px;overflow-y:auto;flex:1;overflow-x:auto;background:var(--bg-app);transition:background .25s;min-height:0}
+#pp{padding:16px 20px;overflow-y:auto;max-height:calc(100vh - 56px);flex:1;overflow-x:auto;background:var(--bg-app);transition:background .25s}
 .phint{background:#fff3cd;border:1px solid #ffc107;border-radius:5px;padding:9px 14px;font-size:12px;margin-bottom:14px;color:#111}
 
 /* ═══ MAISOKU CANVAS CORE STRUCTURE ═══ */
@@ -279,11 +279,23 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
     <button class="btn btn-ai" style="padding:7px 14px;" id="btn-scan-txt" onclick="startPDFScan(this)">
       ✨ AIでPDFを読み込む
     </button>
+    <button class="btn btn-ai" style="padding:7px 14px;background:#7c3aed;" id="btn-add-doc-txt" onclick="addDocumentToQueue()">
+      ➕ 書類を追加
+    </button>
     <button class="btn btn-save" onclick="saveDataDraft()" id="btn-save-txt">💾 本体の設定を保存する</button>
     <label class="btn btn-save" style="background:#0284c7; display:inline-block;" id="btn-load-txt">
       📂 保存したファイルを読み込む
       <input type="file" accept=".json" style="display:none" onchange="loadDataDraft(this)">
     </label>
+  </div>
+  <!-- Document queue display -->
+  <div id="doc-queue-wrap" style="display:none;margin-top:8px;padding:10px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;">
+    <div style="font-size:11px;font-weight:700;color:#334155;margin-bottom:6px;" id="doc-queue-title">書類キュー (0件)</div>
+    <div id="doc-queue-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+    <div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn" style="background:#e2e8f0;color:#334155;font-size:11px;padding:5px 10px;" onclick="clearDocQueue()">🗑 クリア</button>
+      <button class="btn btn-ai" style="font-size:11px;padding:5px 12px;" id="btn-scan-queue-txt" onclick="scanAllDocuments()">✨ まとめてスキャン</button>
+    </div>
   </div>
 
   <!-- AI PDF Scan Modal -->
@@ -961,6 +973,8 @@ function applyLang(){
   if(el('prevBtn')) el('prevBtn').textContent=isPrev?t.btnBackTxt:t.btnPrevTxt;
   st('printBtn',t.btnPrint); st('pdfBtn',t.btnPdf); st('io-title',t.ioTitle); st('btn-save-txt',t.btnSaveTxt);
   const _sb=el('btn-scan-txt');if(_sb)_sb.textContent=t.btnScanTxt||'✨ AIでPDFを読み込む';
+  const _ab=el('btn-add-doc-txt');if(_ab)_ab.textContent=lang==='en'?'➕ Add document':'➕ 書類を追加';
+  renderDocQueue(); // Refresh queue labels if language changes
   const loadLbl=el('btn-load-txt');
   if(loadLbl){
     const fileInp=loadLbl.querySelector('input');
@@ -1292,25 +1306,23 @@ function applyDesign() {
   // th-ba-lbl label now set by compileSpecTable()
 }
 
-function renderMap(lat,lon){
-  if(imgs.mapcustom) return;
-
-  const w=el('ms-map-inner');if(!w)return;
-  const z=16;
+function renderMap(lat, lon) {
+  if (imgs.mapcustom) return;
+  const w = el('ms-map-inner'); if (!w) return;
   const parsedLat = parseFloat(lat);
   const parsedLon = parseFloat(lon);
-  if(isNaN(parsedLat) || isNaN(parsedLon)) return;
+  if (isNaN(parsedLat) || isNaN(parsedLon)) return;
 
+  const z = 16;
   const fixedLat = parseFloat(parsedLat.toFixed(4));
   const fixedLon = parseFloat(parsedLon.toFixed(4));
+  const tx = Math.floor((fixedLon + 180) / 360 * Math.pow(2, z));
+  const latR = fixedLat * Math.PI / 180;
+  const ty = Math.floor((1 - Math.log(Math.tan(latR) + 1 / Math.cos(latR)) / Math.PI) / 2 * Math.pow(2, z));
+  const url = 'https://tile.openstreetmap.org/' + z + '/' + tx + '/' + ty + '.png';
+  const leftUrl = 'https://tile.openstreetmap.org/' + z + '/' + (tx - 1) + '/' + ty + '.png';
 
-  const tx=Math.floor((fixedLon+180)/360*Math.pow(2,z));
-  const latR=fixedLat*Math.PI/180;
-  const ty=Math.floor((1-Math.log(Math.tan(latR)+1/Math.cos(latR))/Math.PI)/2*Math.pow(2,z));
-  const url='https://tile.openstreetmap.org/'+z+'/'+tx+'/'+ty+'.png';
-  const leftUrl='https://tile.openstreetmap.org/'+z+'/'+(tx-1)+'/'+ty+'.png';
-  
-  w.innerHTML=`<div style="position:relative;width:100%;height:100%;overflow:hidden;background:#f4f3f0;">
+  w.innerHTML = `<div style="position:relative;width:100%;height:100%;overflow:hidden;background:#f4f3f0;">
     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:512px;height:256px;display:flex;">
       <img src="${leftUrl}" style="width:256px;height:256px;" crossorigin="anonymous" onerror="this.style.opacity=0;">
       <img src="${url}" style="width:256px;height:256px;" crossorigin="anonymous" onerror="this.style.display='none'">
@@ -1318,6 +1330,50 @@ function renderMap(lat,lon){
     <div style="position:absolute;top:50%;left:50%;transform:translate(-6px,-12px);font-size:18px;line-height:1;z-index:4;">📍</div>
     <div style="position:absolute;bottom:2px;right:2px;font-size:8px;color:#555;background:rgba(255,255,255,.7);padding:1px 3px;z-index:5;">© OSM</div>
   </div>`;
+}
+
+async function geocodeAndRenderMap(addr) {
+  const t = T[lang] || T['ja'];
+  sh('ms-map-inner', `<div style="color:#aaa;font-size:10px;text-align:center;padding:24px 6px">${t.mapLoad}</div>`);
+
+  // Try Photon first (OpenStreetMap-powered, more reliable for Japanese addresses)
+  try {
+    const photonResp = await fetch(
+      'https://photon.komoot.io/api/?q=' + encodeURIComponent(addr) + '&lang=ja&limit=1',
+      { headers: { 'Accept': 'application/json' } }
+    );
+    if (photonResp.ok) {
+      const data = await photonResp.json();
+      if (data.features && data.features[0]) {
+        const [lon, lat] = data.features[0].geometry.coordinates;
+        mapCache[addr] = { lat, lon };
+        renderMap(lat, lon);
+        return;
+      }
+    }
+  } catch (_) { /* fall through to Nominatim */ }
+
+  // Fallback: Nominatim
+  try {
+    const nomResp = await fetch(
+      'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(addr) + '&limit=1',
+      { headers: { 'Accept-Language': 'ja', 'User-Agent': 'MaisokuGenerator/1.0' } }
+    );
+    if (nomResp.ok) {
+      const data = await nomResp.json();
+      if (data && data[0]) {
+        mapCache[addr] = { lat: data[0].lat, lon: data[0].lon };
+        renderMap(data[0].lat, data[0].lon);
+        return;
+      }
+    }
+  } catch (_) { /* fall through to error */ }
+
+  // Both failed
+  const msg = lang === 'en'
+    ? 'Could not locate this address. Please enter coordinates manually or upload a map image.'
+    : 'この住所を特定できませんでした。座標を手動で入力するか、地図画像をアップロードしてください。';
+  sh('ms-map-inner', `<div style="color:#e53e3e;font-size:10px;text-align:center;padding:18px 6px;line-height:1.5">📍 ${msg}</div>`);
 }
 
 function upd(){
@@ -1482,17 +1538,10 @@ function upd(){
   }
 
   if (!hasManualCoordinates) {
-    const addr=gv('f-ad');
-    if(addr){
-      if(mapCache[addr]) renderMap(mapCache[addr].lat,mapCache[addr].lon);
-      else{
-        sh('ms-map-inner',`<div style="color:#aaa;font-size:10px;text-align:center;padding:24px 6px">${t.mapLoad}</div>`);
-        fetch('https://nominatim.openstreetmap.org/search?format=json&q='+encodeURIComponent(addr)+'&limit=1',{headers:{'Accept-Language':'ja'}})
-          .then(r=>r.json()).then(data=>{
-            if(data&&data[0]){mapCache[addr]={lat:data[0].lat,lon:data[0].lon};renderMap(data[0].lat,data[0].lon);}
-            else sh('ms-map-inner',`<div style="color:#aaa;font-size:10px;text-align:center;padding:24px 6px">📍 ${t.mapNF}</div>`);
-          }).catch(()=>sh('ms-map-inner',`<div style="color:#aaa;font-size:10px;padding:24px 6px">📍</div>`));
-      }
+    const addr = gv('f-ad');
+    if (addr) {
+      if (mapCache[addr]) renderMap(mapCache[addr].lat, mapCache[addr].lon);
+      else geocodeAndRenderMap(addr);
     }
   }
 
@@ -1567,20 +1616,305 @@ function doExportPDF() {
 
 
 /* ════════════════════════════════════════════════════════
-   AI PDF SCAN ENGINE — inline, no popup needed
-   Attach a hidden file input to the existing scan button.
-   Reads PDF as base64, calls Anthropic API directly.
-   Works on any HTTPS server (GitHub Pages, Netlify, etc).
+   DOCUMENT QUEUE — multi-document scan support
+   Agents can queue multiple PDFs/images, then scan all at once.
+   ════════════════════════════════════════════════════════ */
+
+// Queue state: [{name, base64, mediaType, status:'queued'|'ok'|'error'}]
+let _docQueue = [];
+
+const MAX_COMBINED_MB = 45; // Anthropic hard limit is ~100MB; we stay safe
+
+function addDocumentToQueue() {
+  let inp = document.getElementById('_multi_doc_inp');
+  if (!inp) {
+    inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = 'application/pdf,image/png,image/jpeg,image/jpg';
+    inp.multiple = true;
+    inp.id = '_multi_doc_inp';
+    inp.style.display = 'none';
+    document.body.appendChild(inp);
+    inp.addEventListener('change', function () {
+      Array.from(inp.files).forEach(f => enqueueDocument(f));
+      inp.value = '';
+    });
+  }
+  inp.click();
+}
+
+async function enqueueDocument(file) {
+  const allowed = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
+  const mediaType = file.type || (file.name.endsWith('.pdf') ? 'application/pdf' : 'image/jpeg');
+  if (!allowed.some(a => mediaType.startsWith(a.split('/')[0]) || mediaType === a)) {
+    alert((lang === 'en' ? 'Unsupported file type: ' : '非対応のファイル形式: ') + file.name);
+    return;
+  }
+  if (file.size > 20 * 1024 * 1024) {
+    alert((lang === 'en' ? 'File exceeds 20MB: ' : '20MB超のファイル: ') + file.name);
+    return;
+  }
+  let base64;
+  try {
+    base64 = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = e => res(e.target.result.split(',')[1]);
+      r.onerror = () => rej(new Error('Read failed'));
+      r.readAsDataURL(file);
+    });
+  } catch (e) {
+    alert((lang === 'en' ? 'Could not read file: ' : 'ファイル読み込みエラー: ') + file.name);
+    return;
+  }
+  _docQueue.push({ name: file.name, base64, mediaType, status: 'queued' });
+  renderDocQueue();
+}
+
+function renderDocQueue() {
+  const wrap = document.getElementById('doc-queue-wrap');
+  const list = document.getElementById('doc-queue-list');
+  const title = document.getElementById('doc-queue-title');
+  if (!wrap || !list || !title) return;
+  if (_docQueue.length === 0) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  title.textContent = lang === 'en'
+    ? `Document queue (${_docQueue.length} file${_docQueue.length > 1 ? 's' : ''} ready to scan)`
+    : `書類キュー (${_docQueue.length}件準備完了)`;
+  list.innerHTML = _docQueue.map((doc, i) => {
+    const badge = { queued: '🕐', ok: '✅', error: '⚠️' }[doc.status] || '🕐';
+    const color = { queued: '#94a3b8', ok: '#16a34a', error: '#dc2626' }[doc.status];
+    return `<div style="display:flex;align-items:center;gap:8px;padding:4px 6px;background:#fff;border-radius:4px;border:1px solid #e2e8f0;font-size:11px;">
+      <span>${badge}</span>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#334155">${doc.name}</span>
+      <span style="color:${color};font-size:10px">${doc.status === 'queued' ? (lang==='en'?'queued':'待機中') : doc.status === 'ok' ? (lang==='en'?'scanned':'スキャン済') : (lang==='en'?'error':'エラー')}</span>
+      <button onclick="removeDocFromQueue(${i})" style="border:none;background:none;cursor:pointer;color:#94a3b8;font-size:14px;line-height:1;padding:0 2px">✕</button>
+    </div>`;
+  }).join('');
+  // Update the "scan queue" button label
+  const btn = document.getElementById('btn-scan-queue-txt');
+  if (btn) btn.textContent = lang === 'en'
+    ? `✨ Scan all (${_docQueue.length})`
+    : `✨ まとめてスキャン (${_docQueue.length}件)`;
+}
+
+function removeDocFromQueue(idx) {
+  _docQueue.splice(idx, 1);
+  renderDocQueue();
+}
+
+function clearDocQueue() {
+  _docQueue = [];
+  renderDocQueue();
+}
+
+async function scanAllDocuments() {
+  if (_docQueue.length === 0) {
+    alert(lang === 'en' ? 'No documents in queue.' : 'キューに書類がありません。');
+    return;
+  }
+
+  // Combined size check
+  const totalBytes = _docQueue.reduce((sum, d) => sum + Math.ceil(d.base64.length * 0.75), 0);
+  const totalMB = totalBytes / (1024 * 1024);
+  if (totalMB > MAX_COMBINED_MB) {
+    const proceed = confirm(
+      (lang === 'en'
+        ? `Combined size is ~${totalMB.toFixed(1)} MB which may exceed API limits. Proceed anyway? (Documents will be scanned one-by-one and merged.)`
+        : `合計サイズが約${totalMB.toFixed(1)} MBです。API制限を超える可能性があります。順番にスキャンして結果をマージします。続行しますか？`)
+    );
+    if (!proceed) return;
+    await scanSequentially();
+    return;
+  }
+
+  // Try combined single-call first
+  await scanCombined();
+}
+
+async function scanCombined() {
+  _scanData = null;
+  openScanModal();
+  setScanProgress(10, lang === 'en' ? `Preparing ${_docQueue.length} documents…` : `${_docQueue.length}件の書類を準備中…`);
+
+  // Build content blocks: each doc as a separate block, then extraction prompt
+  const contentBlocks = [];
+  _docQueue.forEach(doc => {
+    if (doc.mediaType === 'application/pdf') {
+      contentBlocks.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: doc.base64 } });
+    } else {
+      const mt = doc.mediaType.startsWith('image/') ? doc.mediaType : 'image/jpeg';
+      contentBlocks.push({ type: 'image', source: { type: 'base64', media_type: mt, data: doc.base64 } });
+    }
+  });
+  contentBlocks.push({
+    type: 'text',
+    text: `You have been provided with ${_docQueue.length} document(s) about the same property. Extract and consolidate the fields across all documents. If documents conflict on the same field, prefer the most detailed or official source (e.g. 物件概要書 > flyer). Return the JSON now.`
+  });
+
+  const sys = buildScanSystemPrompt();
+
+  setScanProgress(40, lang === 'en' ? 'Sending all documents to AI…' : 'AIに全書類を送信中…');
+  try {
+    const resp = await fetch('https://hi.joshi-pratham04.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 2000,
+        system: sys,
+        messages: [{ role: 'user', content: contentBlocks }]
+      })
+    });
+
+    if (!resp.ok) {
+      // If combined call fails (likely too large), fall back to sequential
+      if (resp.status === 413 || resp.status === 400) {
+        setScanProgress(30, lang === 'en' ? 'Combined too large — scanning one-by-one…' : 'まとめて送信できないため順番にスキャンします…');
+        closeScanModal();
+        await scanSequentially();
+        return;
+      }
+      let m = 'API error ' + resp.status;
+      try { const j = await resp.json(); m = j.error?.message || m; } catch (_) {}
+      throw new Error(m);
+    }
+
+    setScanProgress(85, lang === 'en' ? 'Parsing results…' : '結果を解析中…');
+    const data = await resp.json();
+    const raw = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+    const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    _docQueue.forEach(d => d.status = 'ok');
+    renderDocQueue();
+    _scanData = parsed;
+    setScanProgress(100, lang === 'en' ? 'Complete!' : '完了！');
+    showScanPreview(parsed);
+  } catch (e) {
+    _docQueue.forEach(d => { if (d.status === 'queued') d.status = 'error'; });
+    renderDocQueue();
+    console.error('Multi-scan error:', e);
+    const isNetwork = e instanceof TypeError || e.message === 'Failed to fetch';
+    showScanErr(isNetwork
+      ? (lang === 'en' ? 'Connection error — check internet and retry.' : '接続エラー — インターネット接続を確認してください。')
+      : (lang === 'en' ? 'Scan failed: ' + e.message : 'スキャン失敗: ' + e.message));
+  }
+}
+
+async function scanSequentially() {
+  // Scan each doc individually and merge: new scan only fills empty fields
+  _scanData = null;
+  openScanModal();
+  let merged = null;
+
+  for (let i = 0; i < _docQueue.length; i++) {
+    const doc = _docQueue[i];
+    setScanProgress(
+      Math.round(10 + (i / _docQueue.length) * 80),
+      lang === 'en' ? `Scanning document ${i + 1} of ${_docQueue.length}: ${doc.name}` : `書類 ${i + 1}/${_docQueue.length} をスキャン中: ${doc.name}`
+    );
+    try {
+      const contentBlocks = [];
+      if (doc.mediaType === 'application/pdf') {
+        contentBlocks.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: doc.base64 } });
+      } else {
+        const mt = doc.mediaType.startsWith('image/') ? doc.mediaType : 'image/jpeg';
+        contentBlocks.push({ type: 'image', source: { type: 'base64', media_type: mt, data: doc.base64 } });
+      }
+      contentBlocks.push({ type: 'text', text: 'Extract all property information and return the JSON.' });
+
+      const resp = await fetch('https://hi.joshi-pratham04.workers.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 2000,
+          system: buildScanSystemPrompt(),
+          messages: [{ role: 'user', content: contentBlocks }]
+        })
+      });
+      if (!resp.ok) throw new Error('API error ' + resp.status);
+      const data = await resp.json();
+      const raw = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+      const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      doc.status = 'ok';
+      // Merge: if merged is null, use first result; otherwise only fill null/empty fields
+      if (!merged) {
+        merged = parsed;
+      } else {
+        mergeIntoBase(merged, parsed);
+      }
+    } catch (e) {
+      doc.status = 'error';
+      console.warn('Error scanning', doc.name, e);
+    }
+    renderDocQueue();
+  }
+
+  if (!merged) {
+    showScanErr(lang === 'en' ? 'All documents failed to scan.' : '全ての書類のスキャンに失敗しました。');
+    return;
+  }
+
+  _scanData = merged;
+  setScanProgress(100, lang === 'en' ? 'Complete!' : '完了！');
+  showScanPreview(merged);
+}
+
+// Merge rule: new values only fill fields that are null/undefined/"" in base
+function mergeIntoBase(base, incoming) {
+  const SCALAR_KEYS = ['pn','pr','ad','ly','pt','cs','tx','st','ea','ba','zo','lr','tu','bd','re','ar','gy','mc','mf','rf','tm','oc','dl','no','l1','s1','m1','l2','s2','m2'];
+  for (const k of SCALAR_KEYS) {
+    if ((base[k] === null || base[k] === undefined || base[k] === '') && incoming[k] != null && incoming[k] !== '') {
+      base[k] = incoming[k];
+    }
+  }
+  // Merge extras: only add new keys
+  if (incoming.extras && typeof incoming.extras === 'object') {
+    base.extras = base.extras || {};
+    for (const [k, v] of Object.entries(incoming.extras)) {
+      if (!(k in base.extras) || base.extras[k] === null || base.extras[k] === '') {
+        base.extras[k] = v;
+      }
+    }
+  }
+  // Merge review items: append deduplicated by key
+  if (Array.isArray(incoming.review)) {
+    base.review = base.review || [];
+    const existingKeys = new Set(base.review.map(r => r.key));
+    for (const item of incoming.review) {
+      if (!existingKeys.has(item.key)) base.review.push(item);
+    }
+  }
+  // Merge EN translations
+  if (incoming.en && typeof incoming.en === 'object') {
+    base.en = base.en || {};
+    for (const [k, v] of Object.entries(incoming.en)) {
+      if (!(k in base.en) || !base.en[k]) base.en[k] = v;
+    }
+  }
+}
+
+// Extract the system prompt into a helper so both scan paths can use it
+function buildScanSystemPrompt() {
+  return `You are an expert Japanese real estate data extraction AI. Your job is to extract ALL property data from the provided PDF with 100% accuracy and return ONLY a raw JSON object — no markdown, no backticks, no explanation, just the JSON.\n\nThe PDF may contain multiple document types: a registry extract (登記簿謄本), a property summary sheet (物件概要書), or an existing maisoku flyer. Extract ONLY fields relevant to a sales maisoku — ignore legal registration details, mortgage records, and ownership transfer history.\n\nEXTRACTION RULES (follow exactly):\n\n1. PRICE (pr): Extract 販売価格 or 価格 in 万円 as a NUMBER ONLY.\n   - 5,000万円 → \"5000\"\n   - 1億2000万円 → \"12000\"\n   - 2,750万円（税込） → \"2750\"\n   - Never include 万, 円, commas, 税込 or any text.\n\n2. PROPERTY NAME (pn): \n   - Look for 物件名, マンション名, or building name in the property summary section.\n   - If scanning a registry (登記簿), look for 建物の名称 in the 表題部（専有部分の建物の表示）section.\n   - Use the most complete readable name found. Include Ⅱ, Ⅲ etc if present.\n\n3. PROPERTY TYPE (pt): Must be exactly one of:\n   - \"オーナーチェンジ物件\" → if 賃貸中, サブリース中, has current tenant, or shows 保証賃料/想定賃料\n   - \"居住用物件\" → if 空室, 中古マンション with no tenant, or for personal use\n   - \"投資用物件\" → if explicitly stated as investment\n   - \"新築物件\" → if brand new construction\n\n4. STATUS (cs): Must be exactly one of: 賃貸中 / 空室 / 居住中\n   - サブリース中 → \"賃貸中\"\n   - 募集中 → \"空室\"\n   - If not clear → \"空室\"\n\n5. TRANSACTION TYPE (tx): Must be exactly one of: 売主 / 媒介 / 代理\n   - 一般/専任/専属専任 all map to → \"媒介\"\n\n6. STRUCTURE (st): Combine info from circled items ①③④ into ONE string.\n   When reading a registry (登記簿謄本):\n   - ① 構造 column: 鉄筋コンクリート造 → abbreviate to \"RC造\". 鉄骨造 → \"S造\". 木造 → \"木造\".\n     Also capture 陸屋根, 瓦葺 etc from same cell if present but ONLY include floor count and unit info below.\n   - ③ 階数 (floor count): e.g. \"4階建\" — found in the 構造 column or header e.g. \"4階建\"\n   - ④ which floor the unit is on: found in 表題部（専有部分の建物の表示）→ 床面積 column as \"2階部分\" or \"3階部分\"\n   Combine as: \"RC造 4階建 2階部分\"\n   From a property summary sheet, just use the 構造・規模 field directly.\n   Do NOT include 陸屋根 or roof type in st — only structure type, floor count, unit floor.\n\n7. AREAS (ea, ba): Numbers only, no units.\n   When reading a registry (登記簿謄本):\n   - ea: Use the floor area from 表題部（専有部分の建物の表示）→ 床面積 for the specific unit floor (e.g. \"2階部分 29.97㎡\" → \"29.97\").\n     Do NOT use the 一棟の建物 total floor areas — those are the whole building.\n   - ba: バルコニー面積 from property summary sheet. Not typically in registry → null if absent.\n   From a property summary: 壁芯 33.42㎡ → \"33.42\", バルコニー面積 4.89㎡ → \"4.89\"\n   If no balcony stated → null\n\n8. YEAR BUILT (bd): Convert Japanese era to Western year + month.\n   When reading a registry (登記簿謄本):\n   - ⑥ Look in 表題部（専有部分の建物の表示）→ 原因及びその日付 column for the 新築 entry.\n     e.g. \"令和4年12月15日新築\" → extract year and month only → \"2022年12月\"\n     Ignore the 登記の日付 (registration date) — use only the 新築 construction date.\n   Era conversion:\n   - 平成 = 1988 + year number (平成10 = 1998)\n   - 令和 = 2018 + year number (令和4 = 2022)\n   - 昭和 = 1925 + year number\n   From a property summary sheet: use 築年月 field directly.\n\n9. FEES (mf, rf, tm, oc): Extract NUMBER ONLY — no yen sign, no commas, no 円/月.\n   - 管理費 14,600円/月 → \"14600\"\n   - 修繕積立金 5,610円/月 → \"5610\"\n   - 合計 20,210円/月 → \"20210\"\n   - その他 0円/月 → \"0\"\n   - 確認中 / 未定 / 調査中 → use the literal string \"確認中\" (not null)\n\n10. RENT (re, ar): For owner-change or sublease properties, extract the guaranteed/actual rent.\n    - 保証賃料 or 月額保証賃料 → use as re (NUMBER ONLY, no units)\n    - 年間保証賃料 or 年間賃料 → use as ar (NUMBER ONLY)\n    - 月額賃料 250,000円 → \"250000\"\n    - If 空室 with no stated rent → null\n\n11. YIELD (gy): Include the % sign.\n    - 表面利回 4.47% → \"4.47%\"\n    - If not stated → null\n\n12. TRANSIT: Extract up to 2 transit lines from 交通 or アクセス section.\n    The format in the document may be: \"東武東上線「中板橋」駅 徒歩10分\"\n    Parse this into:\n    - l1/l2: Full line name only e.g. \"東武東上線\"\n    - s1/s2: Station name only, no 駅 suffix, no 「」 e.g. \"中板橋\"\n    - m1/m2: Walk minutes as NUMBER ONLY e.g. \"10\"\n\n13. NOTES (no): Extract 備考 section verbatim. Include ※ marks.\n    - Remove duplicate whitespace.\n    - If multiple lines, join with newline character.\n    - Do NOT include registry legal notes — only property sale remarks.\n\n14. HANDOVER (dl):\n    - 相談 → \"相談\"\n    - Specific date → exact date\n    - 即時 → \"即時\"\n\n15. ZONING (zo): Extract exact text from 用途制限 field.\n\n16. TOTAL UNITS (tu): Extract 総戸数 as a NUMBER ONLY.\n    - 30戸 → \"30\"\n    - Never include 戸 or other text.\n    - In a registry, if no 総戸数 field exists, you can infer from the 専有部分の家屋番号 ranges\n      e.g. \"8-46-101〜8-46-109, 8-46-201〜8-46-208, 8-46-301〜8-46-308, 8-46-401〜8-46-408\"\n      = 9+8+8+8 = 33 units → \"33\". Only do this if the pattern is clear.\n    - If cannot determine → null\n\n17. NULL RULES: Use null (not \"\", not \"—\", not \"null\") for any field not found.\n\n18. ENGLISH TRANSLATIONS: For these free-text fields, ALSO provide a clean English version:\n    - pn: Romanized building name\n    - ad: Address in English order\n    - st: Structure in English (RC造 4階建 2階部分 → \"RC, 4 floors, 2nd floor unit\")\n    - zo: Zoning in English\n    - mc: Management company in English\n    - no: Notes fully translated to English\n    - dl: Handover in English\n    Put these in an \"en\" object.\n\n19. EXTRAS: If the document contains fields NOT covered above, ALLOWLISTED extras only.\n    ONLY include fields from this exact list: 敷金, 礼金, 保証金, 駐車場代, 駐輪場代, 保険料, 町会費, 賃貸借期間, ペット, ペット条件, 更新料, 仲介手数料, 権利金, 解約予告, 入居可能日, 契約期間, 階数, 向き\n    If no allowlisted extras found, use \"extras\": null.\n\n20. REVIEW ARRAY: After extracting all standard fields and allowlisted extras, check if the document contains ANY field that might legitimately appear on a real estate sales maisoku but is NOT in the standard schema or allowlist.\n    For each such field add: {\"key\":\"...\",\"label_en\":\"...\",\"value_ja\":\"...\",\"value_en\":\"...\",\"reason\":\"...\"}\n    If none, use \"review\": null.\n\nReturn the JSON now:\n{\"pn\":null,\"pr\":null,\"ad\":null,\"ly\":null,\"pt\":null,\"cs\":null,\"tx\":null,\"st\":null,\"ea\":null,\"ba\":null,\"zo\":null,\"lr\":null,\"tu\":null,\"bd\":null,\"re\":null,\"ar\":null,\"gy\":null,\"mc\":null,\"mf\":null,\"rf\":null,\"tm\":null,\"oc\":null,\"dl\":null,\"no\":null,\"l1\":null,\"s1\":null,\"m1\":null,\"l2\":null,\"s2\":null,\"m2\":null,\"extras\":null,\"review\":null,\"en\":null}`;
+}
+
+/* ════════════════════════════════════════════════════════
+   SINGLE-DOCUMENT AI PDF SCAN ENGINE (legacy — still works)
    ════════════════════════════════════════════════════════ */
 let _scanData = null;
 
 function startPDFScan(btn) {
-  // Create a hidden file input and trigger it
+  // If queue already has items, add to queue instead of scanning immediately
+  if (_docQueue.length > 0) {
+    addDocumentToQueue();
+    return;
+  }
+  // First document: trigger file picker, then scan immediately (legacy behaviour)
   let inp = document.getElementById('_pdf_file_inp');
   if (!inp) {
     inp = document.createElement('input');
     inp.type = 'file';
-    inp.accept = 'application/pdf';
+    inp.accept = 'application/pdf,image/png,image/jpeg,image/jpg';
     inp.id = '_pdf_file_inp';
     inp.style.display = 'none';
     document.body.appendChild(inp);
@@ -1599,7 +1933,7 @@ async function runPDFScan(file) {
   }
   _scanData = null;
   openScanModal();
-  setScanProgress(10, lang === 'en' ? 'Reading PDF…' : 'PDFを読み込み中…');
+  setScanProgress(10, lang === 'en' ? 'Reading file…' : 'ファイルを読み込み中…');
 
   // Quick connectivity check
   try {
@@ -1608,14 +1942,12 @@ async function runPDFScan(file) {
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1,messages:[{role:'user',content:'hi'}]})
     });
-    // 400 = bad request but API is reachable, 401 = auth needed, both are fine
     if (!ping.ok && ping.status !== 400 && ping.status !== 401) {
       const j = await ping.json().catch(()=>({}));
       throw new Error(j.error?.message || 'API unreachable: ' + ping.status);
     }
   } catch(pingErr) {
     if (pingErr.message && !pingErr.message.includes('API unreachable')) {
-      // Real network error
       showScanErr(lang==='en'
         ? 'Cannot reach Anthropic API. Check your internet connection.'
         : 'Anthropic APIに接続できません。インターネット接続を確認してください。');
@@ -1632,188 +1964,28 @@ async function runPDFScan(file) {
       r.readAsDataURL(file);
     });
   } catch(e) {
-    showScanErr('PDFの読み込みに失敗しました: ' + e.message); return;
+    showScanErr('ファイルの読み込みに失敗しました: ' + e.message); return;
   }
 
   setScanProgress(40, lang === 'en' ? 'Sending to AI…' : 'AIに送信中…');
 
-  const sys = `You are an expert Japanese real estate data extraction AI. Your job is to extract ALL property data from the provided PDF with 100% accuracy and return ONLY a raw JSON object — no markdown, no backticks, no explanation, just the JSON.
-
-The PDF may contain multiple document types: a registry extract (登記簿謄本), a property summary sheet (物件概要書), or an existing maisoku flyer. Extract ONLY fields relevant to a sales maisoku — ignore legal registration details, mortgage records, and ownership transfer history.
-
-EXTRACTION RULES (follow exactly):
-
-1. PRICE (pr): Extract 販売価格 or 価格 in 万円 as a NUMBER ONLY.
-   - 5,000万円 → "5000"
-   - 1億2000万円 → "12000"
-   - 2,750万円（税込） → "2750"
-   - Never include 万, 円, commas, 税込 or any text.
-
-2. PROPERTY NAME (pn): 
-   - Look for 物件名, マンション名, or building name in the property summary section.
-   - If scanning a registry (登記簿), look for 建物の名称 in the 表題部（専有部分の建物の表示）section.
-   - Use the most complete readable name found. Include Ⅱ, Ⅲ etc if present.
-
-3. PROPERTY TYPE (pt): Must be exactly one of:
-   - "オーナーチェンジ物件" → if 賃貸中, サブリース中, has current tenant, or shows 保証賃料/想定賃料
-   - "居住用物件" → if 空室, 中古マンション with no tenant, or for personal use
-   - "投資用物件" → if explicitly stated as investment
-   - "新築物件" → if brand new construction
-
-4. STATUS (cs): Must be exactly one of: 賃貸中 / 空室 / 居住中
-   - サブリース中 → "賃貸中"
-   - 募集中 → "空室"
-   - If not clear → "空室"
-
-5. TRANSACTION TYPE (tx): Must be exactly one of: 売主 / 媒介 / 代理
-   - 一般/専任/専属専任 all map to → "媒介"
-
-6. STRUCTURE (st): Combine info from circled items ①③④ into ONE string.
-   When reading a registry (登記簿謄本):
-   - ① 構造 column: 鉄筋コンクリート造 → abbreviate to "RC造". 鉄骨造 → "S造". 木造 → "木造".
-     Also capture 陸屋根, 瓦葺 etc from same cell if present but ONLY include floor count and unit info below.
-   - ③ 階数 (floor count): e.g. "4階建" — found in the 構造 column or header e.g. "4階建"
-   - ④ which floor the unit is on: found in 表題部（専有部分の建物の表示）→ 床面積 column as "2階部分" or "3階部分"
-   Combine as: "RC造 4階建 2階部分"
-   From a property summary sheet, just use the 構造・規模 field directly.
-   Do NOT include 陸屋根 or roof type in st — only structure type, floor count, unit floor.
-
-7. AREAS (ea, ba): Numbers only, no units.
-   When reading a registry (登記簿謄本):
-   - ea: Use the floor area from 表題部（専有部分の建物の表示）→ 床面積 for the specific unit floor (e.g. "2階部分 29.97㎡" → "29.97").
-     Do NOT use the 一棟の建物 total floor areas — those are the whole building.
-   - ba: バルコニー面積 from property summary sheet. Not typically in registry → null if absent.
-   From a property summary: 壁芯 33.42㎡ → "33.42", バルコニー面積 4.89㎡ → "4.89"
-   If no balcony stated → null
-
-8. YEAR BUILT (bd): Convert Japanese era to Western year + month.
-   When reading a registry (登記簿謄本):
-   - ⑥ Look in 表題部（専有部分の建物の表示）→ 原因及びその日付 column for the 新築 entry.
-     e.g. "令和4年12月15日新築" → extract year and month only → "2022年12月"
-     Ignore the 登記の日付 (registration date) — use only the 新築 construction date.
-   Era conversion:
-   - 平成 = 1988 + year number (平成10 = 1998)
-   - 令和 = 2018 + year number (令和4 = 2022)
-   - 昭和 = 1925 + year number
-   From a property summary sheet: use 築年月 field directly.
-
-9. FEES (mf, rf, tm, oc): Extract NUMBER ONLY — no yen sign, no commas, no 円/月.
-   - 管理費 14,600円/月 → "14600"
-   - 修繕積立金 5,610円/月 → "5610"
-   - 合計 20,210円/月 → "20210"
-   - その他 0円/月 → "0"
-   - 確認中 / 未定 / 調査中 → use the literal string "確認中" (not null)
-
-10. RENT (re, ar): For owner-change or sublease properties, extract the guaranteed/actual rent.
-    - 保証賃料 or 月額保証賃料 → use as re (NUMBER ONLY, no units)
-    - 年間保証賃料 or 年間賃料 → use as ar (NUMBER ONLY)
-    - 月額賃料 250,000円 → "250000"
-    - If 空室 with no stated rent → null
-
-11. YIELD (gy): Include the % sign.
-    - 表面利回 4.47% → "4.47%"
-    - If not stated → null
-
-12. TRANSIT: Extract up to 2 transit lines from 交通 or アクセス section.
-    The format in the document may be: "東武東上線「中板橋」駅 徒歩10分"
-    Parse this into:
-    - l1/l2: Full line name only e.g. "東武東上線"
-    - s1/s2: Station name only, no 駅 suffix, no 「」 e.g. "中板橋"
-    - m1/m2: Walk minutes as NUMBER ONLY e.g. "10"
-
-13. NOTES (no): Extract 備考 section verbatim. Include ※ marks.
-    - Remove duplicate whitespace.
-    - If multiple lines, join with newline character.
-    - Do NOT include registry legal notes — only property sale remarks.
-
-14. HANDOVER (dl):
-    - 相談 → "相談"
-    - Specific date → exact date
-    - 即時 → "即時"
-
-15. ZONING (zo): Extract exact text from 用途制限 field.
-
-16. TOTAL UNITS (tu): Extract 総戸数 as a NUMBER ONLY.
-    - 30戸 → "30"
-    - Never include 戸 or other text.
-    - In a registry, if no 総戸数 field exists, you can infer from the 専有部分の家屋番号 ranges
-      e.g. "8-46-101〜8-46-109, 8-46-201〜8-46-208, 8-46-301〜8-46-308, 8-46-401〜8-46-408"
-      = 9+8+8+8 = 33 units → "33". Only do this if the pattern is clear.
-    - If cannot determine → null
-
-17. NULL RULES: Use null (not "", not "—", not "null") for any field not found.
-
-18. ENGLISH TRANSLATIONS: For these free-text fields, ALSO provide a clean English version:
-    - pn: Romanized building name (プレール・ドゥーク中板橋Ⅱ → "Prele Deux Nakaita II", アエリア南青山 → "Aeria Minami-Aoyama")
-    - ad: Address in English order (東京都板橋区栄町8-13 → "8-13 Sakae-cho, Itabashi-ku, Tokyo")
-    - st: Structure in English (RC造 4階建 2階部分 → "RC, 4 floors, 2nd floor unit")
-    - zo: Zoning in English (住宅 → "Residential", 住居もしくは事務所 → "Residential or office use")
-    - mc: Management company in English (株式会社キノシタコミュニティ → "Kinoshita Community Co., Ltd.")
-    - no: Notes fully translated to English
-    - dl: Handover in English (相談 → "Negotiable", 即時 → "Immediate")
-    Put these in an "en" object: "en": {"pn":"...", "ad":"...", "st":"...", "zo":"...", "mc":"...", "no":"...", "dl":"..."}
-
-19. EXTRAS: If the document contains fields NOT covered above (e.g. 敷金, 礼金, 駐車場代, 保証金,
-    賃貸借期間, ペット条件, 更新料, 契約期間, 解約予告, 入居可能日, 向き, 階数 etc.),
-    ALLOWLISTED extras only — use the Japanese field name as key, raw value as value.
-    ONLY include fields from this exact list (these are the only non-standard fields that ever appear on a Japanese sales maisoku):
-    敷金, 礼金, 保証金, 駐車場代, 駐輪場代, 保険料, 町会費, 賃貸借期間, ペット, ペット条件,
-    更新料, 仲介手数料, 権利金, 解約予告, 入居可能日, 契約期間, 階数, 向き
-    Example: "extras": {"敷金":"100000", "礼金":"1ヶ月", "ペット条件":"小型犬1匹可"}
-    Do NOT put 総戸数 or 手数料 in extras — use tu field and footer checkbox instead.
-    Do NOT include ANY registry/legal fields: 家屋番号, 不動産番号, 敷地権割合, 所有者,
-    抵当権, 根抵当権, 債権額, 極度額, 損害金, 利息, 債務者, 抵当権者, 共同担保, 順位番号,
-    受付番号, 権利部, 甲区, 乙区 — these are NEVER on a maisoku.
-    If no allowlisted extras found, use "extras": null.
-
-19. REVIEW ARRAY: After extracting all standard fields and allowlisted extras, check if the document
-    contains ANY field that:
-    (a) is NOT in the standard schema (pr, pn, ad, ly, pt, cs, tx, st, ea, ba, zo, lr, tu, bd, re, ar, gy, mc, mf, rf, tm, oc, dl, no, l1/s1/m1, l2/s2/m2)
-    (b) is NOT in the allowlisted extras above
-    (c) is NOT a registry/legal noise field
-    (d) MIGHT legitimately appear on a real estate sales maisoku (e.g. 管理形態, 管理員, セキュリティ,
-        サブリース会社, 賃貸管理会社, 空室保証, 告知事項, 瑕疵担保, 設備, 専用庭 etc.)
-    For each such field, add an entry to the "review" array:
-    {
-      "key": "管理形態",
-      "label_en": "Management Type",
-      "value_ja": "全部委託",
-      "value_en": "Fully Outsourced",
-      "reason": "Management arrangement sometimes shown on investment maisoku"
-    }
-    Keep reasons short (under 10 words). If no review candidates found, use "review": null.
-
-SELF-CHECK before outputting:
-- Is pr a plain number with no units? ✓
-- Is tu a plain number (no 戸)? ✓
-- Are mf/rf plain numbers OR the string "確認中" if stated? ✓
-- Is bd in Western year format (e.g. 2022年12月)? ✓
-- Is st the complete structure string in one field? ✓
-- Are l1/l2 line names only (no station)? ✓
-- Are s1/s2 station names without 駅 or 「」? ✓
-- Are m1/m2 plain numbers? ✓
-- Is pt exactly one of the 4 allowed values? ✓
-- Is cs exactly 賃貸中/空室/居住中 (サブリース中 → 賃貸中)? ✓
-- Did I exclude ALL registry/legal fields from extras and review? ✓
-- Does review only contain fields that could plausibly appear on a maisoku? ✓
-- Does en object contain English for all free-text fields found? ✓
-
-Return the JSON now:
-{"pn":null,"pr":null,"ad":null,"ly":null,"pt":null,"cs":null,"tx":null,"st":null,"ea":null,"ba":null,"zo":null,"lr":null,"tu":null,"bd":null,"re":null,"ar":null,"gy":null,"mc":null,"mf":null,"rf":null,"tm":null,"oc":null,"dl":null,"no":null,"l1":null,"s1":null,"m1":null,"l2":null,"s2":null,"m2":null,"extras":null,"review":null,"en":null}`;
+  const sys = buildScanSystemPrompt();
+  const mediaType = file.type && file.type.startsWith('image/') ? file.type : 'application/pdf';
+  const contentBlock = mediaType === 'application/pdf'
+    ? { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } }
+    : { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } };
 
   try {
     setScanProgress(60, lang === 'en' ? 'AI is reading the document…' : 'AIが書類を解析中…');
     const resp = await fetch('https://hi.joshi-pratham04.workers.dev', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 2000,
         system: sys,
         messages: [{ role: 'user', content: [
-          { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
+          contentBlock,
           { type: 'text', text: 'Extract all property information and return the JSON.' }
         ]}]
       })
@@ -1850,12 +2022,11 @@ Return the JSON now:
 function openScanModal() {
   el('scan-overlay').classList.add('active');
   el('scan-progress').style.display = 'block';
-  el('scan-fields-preview').style.display = 'none';
   el('scan-fields-preview').innerHTML = '';
   el('scan-apply-btn').style.display = 'none';
   el('scan-err').style.display = 'none';
   el('scan-err').textContent = '';
-  el('scan-modal-title').textContent = lang === 'en' ? 'Scanning PDF…' : '物件PDFをスキャン中…';
+  el('scan-modal-title').textContent = lang === 'en' ? 'Scanning…' : 'スキャン中…';
   el('scan-modal-desc').innerHTML = lang === 'en'
     ? 'AI is analysing the property document and will auto-fill the form.<br>Please wait a moment.'
     : 'AIが物件概要書を解析し、フォームに自動入力します。<br>数秒お待ちください。';
