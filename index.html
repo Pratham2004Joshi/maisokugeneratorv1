@@ -329,21 +329,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
     <div class="di" id="d5" onclick="setDesign(5,this)">モダン縦型</div>
   </div>
   <div class="sb-sec" id="palette-sec">
-    <div class="sb-lbl">カラー</div>
-    <div style="display:flex;flex-direction:column;gap:2px;padding:4px 8px;">
-      <div class="pal-btn on" onclick="setPalette(0)">
-        <span class="pal-swatch" style="background:#C8102E"></span>赤黒
-      </div>
-      <div class="pal-btn" onclick="setPalette(1)">
-        <span class="pal-swatch" style="background:#0D1B2A"></span>紺金
-      </div>
-      <div class="pal-btn" onclick="setPalette(2)">
-        <span class="pal-swatch" style="background:#22252a"></span>墨白
-      </div>
-      <div class="pal-btn" onclick="setPalette(3)">
-        <span class="pal-swatch" style="background:#1B4332"></span>深緑
-      </div>
-    </div>
+    <div class="sb-lbl" id="sb-color-lbl">カラー</div>
+    <div id="palette-btns" style="display:flex;flex-direction:column;gap:2px;padding:4px 8px;"></div>
   </div>
 </div>
 
@@ -519,7 +506,7 @@ ja:{appTitle:'マイソク ジェネレーター',
   btnLoadTxt:'📂 保存したファイルを読み込む',
   btnScanTxt:'✨ AIでPDFを読み込む',
   tabs:['基本情報','スペック','アクセス','画像','会社情報'],
-  dLabel:'デザイン', designs:['クラシック（赤黒）','プレミアム（紺金）','モダンホライズン','クラシック縦型（赤黒）','プレミアム縦型（紺金）','モダン縦型'],
+  dLabel:'デザイン', colorLabel:'カラー', designs:['クラシック（赤黒）','プレミアム（紺金）','モダンホライズン','クラシック縦型（赤黒）','プレミアム縦型（紺金）','モダン縦型'],
   ft:['基本情報','スペック詳細','アクセス','画像アップロード','会社情報'],
   sb1:'路線 1',sb2:'路線 2',
   fl:['物件種別','物件名','販売価格（万円）','所在地','間取りタイプ','現況','取引態様','設備',
@@ -574,7 +561,7 @@ en:{appTitle:'Maisoku Generator',
   btnLoadTxt:'📂 Load Property Draft File',
   btnScanTxt:'✨ Scan PDF with AI',
   tabs:['Basic Info','Specs','Access','Images','Company'],
-  dLabel:'Design', designs:['Classic (Red/Black)','Premium (Navy/Gold)','Modern Horizon','Classic Vertical (Red/Black)','Premium Vertical (Navy/Gold)','Modern Vertical'],
+  dLabel:'Design', colorLabel:'Color', designs:['Classic (Red/Black)','Premium (Navy/Gold)','Modern Horizon','Classic Vertical (Red/Black)','Premium Vertical (Navy/Gold)','Modern Vertical'],
   ft:['Basic Information','Property Specs','Access / Transport','Upload Images','Company Info'],
   sb1:'Line 1',sb2:'Line 2',
   fl:['Property Type','Property Name','Sale Price (¥10k)','Address','Layout Type','Status','Transaction Type','Amenities',
@@ -665,7 +652,16 @@ function setPalette(idx) {
   const group = DS[design].group;
   if (group === 'v') paletteV = idx;
   else paletteH = idx;
-  document.querySelectorAll('.pal-btn').forEach((b,i) => b.classList.toggle('on', i === idx));
+  // Re-render buttons so active state updates correctly
+  const palContainer = document.getElementById('palette-btns');
+  if (palContainer) {
+    const swatches = ['#C8102E','#0D1B2A','#22252a','#1B4332'];
+    palContainer.innerHTML = PALETTES.map((p,i) =>
+      `<div class="pal-btn${i===idx?' on':''}" onclick="setPalette(${i})">` +
+      `<span class="pal-swatch" style="background:${swatches[i]}"></span>` +
+      (lang==='en' ? p.en : p.ja) + `</div>`
+    ).join('');
+  }
   upd();
 }
 
@@ -1366,6 +1362,18 @@ function applyLang(){
   }
   for(let i=0;i<5;i++) { if(el('st'+i)) el('st'+i).textContent = t.tabs[i]; }
   st('sb-dl',t.dLabel);
+  st('sb-color-lbl', t.colorLabel);
+  // Re-render palette buttons in current language
+  const palContainer = document.getElementById('palette-btns');
+  if (palContainer) {
+    const activeIdx = DS[design].group === 'v' ? paletteV : paletteH;
+    const swatches = ['#C8102E','#0D1B2A','#22252a','#1B4332'];
+    palContainer.innerHTML = PALETTES.map((p,i) =>
+      `<div class="pal-btn${i===activeIdx?' on':''}" onclick="setPalette(${i})">` +
+      `<span class="pal-swatch" style="background:${swatches[i]}"></span>` +
+      (lang==='en' ? p.en : p.ja) + `</div>`
+    ).join('');
+  }
   document.querySelectorAll('.di').forEach((e, i) => { if(e) e.textContent = t.designs[i]; });
   for(let i=0;i<5;i++) { if(el('ft'+i)) el('ft'+i).textContent = t.ft[i]; }
   st('sb1t',t.sb1); st('sb2t',t.sb2);
