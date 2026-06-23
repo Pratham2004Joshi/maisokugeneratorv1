@@ -631,8 +631,8 @@ const ROW_SCHEMA = [
                           right:{key:'cs',thId:'th-cs',tdId:'td-cs',ja:'現況',en:'Status',               fmt:'status'} },
   { type:'full',     key:'tx', thId:'th-tx', tdId:'td-tx', ja:'取引態様',        en:'Transaction Type', fmt:'transaction', w:1 },
   { type:'paired',   w:1, left:{key:'re',thId:'th-re',tdId:'td-re',ja:'賃料(共益費込)',en:'Monthly Rent',jaEst:'想定賃料',enEst:'Estimated Rent',             fmt:'yen_monthly'},
-                          right:{key:'ar',thId:'th-ar',tdId:'td-ar',ja:'年間賃料',en:'Annual Rent',jaEst:'想定年間賃料',enEst:'Estimated Annual Rent',          fmt:'plain'} },
-  { type:'paired',   w:1, left:{key:'gy',thId:'th-gy',tdId:'td-gy',ja:'表面利回',en:'Gross Yield',jaEst:'想定表面利回',enEst:'Estimated Gross Yield',          fmt:'plain'},
+                          right:{key:'ar',thId:'th-ar',tdId:'td-ar',ja:'年間賃料',en:'Annual Rent',jaEst:'想定年間賃料',enEst:'Estimated Annual Rent',          fmt:'yen_annual'} },
+  { type:'paired',   w:1, left:{key:'gy',thId:'th-gy',tdId:'td-gy',ja:'表面利回',en:'Gross Yield',jaEst:'想定表面利回',enEst:'Estimated Gross Yield',          fmt:'percent'},
                           right:{key:'mc',thId:'th-mc',tdId:'td-mc',ja:'管理会社',en:'Mgmt Company',       fmt:'plain'} },
   { type:'paired',   w:1, left:{key:'mf',thId:'th-mf',tdId:'td-mf',ja:'管理費',en:'Mgmt Fee',             fmt:'yen_monthly'},
                           right:{key:'rf',thId:'th-rf',tdId:'td-rf',ja:'修繕積立金',en:'Repair Reserve',    fmt:'yen_monthly'} },
@@ -841,6 +841,24 @@ function formatValue(raw, fmt, _lang) {
       return map[raw] || raw;
     }
     
+    case 'yen_annual': {
+      if (raw === '確認中' || raw === '未定' || raw === '調査中') {
+        return _lang === 'en' ? 'TBC' : raw;
+      }
+      const numA = parseFloat(raw.replace(/[,¥円\/年yearper ]/g, ''));
+      if (isNaN(numA)) return raw;
+      return '¥' + numA.toLocaleString() + (_lang === 'ja' ? '/年' : '/year');
+    }
+
+    case 'percent': {
+      if (raw === '確認中' || raw === '未定' || raw === '調査中' || raw === '相談') {
+        return _lang === 'en' ? 'TBC' : raw;
+      }
+      const stripped = raw.replace(/[%％\s]/g, '').trim();
+      if (!stripped || isNaN(parseFloat(stripped))) return raw;
+      return stripped + '%';
+    }
+
     case 'notes': {
       let out = raw;
       if (_lang === 'en') {
