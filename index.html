@@ -506,7 +506,7 @@ ja:{appTitle:'マイソク ジェネレーター',
   btnLoadTxt:'📂 保存したファイルを読み込む',
   btnScanTxt:'✨ AIでPDFを読み込む',
   tabs:['基本情報','スペック','アクセス','画像','会社情報'],
-  dLabel:'デザイン', colorLabel:'カラー', designs:['クラシック（赤黒）','プレミアム（紺金）','モダンホライズン','クラシック縦型（赤黒）','プレミアム縦型（紺金）','モダン縦型'],
+  dLabel:'デザイン', colorLabel:'カラー', designs:['クラシック','プレミアム','モダンホライズン','クラシック縦型','プレミアム縦型','モダン縦型'],
   ft:['基本情報','スペック詳細','アクセス','画像アップロード','会社情報'],
   sb1:'路線 1',sb2:'路線 2',
   fl:['物件種別','物件名','販売価格（万円）','所在地','間取りタイプ','現況','取引態様','設備',
@@ -561,7 +561,7 @@ en:{appTitle:'Maisoku Generator',
   btnLoadTxt:'📂 Load Property Draft File',
   btnScanTxt:'✨ Scan PDF with AI',
   tabs:['Basic Info','Specs','Access','Images','Company'],
-  dLabel:'Design', colorLabel:'Color', designs:['Classic (Red/Black)','Premium (Navy/Gold)','Modern Horizon','Classic Vertical (Red/Black)','Premium Vertical (Navy/Gold)','Modern Vertical'],
+  dLabel:'Design', colorLabel:'Color', designs:['Classic','Premium','Modern Horizon','Classic Vertical','Premium Vertical','Modern Vertical'],
   ft:['Basic Information','Property Specs','Access / Transport','Upload Images','Company Info'],
   sb1:'Line 1',sb2:'Line 2',
   fl:['Property Type','Property Name','Sale Price (¥10k)','Address','Layout Type','Status','Transaction Type','Amenities',
@@ -628,16 +628,20 @@ const DS=[
 const PALETTES = [
   { id:'red',      ja:'赤黒',  en:'Red / Black',
     thBg:'#C8102E', thTx:'#fff',    prColor:'#C8102E', npBg:'#C8102E',
-    botBorder:'#111',    footBorder:'#ccc', bg:'#fff',     tdBg:'' },
+    botBorder:'#111',    footBorder:'#ccc', bg:'#fff',     tdBg:'',
+    overlayRgb:'0,0,0' },
   { id:'navy',     ja:'紺金',  en:'Navy / Gold',
     thBg:'#0D1B2A', thTx:'#C9A84C', prColor:'#C9A84C', npBg:'#0D1B2A',
-    botBorder:'#0D1B2A', footBorder:'#ccc', bg:'#fff',     tdBg:'' },
+    botBorder:'#0D1B2A', footBorder:'#ccc', bg:'#fff',     tdBg:'',
+    overlayRgb:'13,27,42' },
   { id:'charcoal', ja:'墨白',  en:'Charcoal / White',
     thBg:'#22252a', thTx:'#fff',    prColor:'#e2e8f0', npBg:'#1a1a1a',
-    botBorder:'#333',    footBorder:'#ccc', bg:'#e2e8f0', tdBg:'#fff' },
+    botBorder:'#333',    footBorder:'#ccc', bg:'#e2e8f0', tdBg:'#fff',
+    overlayRgb:'34,37,42' },
   { id:'forest',   ja:'深緑',  en:'Forest / Cream',
     thBg:'#1B4332', thTx:'#F5F0E8', prColor:'#1B4332', npBg:'#1B4332',
-    botBorder:'#1B4332', footBorder:'#ccc', bg:'#fff',     tdBg:'' },
+    botBorder:'#1B4332', footBorder:'#ccc', bg:'#fff',     tdBg:'',
+    overlayRgb:'27,67,50' },
 ];
 
 // Independent palette memory: h = horizontal, v = vertical
@@ -1740,6 +1744,15 @@ function applyDesign() {
     bgLayer.style.background = '';
   }
   ss('ms-pp','color',p.prColor);
+
+  // ── Photo overlay gradient: tinted by palette overlayRgb ──
+  const rgb = p.overlayRgb || '0,0,0';
+  const heroTextEl = document.querySelector('.la-hero-text');
+  if (heroTextEl) heroTextEl.style.background = `linear-gradient(to top, rgba(${rgb},0.95) 0%, transparent 100%)`;
+  const lbTextEl = document.querySelector('.lb-banner-text');
+  if (lbTextEl) lbTextEl.style.background = `linear-gradient(to right, rgba(${rgb},0.9) 45%, transparent 100%)`;
+  const lcTextEl = document.querySelector('.lc-banner-text');
+  if (lcTextEl) lcTextEl.style.background = `linear-gradient(to right, rgba(${rgb},0.85) 50%, transparent 100%)`;
   
   // Designs 0-5: all use sans; none of the current designs use serif by default
   ms.style.fontFamily = "'Noto Sans JP', sans-serif";
