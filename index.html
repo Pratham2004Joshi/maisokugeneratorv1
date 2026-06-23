@@ -183,6 +183,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .img-cover-box img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block}
 
 .ms-am { display: flex; flex-direction: column; background: #fff; justify-content: space-evenly; height: 100%; border-right: 1px solid #ddd; overflow: hidden; }
+.ms-am-2col { display: grid; grid-template-columns: 1fr 1fr; align-content: space-evenly; background: #fff; height: 100%; overflow: hidden; border-right: 1px solid #e0e0e0; padding: 0 4px; box-sizing: border-box; }
+.ms-am-2col .ms-ar { display: flex; align-items: center; padding: 2px 4px; }
+.ms-am-2col .ms-ar-span { grid-column: 1 / -1; }
 .ms-ar { display: flex !important; align-items: center !important; gap: 6px !important; padding: 4px 8px; border-bottom: 1px solid #f1f5f9; width: 100%; flex: 1; min-height: 24px; max-height: 52px; overflow: hidden; box-sizing: border-box; }
 .ms-ai { width: 22px; height: 22px; background: #f1f5f9; border-radius: 3px; flex-shrink: 0; display: inline-flex !important; align-items: center !important; justify-content: center !important; font-size: 13px; line-height: 1 !important; margin: 0 !important; vertical-align: middle; }
 .ms-am-text { font-size: 10px; display: inline-block; vertical-align: middle; line-height: 20px; height: 20px; color: #1e293b; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -260,7 +263,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .lvert-photo-overlay .pn { font-size:18px; font-weight:900; font-family:'Noto Serif JP',serif; color:#fff; line-height:1.2; margin-bottom:4px; }
 .lvert-photo-overlay .pp { font-size:12px; font-weight:700; }
 .lvert-spec-col { overflow:hidden; border-right:1px solid #e0e0e0; display:flex; flex-direction:column; }
-.lvert-fp-col { display:flex; align-items:center; justify-content:center; overflow:hidden; background:#fff; position:relative; height:100%; }
+.lvert-fp-col { display:flex; align-items:center; justify-content:center; overflow:hidden; background:#f0f0f0; position:relative; height:100%; padding:8px; box-sizing:border-box; }
 .lvert-fp-col img { max-width:100%; max-height:100%; object-fit:contain; display:block; margin:auto; }
 /* Bottom strip */
 .lvert-bottom { flex-shrink:0; display:grid; grid-template-columns:30% 35% 35%; height:155px; border-bottom:1px solid #e0e0e0; background:#fff; }
@@ -1603,6 +1606,24 @@ function compileActiveTemplateHTML() {
     </div>`;
   }).join('');
 
+  // 2-column amenities for vertical layout: odd last item spans full width
+  const amenitiesRendered2col = (() => {
+    const items = selAm.map(a => {
+      const i=AJ.indexOf(a), lbl=lang==='en'&&i>=0?AE[i]:a;
+      return `<div class="ms-ar" style="background:#fff;">
+        <div class="ms-ai">${AI[a]||'·'}</div>
+        <span class="ms-am-text">${lbl}</span>
+      </div>`;
+    });
+    const isOdd = items.length % 2 !== 0;
+    const pairs = isOdd ? items.slice(0, -1) : items;
+    const last  = isOdd ? `<div class="ms-ar ms-ar-span" style="background:#fff;grid-column:1/-1;">
+        <div class="ms-ai">${AI[selAm[selAm.length-1]]||'·'}</div>
+        <span class="ms-am-text">${lang==='en'&&AJ.indexOf(selAm[selAm.length-1])>=0?AE[AJ.indexOf(selAm[selAm.length-1])]:selAm[selAm.length-1]}</span>
+      </div>` : '';
+    return pairs.join('') + last;
+  })();
+
   const _acc1 = buildAccRow(1), _acc2 = buildAccRow(2);
   const sharedAccessOverlayBlock = (_acc1 || _acc2) ? `
     <div style="position:absolute;bottom:6px;right:6px;z-index:50;background:rgba(255,255,255,0.93);border:1px solid #d1d5db;box-shadow:0 2px 8px rgba(0,0,0,0.18);border-radius:3px;padding:5px 8px;display:inline-flex;flex-direction:column;gap:0;max-width:220px;min-width:0;">
@@ -1730,7 +1751,7 @@ function compileActiveTemplateHTML() {
       </div>
       <div class="lvert-bottom">
         <div class="lvert-ent-box">${entPhoto}</div>
-        <div class="lvert-am-col ms-am">${amenitiesRendered}</div>
+        <div class="lvert-am-col ms-am-2col">${amenitiesRendered2col}</div>
         <div class="lvert-map-box" id="${mapId}" style="position:relative;">
           ${sharedAccessOverlayBlock}
           ${mapOverlayPhoto ? mapOverlayPhoto : ''}
