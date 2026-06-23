@@ -263,7 +263,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .lvert-photo-overlay .pn { font-size:18px; font-weight:900; font-family:'Noto Serif JP',serif; color:#fff; line-height:1.2; margin-bottom:4px; }
 .lvert-photo-overlay .pp { font-size:12px; font-weight:700; }
 .lvert-right-panel { display:flex; flex-direction:column; overflow:hidden; }
-.lvert-accent-bar { flex-shrink:0; height:6px; width:100%; }
+.lvert-accent-bar { flex-shrink:0; height:6px; width:100%; display:block; }
 .lvert-right-body { display:grid; grid-template-columns:62% 38%; flex:1; min-height:0; overflow:hidden; }
 .lvert-spec-col { overflow:hidden; border-right:1px solid #e0e0e0; display:flex; flex-direction:column; }
 .lvert-fp-col { display:flex; align-items:center; justify-content:center; overflow:hidden; background:#f0f0f0; position:relative; height:100%; padding:8px; box-sizing:border-box; }
@@ -272,7 +272,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .lvert-bottom { flex-shrink:0; display:grid; grid-template-columns:32% 68%; height:155px; border-bottom:1px solid #e0e0e0; background:#fff; }
 .lvert-ent-box { position:relative; overflow:hidden; border-right:1px solid #e0e0e0; background:#222; }
 .lvert-ent-box img { width:100%; height:100%; object-fit:cover; }
-.lvert-bottom-right { display:grid; grid-template-columns:50% 50%; height:100%; }
+.lvert-bottom-right { display:grid; grid-template-columns:62% 38%; height:100%; }
 .lvert-am-col { border-right:1px solid #e0e0e0; overflow:hidden; }
 .lvert-map-box { position:relative; overflow:hidden; }
 
@@ -1741,6 +1741,7 @@ function compileActiveTemplateHTML() {
     const dockId = 'lv-table-dock';
     const mapId  = 'ms-map-wrapper-lv';
     body.innerHTML = `
+      <div class="lvert-accent-bar" id="lvert-accent-bar"></div>
       <div class="lvert-body">
         <div class="lvert-ext-col img-cover-box">
           ${extPhoto}
@@ -1751,7 +1752,6 @@ function compileActiveTemplateHTML() {
           </div>
         </div>
         <div class="lvert-right-panel">
-          <div class="lvert-accent-bar" id="lvert-accent-bar"></div>
           <div class="lvert-right-body">
             <div class="lvert-spec-col ms-tbl" id="${dockId}"></div>
             <div class="lvert-fp-col">${fpPhoto}</div>
