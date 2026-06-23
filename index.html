@@ -248,31 +248,25 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .ld-entrance-card { border-right: 1px solid #ddd; height: 100%; }
 .ld-map-card { height: 100%; position: relative; }
 
-/* ── VERTICAL PHOTO LAYOUTS (lv / lw / lx) ──
-   These share the same structural grid, only palette differs.
-   Key design: 3-column body where col1=portrait exterior, col2=spec, col3=floor plan
+/* ── VERTICAL PHOTO LAYOUT (lv) ──
+   3-column body: 32% portrait exterior (with text overlay) | 42% spec table | 26% floor plan
    Bottom strip: entrance | amenities | map
 */
-/* lv = Classic vertical (red/black), lw = Premium vertical (navy/gold), lx = Modern vertical */
-.lvert-header { flex-shrink:0; display:grid; grid-template-columns:36% 64%; height:80px; border-bottom:1px solid #111; }
-.lvert-header-photo { position:relative; overflow:hidden; border-right:1px solid #111; background:#111; }
-.lvert-header-photo img { width:100%; height:100%; object-fit:cover; object-position:center 30%; }
-.lvert-header-text { display:flex; flex-direction:column; justify-content:center; padding:0 20px; background:#fff; }
-.lvert-header-text .pt { font-size:10px; font-weight:700; margin-bottom:2px; opacity:.75; }
-.lvert-header-text .pn { font-size:22px; font-weight:900; font-family:'Noto Serif JP',serif; line-height:1.15; margin-bottom:3px; }
-.lvert-header-text .pp { font-size:14px; font-weight:700; }
-/* 3-column body */
-.lvert-body { display:grid; grid-template-columns:24% 46% 30%; flex:1; min-height:0; border-bottom:1px solid #111; }
-.lvert-ext-col { position:relative; overflow:hidden; background:#111; border-right:1px solid #111; }
+.lvert-body { display:grid; grid-template-columns:32% 42% 26%; flex:1; min-height:0; border-bottom:1px solid #e0e0e0; }
+.lvert-ext-col { position:relative; overflow:hidden; background:#111; border-right:1px solid #e0e0e0; }
 .lvert-ext-col img { width:100%; height:100%; object-fit:cover; object-position:center center; }
-.lvert-spec-col { overflow:hidden; border-right:1px solid #111; display:flex; flex-direction:column; }
+.lvert-photo-overlay { position:absolute; bottom:0; left:0; right:0; padding:14px 16px; background:linear-gradient(to top, rgba(0,0,0,0.92) 0%, transparent 100%); z-index:5; }
+.lvert-photo-overlay .pt { font-size:9px; font-weight:700; color:rgba(255,255,255,0.8); margin-bottom:3px; }
+.lvert-photo-overlay .pn { font-size:18px; font-weight:900; font-family:'Noto Serif JP',serif; color:#fff; line-height:1.2; margin-bottom:4px; }
+.lvert-photo-overlay .pp { font-size:12px; font-weight:700; }
+.lvert-spec-col { overflow:hidden; border-right:1px solid #e0e0e0; display:flex; flex-direction:column; }
 .lvert-fp-col { display:flex; align-items:center; justify-content:center; overflow:hidden; background:#fff; position:relative; height:100%; }
 .lvert-fp-col img { max-width:100%; max-height:100%; object-fit:contain; display:block; margin:auto; }
 /* Bottom strip */
-.lvert-bottom { flex-shrink:0; display:grid; grid-template-columns:30% 35% 35%; height:155px; border-bottom:1px solid #111; background:#fff; }
-.lvert-ent-box { position:relative; overflow:hidden; border-right:1px solid #ddd; background:#222; }
+.lvert-bottom { flex-shrink:0; display:grid; grid-template-columns:30% 35% 35%; height:155px; border-bottom:1px solid #e0e0e0; background:#fff; }
+.lvert-ent-box { position:relative; overflow:hidden; border-right:1px solid #e0e0e0; background:#222; }
 .lvert-ent-box img { width:100%; height:100%; object-fit:cover; }
-.lvert-am-col { border-right:1px solid #ddd; overflow:hidden; }
+.lvert-am-col { border-right:1px solid #e0e0e0; overflow:hidden; }
 .lvert-map-box { position:relative; overflow:hidden; }
 
 .ms-disc-bar { padding: 2px 14px; font-size: 8px; text-align: right; color: #555; background: #fff; height: 20px; line-height: 16px; flex-shrink: 0; border-top: 1px solid #ddd; z-index: 10; width: 100%; box-sizing: border-box; }
@@ -324,9 +318,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
     <div class="di" id="d1" onclick="setDesign(1,this)">プレミアム</div>
     <div class="di" id="d2" onclick="setDesign(2,this)">モダンホライズン</div>
     <div class="di-group-label" style="font-size:9px;color:#888;padding:6px 8px 2px;letter-spacing:.05em;">── 縦型写真</div>
-    <div class="di" id="d3" onclick="setDesign(3,this)">クラシック縦型</div>
-    <div class="di" id="d4" onclick="setDesign(4,this)">プレミアム縦型</div>
-    <div class="di" id="d5" onclick="setDesign(5,this)">モダン縦型</div>
+    <div class="di" id="d3" onclick="setDesign(3,this)">縦型</div>
   </div>
   <div class="sb-sec" id="palette-sec">
     <div class="sb-lbl" id="sb-color-lbl">カラー</div>
@@ -524,7 +516,7 @@ ja:{appTitle:'マイソク ジェネレーター',
   btnLoadTxt:'📂 保存したファイルを読み込む',
   btnScanTxt:'✨ AIでPDFを読み込む',
   tabs:['基本情報','スペック','アクセス','画像','会社情報'],
-  dLabel:'デザイン', colorLabel:'カラー', overlayLabel:'グラデーション', overlayColorLbl:'色', overlayOpacityLbl:'濃度', designs:['クラシック','プレミアム','モダンホライズン','クラシック縦型','プレミアム縦型','モダン縦型'],
+  dLabel:'デザイン', colorLabel:'カラー', overlayLabel:'グラデーション', overlayColorLbl:'色', overlayOpacityLbl:'濃度', designs:['クラシック','プレミアム','モダンホライズン','縦型'],
   ft:['基本情報','スペック詳細','アクセス','画像アップロード','会社情報'],
   sb1:'路線 1',sb2:'路線 2',
   fl:['物件種別','物件名','販売価格（万円）','所在地','間取りタイプ','現況','取引態様','設備',
@@ -579,7 +571,7 @@ en:{appTitle:'Maisoku Generator',
   btnLoadTxt:'📂 Load Property Draft File',
   btnScanTxt:'✨ Scan PDF with AI',
   tabs:['Basic Info','Specs','Access','Images','Company'],
-  dLabel:'Design', colorLabel:'Color', overlayLabel:'Gradient', overlayColorLbl:'Color', overlayOpacityLbl:'Opacity', designs:['Classic','Premium','Modern Horizon','Classic Vertical','Premium Vertical','Modern Vertical'],
+  dLabel:'Design', colorLabel:'Color', overlayLabel:'Gradient', overlayColorLbl:'Color', overlayOpacityLbl:'Opacity', designs:['Classic','Premium','Modern Horizon','Portrait'],
   ft:['Basic Information','Property Specs','Access / Transport','Upload Images','Company Info'],
   sb1:'Line 1',sb2:'Line 2',
   fl:['Property Type','Property Name','Sale Price (¥10k)','Address','Layout Type','Status','Transaction Type','Amenities',
@@ -638,8 +630,6 @@ const DS=[
   {layout:'lb', group:'h'},
   {layout:'lc', group:'h'},
   {layout:'lv', group:'v'},
-  {layout:'lw', group:'v'},
-  {layout:'lx', group:'v'},
 ];
 
 // PALETTES — each defines the full color set applied over any layout
@@ -702,6 +692,8 @@ function applyOverlay() {
   if (lbTextEl) lbTextEl.style.background = `linear-gradient(to right, rgba(${rgb},${op2}) 45%, transparent 100%)`;
   const lcTextEl = document.querySelector('.lc-banner-text');
   if (lcTextEl) lcTextEl.style.background = `linear-gradient(to right, rgba(${rgb},${op3}) 50%, transparent 100%)`;
+  const lvertOverlayEl = document.querySelector('.lvert-photo-overlay');
+  if (lvertOverlayEl) lvertOverlayEl.style.background = `linear-gradient(to top, rgba(${rgb},${op1}) 0%, transparent 100%)`;
 }
 
 function setPalette(idx) {
@@ -1137,10 +1129,8 @@ const CROP_ASPECTS_BY_LAYOUT = {
   la: { exterior: 516/422, entrance: 280/282, mapcustom: 370/282 },  // Design 0
   lb: { exterior: 1122/120, entrance: 337/187, mapcustom: 393/187 }, // Design 1
   lc: { exterior: 617/373, entrance: 449/165, mapcustom: 449/165 },  // Design 2
-  // Vertical photo layouts — exterior is portrait (narrow tall), fp is also portrait
-  lv: { exterior: 270/390, entrance: 330/155, mapcustom: 385/155 },  // Design 3
-  lw: { exterior: 270/390, entrance: 330/155, mapcustom: 385/155 },  // Design 4
-  lx: { exterior: 270/390, entrance: 330/155, mapcustom: 385/155 }   // Design 5
+  // Vertical photo layout — exterior is portrait (narrow tall)
+  lv: { exterior: 305/422, entrance: 330/155, mapcustom: 385/155 }
 };
 function getCropAspect(key) {
   const layout = (DS[design] || DS[0]).layout;
@@ -1721,21 +1711,20 @@ function compileActiveTemplateHTML() {
         </div>
       </div>`;
   }
-  // ── VERTICAL PHOTO LAYOUTS (lv / lw / lx) ──
-  // lv=Classic, lw=Premium, lx=Modern — same structure, palette varies via DS[]
-  else if(targetLayout === 'lv' || targetLayout === 'lw' || targetLayout === 'lx') {
-    const dockId = targetLayout + '-table-dock';
-    const mapId  = 'ms-map-wrapper-' + targetLayout;
+  // ── VERTICAL PHOTO LAYOUT (lv) ──
+  else if(targetLayout === 'lv') {
+    const dockId = 'lv-table-dock';
+    const mapId  = 'ms-map-wrapper-lv';
     body.innerHTML = `
-      <div class="lvert-header" style="grid-template-columns:100%;">
-        <div class="lvert-header-text" style="border-right:none;">
-          <div class="pt" id="ms-pt"></div>
-          <div class="pn" id="ms-pn"></div>
-          <div class="pp" id="ms-pp"></div>
-        </div>
-      </div>
       <div class="lvert-body">
-        <div class="lvert-ext-col img-cover-box">${extPhoto}</div>
+        <div class="lvert-ext-col img-cover-box">
+          ${extPhoto}
+          <div class="lvert-photo-overlay">
+            <div class="pt" id="ms-pt"></div>
+            <div class="pn" id="ms-pn"></div>
+            <div class="pp" id="ms-pp"></div>
+          </div>
+        </div>
         <div class="lvert-spec-col ms-tbl" id="${dockId}"></div>
         <div class="lvert-fp-col">${fpPhoto}</div>
       </div>
@@ -1819,15 +1808,11 @@ function applyDesign() {
   if(innerSpec) innerSpec.style.borderColor = p.botBorder;
 
   // ── Vertical layout header: apply accent background ──
-  const lvertHeader = document.querySelector('.lvert-header');
-  if (lvertHeader) {
-    lvertHeader.style.background = p.npBg;
-    const lvertPt = lvertHeader.querySelector('.pt');
-    const lvertPn = lvertHeader.querySelector('.pn');
-    const lvertPp = lvertHeader.querySelector('.pp');
-    if (lvertPt) { lvertPt.style.color = 'rgba(255,255,255,0.8)'; }
-    if (lvertPn) { lvertPn.style.color = '#fff'; }
-    if (lvertPp) { lvertPp.style.color = p.thTx; }
+  // ── Vertical layout: price color on photo overlay ──
+  const lvertOverlay = document.querySelector('.lvert-photo-overlay');
+  if (lvertOverlay) {
+    const lvertPp = lvertOverlay.querySelector('.pp');
+    if (lvertPp) { lvertPp.style.color = p.thTx === '#fff' ? '#fff' : p.prColor; }
   }
 
   if (p && p.bg && p.bg !== '#fff') {
