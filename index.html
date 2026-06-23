@@ -272,7 +272,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .lvert-bottom { flex-shrink:0; display:grid; grid-template-columns:32% 68%; height:155px; border-bottom:1px solid #e0e0e0; background:#fff; }
 .lvert-ent-box { position:relative; overflow:hidden; border-right:1px solid #e0e0e0; background:#222; }
 .lvert-ent-box img { width:100%; height:100%; object-fit:cover; }
-.lvert-bottom-right { display:grid; grid-template-columns:62% 38%; height:100%; }
+.lvert-bottom-right { display:grid; grid-template-columns:62% 38%; height:155px; overflow:hidden; }
 .lvert-am-col { border-right:1px solid #e0e0e0; overflow:hidden; }
 .lvert-map-box { position:relative; overflow:hidden; }
 
@@ -1117,7 +1117,7 @@ function processImageBinary(key, input, btnId, previewId) {
       pv.style.display = 'block';
     }
     // Reset crop and show badge (floorplan excluded — uses contain, always shows whole image)
-    imgCrop[key] = { pos: 'center center', zoom: 1 };
+    imgCrop[key] = { pos: 'center center', zoom: 1, xFrac: 0.5, yFrac: 0.5 };
     if (key !== 'floorplan') {
       const cropMap = { exterior:'crop-ex', entrance:'crop-en', mapcustom:'crop-map' };
       const panel = el(cropMap[key]);
@@ -1137,7 +1137,7 @@ const CROP_ASPECTS_BY_LAYOUT = {
   lb: { exterior: 1122/120, entrance: 337/187, mapcustom: 393/187 }, // Design 1
   lc: { exterior: 617/373, entrance: 449/165, mapcustom: 449/165 },  // Design 2
   // Vertical photo layout — exterior is portrait (narrow tall)
-  lv: { exterior: 305/422, entrance: 330/155, mapcustom: 385/155 }
+  lv: { exterior: 359/573, entrance: 359/155, mapcustom: 290/155 }
 };
 function getCropAspect(key) {
   const layout = (DS[design] || DS[0]).layout;
@@ -1154,6 +1154,9 @@ let _cropDragStartX = 0;
 let _cropDragStartY = 0;
 let _cropDragOriginX = 0;
 let _cropDragOriginY = 0;
+let _cropRestoreXFrac = 0.5;
+let _cropRestoreYFrac = 0.5;
+let _cropNeedsRestore = false;
 
 function openCropModal(key) {
   if (!imgs[key]) return;
@@ -1162,10 +1165,12 @@ function openCropModal(key) {
   // Copy current saved state into temp
   const saved = imgCrop[key];
   _cropTempZoom = saved.zoom;
-  // Convert saved object-position % back to pixel offsets on open
-  // We'll recompute from the stored offsetX/offsetY if present, else parse from pos
-  _cropTempX = saved.offsetX || 0;
-  _cropTempY = saved.offsetY || 0;
+  // Fractions are stored at save time; pixel offsets computed after image loads in applyCropModalTransform
+  _cropTempX = 0;
+  _cropTempY = 0;
+  _cropRestoreXFrac = (saved.xFrac !== undefined) ? saved.xFrac : 0.5;
+  _cropRestoreYFrac = (saved.yFrac !== undefined) ? saved.yFrac : 0.5;
+  _cropNeedsRestore = true;
 
   const modal = el('crop-modal-overlay');
   const wrap = el('crop-preview-wrap');
@@ -1215,6 +1220,15 @@ function applyCropModalTransform() {
 
   const scaledW = natW * scale;
   const scaledH = natH * scale;
+
+  // If restoring from saved fractions, compute pixel offsets now that we know the scale
+  if (_cropNeedsRestore) {
+    _cropNeedsRestore = false;
+    const rangeX = scaledW - previewW;
+    const rangeY = scaledH - previewH;
+    _cropTempX = rangeX > 0 ? -(_cropRestoreXFrac * rangeX) : 0;
+    _cropTempY = rangeY > 0 ? -(_cropRestoreYFrac * rangeY) : 0;
+  }
 
   // Clamp offsets so image always covers the preview
   const minX = previewW - scaledW;
@@ -1286,15 +1300,17 @@ function cropModalConfirm() {
   const previewW = wrap.clientWidth;
   const previewH = wrap.clientHeight;
 
-  // % = how far the crop anchor is from left/top
-  const xPct = scaledW > previewW ? Math.round((-_cropTempX / (scaledW - previewW)) * 100) : 50;
-  const yPct = scaledH > previewH ? Math.round((-_cropTempY / (scaledH - previewH)) * 100) : 50;
+  // Save normalised fractions (0-1) of the scrollable range, independent of preview size
+  const xFrac = scaledW > previewW ? (-_cropTempX / (scaledW - previewW)) : 0.5;
+  const yFrac = scaledH > previewH ? (-_cropTempY / (scaledH - previewH)) : 0.5;
+  const xPct = Math.round(Math.min(1, Math.max(0, xFrac)) * 100);
+  const yPct = Math.round(Math.min(1, Math.max(0, yFrac)) * 100);
 
   imgCrop[_cropKey] = {
     pos: xPct + '% ' + yPct + '%',
     zoom: _cropTempZoom,
-    offsetX: _cropTempX,
-    offsetY: _cropTempY
+    xFrac: xFrac,
+    yFrac: yFrac
   };
 
   // Update the thumbnail indicator
@@ -1534,13 +1550,17 @@ function compileActiveTemplateHTML() {
   function cropStyle(key) {
     if (key === 'floorplan') return ''; // floorplan uses contain — never crop
     const c = imgCrop[key];
-    if (!c || c.zoom === 1 && c.pos === 'center center') return '';
-    return ` style="object-position:${c.pos};transform:scale(${c.zoom});transform-origin:${c.pos}"`;
+    if (!c) return '';
+    const pos = c.pos || 'center center';
+    const zoom = c.zoom || 1;
+    if (zoom === 1 && pos === 'center center') return '';
+    // Scale from center center to avoid drift; object-position handles framing
+    return ` style="object-position:${pos};transform:scale(${zoom});transform-origin:center center"`;
   }
   const extPhoto = imgs.exterior ? `<img src="${imgs.exterior}"${cropStyle('exterior')}>` : `<div style="color:#555;font-size:12px">${t.extPh}</div>`;
   const fpPhoto = imgs.floorplan ? `<img src="${imgs.floorplan}"${cropStyle('floorplan')}>` : `<div style="color:#bbb;font-size:11px">${t.fpPh}</div>`;
   const entPhoto = imgs.entrance ? `<img src="${imgs.entrance}"${cropStyle('entrance')}>` : `<div style="color:#aaa;font-size:11px">${t.entPh}</div>`;
-  const mapOverlayPhoto = imgs.mapcustom ? `<img src="${imgs.mapcustom}" style="width:100%;height:100%;object-fit:cover;object-position:${imgCrop.mapcustom.pos};transform:scale(${imgCrop.mapcustom.zoom});transform-origin:${imgCrop.mapcustom.pos}">` : null;
+  const mapOverlayPhoto = imgs.mapcustom ? `<img src="${imgs.mapcustom}" style="width:100%;height:100%;object-fit:cover;object-position:${imgCrop.mapcustom.pos};transform:scale(${imgCrop.mapcustom.zoom});transform-origin:center center">` : null;
 
   const STN_MAP = {
     "池ノ上":"Ikenoue","池尻大橋":"Ikejiri-Ohashi","渋谷":"Shibuya","新宿":"Shinjuku",
