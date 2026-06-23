@@ -262,9 +262,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .lvert-photo-overlay .pt { font-size:9px; font-weight:700; color:rgba(255,255,255,0.8); margin-bottom:3px; }
 .lvert-photo-overlay .pn { font-size:18px; font-weight:900; font-family:'Noto Serif JP',serif; color:#fff; line-height:1.2; margin-bottom:4px; }
 .lvert-photo-overlay .pp { font-size:12px; font-weight:700; }
-.lvert-right-panel { display:flex; flex-direction:column; overflow:hidden; }
+.lvert-right-panel { display:flex; flex-direction:column; overflow:hidden; height:100%; }
 .lvert-accent-bar { flex-shrink:0; height:6px; width:100%; display:block; }
-.lvert-right-body { display:grid; grid-template-columns:62% 38%; flex:1; min-height:0; overflow:hidden; }
+.lvert-right-body { display:grid; grid-template-columns:62% 38%; flex:1; min-height:0; overflow:hidden; height:100%; }
 .lvert-spec-col { overflow:hidden; border-right:1px solid #e0e0e0; display:flex; flex-direction:column; }
 .lvert-fp-col { display:flex; align-items:center; justify-content:center; overflow:hidden; background:#f0f0f0; position:relative; height:100%; padding:8px; box-sizing:border-box; }
 .lvert-fp-col img { max-width:100%; max-height:100%; object-fit:contain; display:block; margin:auto; }
@@ -1547,20 +1547,20 @@ function compileActiveTemplateHTML() {
   const body=el('ms-canvas-body');
   if(!body) return;
   
+  // Base style all cover images must have — crop overlays on top
+  const BASE_COVER = 'width:100%;height:100%;object-fit:cover;display:block;';
+
   function cropStyle(key) {
-    if (key === 'floorplan') return ''; // floorplan uses contain — never crop
+    if (key === 'floorplan') return BASE_COVER.replace('cover','contain'); // floorplan uses contain
     const c = imgCrop[key];
-    if (!c) return '';
-    const pos = c.pos || 'center center';
-    const zoom = c.zoom || 1;
-    if (zoom === 1 && pos === 'center center') return '';
-    // Scale from center center to avoid drift; object-position handles framing
-    return ` style="object-position:${pos};transform:scale(${zoom});transform-origin:center center"`;
+    const pos = (c && c.pos) ? c.pos : 'center center';
+    const zoom = (c && c.zoom) ? c.zoom : 1;
+    return ` style="${BASE_COVER}object-position:${pos};transform:scale(${zoom});transform-origin:center center"`;
   }
-  const extPhoto = imgs.exterior ? `<img src="${imgs.exterior}"${cropStyle('exterior')}>` : `<div style="color:#555;font-size:12px">${t.extPh}</div>`;
-  const fpPhoto = imgs.floorplan ? `<img src="${imgs.floorplan}"${cropStyle('floorplan')}>` : `<div style="color:#bbb;font-size:11px">${t.fpPh}</div>`;
-  const entPhoto = imgs.entrance ? `<img src="${imgs.entrance}"${cropStyle('entrance')}>` : `<div style="color:#aaa;font-size:11px">${t.entPh}</div>`;
-  const mapOverlayPhoto = imgs.mapcustom ? `<img src="${imgs.mapcustom}" style="width:100%;height:100%;object-fit:cover;object-position:${imgCrop.mapcustom.pos};transform:scale(${imgCrop.mapcustom.zoom});transform-origin:center center">` : null;
+  const extPhoto = imgs.exterior ? `<img src="${imgs.exterior}"${cropStyle('exterior')}>` : `<div style="color:#555;font-size:12px;padding:8px">${t.extPh}</div>`;
+  const fpPhoto = imgs.floorplan ? `<img src="${imgs.floorplan}"${cropStyle('floorplan')}>` : `<div style="color:#bbb;font-size:11px;padding:8px">${t.fpPh}</div>`;
+  const entPhoto = imgs.entrance ? `<img src="${imgs.entrance}"${cropStyle('entrance')}>` : `<div style="color:#aaa;font-size:11px;padding:8px">${t.entPh}</div>`;
+  const mapOverlayPhoto = imgs.mapcustom ? `<img src="${imgs.mapcustom}" style="${BASE_COVER}object-position:${imgCrop.mapcustom.pos};transform:scale(${imgCrop.mapcustom.zoom});transform-origin:center center">` : null;
 
   const STN_MAP = {
     "池ノ上":"Ikenoue","池尻大橋":"Ikejiri-Ohashi","渋谷":"Shibuya","新宿":"Shinjuku",
