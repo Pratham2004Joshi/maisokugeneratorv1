@@ -125,7 +125,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .ub.done{border-style:solid;border-color:#22c55e;color:#22c55e;background:#f0fff4}
 .uprev{max-height:90px;border-radius:4px;border:1px solid #eee;margin-top:7px;display:none}
 .crop-ctrl{margin-top:6px;}
-.crop-thumb-btn{display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:4px 10px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer;font-size:11px;color:#475569;transition:background .15s;}
+.crop-thumb-btn{display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:4px 10px;background:var(--bg-chip);border:1px solid var(--border-input);border-radius:4px;cursor:pointer;font-size:11px;color:var(--text-label);transition:background .15s;}
 .crop-thumb-btn:hover{background:#e0e7ff;color:#4c1d95;}
 .crop-thumb-btn.has-crop{border-color:#7c3aed;color:#7c3aed;background:#f5f3ff;}
 /* Crop modal */
@@ -159,10 +159,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .scan-bar-wrap{height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;margin-bottom:8px}
 .scan-bar{height:100%;width:0%;background:linear-gradient(90deg,#7c3aed,#C8102E);border-radius:3px;transition:width .4s ease}
 .scan-status{font-size:11px;color:#7c3aed;font-weight:600;letter-spacing:.04em}
-.scan-result-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:12px}
+.scan-result-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-input);font-size:12px}
 .scan-result-row:last-child{border-bottom:none}
-.scan-result-key{color:#475569;font-weight:500}
-.scan-result-val{color:#111;font-weight:600;max-width:240px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scan-result-key{color:var(--text-label);font-weight:500}
+.scan-result-val{color:var(--text-body);font-weight:600;max-width:240px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #scan-apikey:focus{border-color:#7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,.15);}
 #scan-fields-preview{margin-top:16px;max-height:280px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px;display:none}
 .scan-err{background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:10px 14px;font-size:12px;color:#dc2626;margin-top:12px;display:none}
@@ -255,13 +255,16 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
    3-column body: 32% portrait exterior (with text overlay) | 42% spec table | 26% floor plan
    Bottom strip: entrance | amenities | map
 */
-.lvert-body { display:grid; grid-template-columns:32% 42% 26%; flex:1; min-height:0; border-bottom:1px solid #e0e0e0; }
+.lvert-body { display:grid; grid-template-columns:32% 68%; flex:1; min-height:0; border-bottom:1px solid #e0e0e0; }
 .lvert-ext-col { position:relative; overflow:hidden; background:#111; border-right:1px solid #e0e0e0; }
 .lvert-ext-col img { width:100%; height:100%; object-fit:cover; object-position:center center; }
 .lvert-photo-overlay { position:absolute; bottom:0; left:0; right:0; padding:14px 16px; background:linear-gradient(to top, rgba(0,0,0,0.92) 0%, transparent 100%); z-index:5; }
 .lvert-photo-overlay .pt { font-size:9px; font-weight:700; color:rgba(255,255,255,0.8); margin-bottom:3px; }
 .lvert-photo-overlay .pn { font-size:18px; font-weight:900; font-family:'Noto Serif JP',serif; color:#fff; line-height:1.2; margin-bottom:4px; }
 .lvert-photo-overlay .pp { font-size:12px; font-weight:700; }
+.lvert-right-panel { display:flex; flex-direction:column; overflow:hidden; }
+.lvert-accent-bar { flex-shrink:0; height:6px; width:100%; }
+.lvert-right-body { display:grid; grid-template-columns:62% 38%; flex:1; min-height:0; overflow:hidden; }
 .lvert-spec-col { overflow:hidden; border-right:1px solid #e0e0e0; display:flex; flex-direction:column; }
 .lvert-fp-col { display:flex; align-items:center; justify-content:center; overflow:hidden; background:#f0f0f0; position:relative; height:100%; padding:8px; box-sizing:border-box; }
 .lvert-fp-col img { max-width:100%; max-height:100%; object-fit:contain; display:block; margin:auto; }
@@ -349,7 +352,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 
 <div id="fp">
   <div class="io-row" style="flex-wrap:wrap;gap:8px">
-    <span style="font-size:12px; font-weight:bold; color:#334155;" id="io-title">物件データ保存 / 読込:</span>
+    <span style="font-size:12px; font-weight:bold; color:var(--text-body);" id="io-title">物件データ保存 / 読込:</span>
     <button class="btn btn-ai" style="padding:7px 14px;" id="btn-scan-txt" onclick="startPDFScan(this)">
       ✨ AIでPDFを読み込む
     </button>
@@ -364,10 +367,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
   </div>
   <!-- Document queue display -->
   <div id="doc-queue-wrap" style="display:none;margin-top:8px;padding:10px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;">
-    <div style="font-size:11px;font-weight:700;color:#334155;margin-bottom:6px;" id="doc-queue-title">書類キュー (0件)</div>
+    <div style="font-size:11px;font-weight:700;color:var(--text-label);margin-bottom:6px;" id="doc-queue-title">書類キュー (0件)</div>
     <div id="doc-queue-list" style="display:flex;flex-direction:column;gap:6px;"></div>
     <div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end;">
-      <button class="btn" style="background:#e2e8f0;color:#334155;font-size:11px;padding:5px 10px;" onclick="clearDocQueue()">🗑 クリア</button>
+      <button class="btn" style="background:var(--bg-chip);color:var(--text-body);font-size:11px;padding:5px 10px;" onclick="clearDocQueue()">🗑 クリア</button>
       <button class="btn btn-ai" style="font-size:11px;padding:5px 12px;" id="btn-scan-queue-txt" onclick="scanAllDocuments()">✨ まとめてスキャン</button>
     </div>
   </div>
@@ -378,7 +381,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
       <h3>✨ <span id="scan-modal-title">物件PDFをスキャン中…</span></h3>
       <p id="scan-modal-desc">AIが物件概要書を解析し、フォームに自動入力します。<br>数秒お待ちください。</p>
       <div id="scan-apikey-row" style="margin-bottom:14px;display:none;">
-        <label style="font-size:11px;font-weight:700;color:#475569;display:block;margin-bottom:5px;">🔑 Anthropic API Key</label>
+        <label style="font-size:11px;font-weight:700;color:var(--text-label);display:block;margin-bottom:5px;">🔑 Anthropic API Key</label>
         <input id="scan-apikey" type="password" placeholder="sk-ant-..." style="width:100%;padding:8px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;">
         <div style="font-size:10px;color:#94a3b8;margin-top:4px;">APIキーはこのブラウザにのみ保存されます。外部に送信されません。</div>
       </div>
@@ -389,7 +392,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
       <div id="scan-fields-preview"></div>
       <div class="scan-err" id="scan-err"></div>
       <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end" id="scan-btns">
-        <button class="btn" id="scan-cancel-btn" style="background:#e2e8f0;color:#334155" onclick="closeScanModal()">キャンセル</button>
+        <button class="btn" id="scan-cancel-btn" style="background:var(--bg-chip);color:var(--text-body)" onclick="closeScanModal()">キャンセル</button>
         <button class="btn btn-ai" id="scan-apply-btn" style="display:none;padding:8px 20px" onclick="applyScanResults()">✅ フォームに反映する</button>
       </div>
     </div>
@@ -441,9 +444,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
       <div class="fr"><div class="fl" id="l-m2">徒歩（分）</div><div class="fi"><input id="f-m2" oninput="upd()" placeholder="15"></div></div>
     </div>
     
-    <div class="sbox" style="border-color: #cbd5e1; background: #f8fafc;">
+    <div class="sbox">
       <div class="sbox-t" id="l-coord-title">🗺️ 地図の微調整 (座標指定)</div>
-      <p id="l-coord-desc" style="font-size: 11px; color: #64748b; margin-bottom: 10px; line-height: 1.4;">
+      <p id="l-coord-desc" style="font-size: 11px; color: var(--text-label); margin-bottom: 10px; line-height: 1.4;">
         住所自動生成のピンがずれる場合、ここにGoogleマップ等からコピーした座標を入力してください。
       </p>
       <div class="fr">
@@ -1594,7 +1597,7 @@ function compileActiveTemplateHTML() {
     return `<div class="render-acc-box" style="background:transparent; padding: 0 4px; margin-bottom:3px;">
         <div style="color:#64748b;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${line}</div>
         <div style="font-size:11px;font-weight:700;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${quote}${t.stSfx}</div>
-        ${min ? `<div style="font-size:9px;color:#475569;">${t.wPfx}<strong>${min}</strong>${t.wSfx}</div>` : ''}
+        ${min ? `<div style="font-size:9px;color:var(--text-label);">${t.wPfx}<strong>${min}</strong>${t.wSfx}</div>` : ''}
       </div>`;
   };
 
@@ -1627,7 +1630,7 @@ function compileActiveTemplateHTML() {
   const _acc1 = buildAccRow(1), _acc2 = buildAccRow(2);
   const sharedAccessOverlayBlock = (_acc1 || _acc2) ? `
     <div style="position:absolute;bottom:6px;right:6px;z-index:50;background:rgba(255,255,255,0.93);border:1px solid #d1d5db;box-shadow:0 2px 8px rgba(0,0,0,0.18);border-radius:3px;padding:5px 8px;display:inline-flex;flex-direction:column;gap:0;max-width:220px;min-width:0;">
-      <div style="font-weight:700;color:#475569;font-size:11px;border-bottom:1px solid #e2e8f0;padding-bottom:3px;margin-bottom:4px;white-space:nowrap;">${t.accTitle}</div>
+      <div style="font-weight:700;color:var(--text-body);font-size:11px;border-bottom:1px solid var(--border-input);padding-bottom:3px;margin-bottom:4px;white-space:nowrap;">${t.accTitle}</div>
       ${_acc1}${_acc2}
     </div>` : '';
 
@@ -1746,8 +1749,13 @@ function compileActiveTemplateHTML() {
             <div class="pp" id="ms-pp"></div>
           </div>
         </div>
-        <div class="lvert-spec-col ms-tbl" id="${dockId}"></div>
-        <div class="lvert-fp-col">${fpPhoto}</div>
+        <div class="lvert-right-panel">
+          <div class="lvert-accent-bar" id="lvert-accent-bar"></div>
+          <div class="lvert-right-body">
+            <div class="lvert-spec-col ms-tbl" id="${dockId}"></div>
+            <div class="lvert-fp-col">${fpPhoto}</div>
+          </div>
+        </div>
       </div>
       <div class="lvert-bottom">
         <div class="lvert-ent-box">${entPhoto}</div>
@@ -1829,7 +1837,9 @@ function applyDesign() {
   if(innerSpec) innerSpec.style.borderColor = p.botBorder;
 
   // ── Vertical layout header: apply accent background ──
-  // ── Vertical layout: price color on photo overlay ──
+  // ── Vertical layout: accent bar + price color on photo overlay ──
+  const lvertAccentBar = document.getElementById('lvert-accent-bar');
+  if (lvertAccentBar) lvertAccentBar.style.background = p.thBg;
   const lvertOverlay = document.querySelector('.lvert-photo-overlay');
   if (lvertOverlay) {
     const lvertPp = lvertOverlay.querySelector('.pp');
@@ -2239,7 +2249,7 @@ function renderDocQueue() {
     const color = { queued: '#94a3b8', ok: '#16a34a', error: '#dc2626' }[doc.status];
     return `<div style="display:flex;align-items:center;gap:8px;padding:4px 6px;background:#fff;border-radius:4px;border:1px solid #e2e8f0;font-size:11px;">
       <span>${badge}</span>
-      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#334155">${doc.name}</span>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-body)">${doc.name}</span>
       <span style="color:${color};font-size:10px">${doc.status === 'queued' ? (lang==='en'?'queued':'待機中') : doc.status === 'ok' ? (lang==='en'?'scanned':'スキャン済') : (lang==='en'?'error':'エラー')}</span>
       <button onclick="removeDocFromQueue(${i})" style="border:none;background:none;cursor:pointer;color:#94a3b8;font-size:14px;line-height:1;padding:0 2px">✕</button>
     </div>`;
@@ -2633,7 +2643,7 @@ function showScanPreview(data) {
     ? Object.entries(data.extras).filter(([, v]) => v !== null && v !== '')
     : [];
 
-  let html = `<div style="font-size:11px;font-weight:700;color:#334155;margin-bottom:8px;letter-spacing:.04em">
+  let html = `<div style="font-size:11px;font-weight:700;color:var(--text-label);margin-bottom:8px;letter-spacing:.04em">
     ${lang==='en' ? `${found.length + extraRows.length} fields detected` : `${found.length + extraRows.length}項目を検出しました`}
   </div>`;
 
@@ -2661,8 +2671,8 @@ function showScanPreview(data) {
   // Review section — optional fields the AI flagged as possibly maisoku-relevant
   const reviewItems = Array.isArray(data.review) ? data.review : [];
   if (reviewItems.length > 0) {
-    html += `<div style="margin-top:12px;padding-top:10px;border-top:1px solid #e2e8f0">
-      <div style="font-size:11px;font-weight:700;color:#92400e;margin-bottom:6px;letter-spacing:.04em">
+    html += `<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border-input)">
+      <div style="font-size:11px;font-weight:700;color:#d97706;margin-bottom:6px;letter-spacing:.04em">
         ${lang==='en' ? '⚠️ Optional fields — tick to include on maisoku' : '⚠️ 追加項目 — マイソクに含める場合はチェック'}
       </div>`;
     reviewItems.forEach((item, i) => {
@@ -2675,7 +2685,7 @@ function showScanPreview(data) {
         <label for="rv-chk-${i}" style="cursor:pointer;flex:1">
           <span class="scan-result-key" style="display:block">${displayLabel}</span>
           <span class="scan-result-val" style="display:block">${String(displayVal || '').slice(0, 80)}</span>
-          ${reason ? `<span style="font-size:9px;color:#94a3b8;display:block;margin-top:1px">${reason}</span>` : ''}
+          ${reason ? `<span style="font-size:9px;color:var(--text-label);display:block;margin-top:1px">${reason}</span>` : ''}
         </label>
       </div>`;
     });
