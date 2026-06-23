@@ -93,6 +93,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 #app{max-width:1150px;margin:20px auto;display:flex;background:var(--bg-app);border-radius:8px;overflow:hidden;box-shadow:var(--shadow-app);transition:background .25s,box-shadow .25s}
 #sidebar{width:160px;background:var(--bg-side);padding:18px 0;flex-shrink:0;transition:background .25s}
 .ti{padding:11px 18px;cursor:pointer;font-size:12px;color:var(--text-side);border-left:3px solid transparent;transition:all .15s}
+.pal-btn{display:flex;align-items:center;gap:8px;padding:7px 10px;cursor:pointer;font-size:12px;color:var(--text-side);border-left:3px solid transparent;border-radius:4px;transition:all .15s}
+.pal-btn:hover{color:#ddd;background:var(--bg-side-hover)}
+.pal-btn.on{color:var(--text-side-active);font-weight:700;border-left-color:#C8102E;background:var(--bg-side-active)}
+.pal-swatch{display:inline-block;width:12px;height:12px;border-radius:2px;flex-shrink:0}
 .ti:hover{color:#ddd;background:var(--bg-side-hover)}
 .ti.on{color:var(--text-side-active);font-weight:700;border-left-color:#C8102E;background:var(--bg-side-active)}
 .sb-sec{margin:18px 10px 6px;border-top:1px solid var(--border-side);padding-top:12px}
@@ -316,13 +320,30 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
   <div class="sb-sec">
     <div class="sb-lbl" id="sb-dl">デザイン</div>
     <div class="di-group-label" style="font-size:9px;color:#888;padding:4px 8px 2px;letter-spacing:.05em;">── 横型写真</div>
-    <div class="di on" id="d0" onclick="setDesign(0,this)">クラシック（赤黒）</div>
-    <div class="di" id="d1" onclick="setDesign(1,this)">プレミアム（紺金）</div>
+    <div class="di on" id="d0" onclick="setDesign(0,this)">クラシック</div>
+    <div class="di" id="d1" onclick="setDesign(1,this)">プレミアム</div>
     <div class="di" id="d2" onclick="setDesign(2,this)">モダンホライズン</div>
     <div class="di-group-label" style="font-size:9px;color:#888;padding:6px 8px 2px;letter-spacing:.05em;">── 縦型写真</div>
-    <div class="di" id="d3" onclick="setDesign(3,this)">クラシック縦型（赤黒）</div>
-    <div class="di" id="d4" onclick="setDesign(4,this)">プレミアム縦型（紺金）</div>
+    <div class="di" id="d3" onclick="setDesign(3,this)">クラシック縦型</div>
+    <div class="di" id="d4" onclick="setDesign(4,this)">プレミアム縦型</div>
     <div class="di" id="d5" onclick="setDesign(5,this)">モダン縦型</div>
+  </div>
+  <div class="sb-sec" id="palette-sec">
+    <div class="sb-lbl">カラー</div>
+    <div style="display:flex;flex-direction:column;gap:2px;padding:4px 8px;">
+      <div class="pal-btn on" onclick="setPalette(0)">
+        <span class="pal-swatch" style="background:#C8102E"></span>赤黒
+      </div>
+      <div class="pal-btn" onclick="setPalette(1)">
+        <span class="pal-swatch" style="background:#0D1B2A"></span>紺金
+      </div>
+      <div class="pal-btn" onclick="setPalette(2)">
+        <span class="pal-swatch" style="background:#22252a"></span>墨白
+      </div>
+      <div class="pal-btn" onclick="setPalette(3)">
+        <span class="pal-swatch" style="background:#1B4332"></span>深緑
+      </div>
+    </div>
   </div>
 </div>
 
@@ -606,14 +627,47 @@ en:{appTitle:'Maisoku Generator',
       coords:'e.g. 35.6517, 139.6645'}}
 };
 
+// DS now defines layout structure only — colors come from PALETTES
 const DS=[
-  {layout:'la',thBg:'#C8102E',thTx:'#fff',footBg:'#fff',footTx:'#111',prColor:'#C8102E',botBorder:'#111',bg:'#fff',tdBg:'',footBorder:'#ccc',npBg:'#C8102E'},
-  {layout:'lb',thBg:'#0D1B2A',thTx:'#C9A84C',footBg:'#fff',footTx:'#111',prColor:'#C9A84C',botBorder:'#0D1B2A',bg:'#fff',tdBg:'',footBorder:'#ccc',npBg:'#0D1B2A'},
-  {layout:'lc',thBg:'#22252a',thTx:'#fff',footBg:'#fff',footTx:'#111',prColor:'#C8102E',botBorder:'#111',bg:'#e2e8f0',tdBg:'#fff',footBorder:'#ccc',npBg:'#1a1a1a'},
-  {layout:'lv',thBg:'#C8102E',thTx:'#fff',footBg:'#fff',footTx:'#111',prColor:'#C8102E',botBorder:'#111',bg:'#fff',tdBg:'',footBorder:'#ccc',npBg:'#C8102E'},
-  {layout:'lw',thBg:'#0D1B2A',thTx:'#C9A84C',footBg:'#fff',footTx:'#111',prColor:'#C9A84C',botBorder:'#0D1B2A',bg:'#fff',tdBg:'',footBorder:'#ccc',npBg:'#0D1B2A'},
-  {layout:'lx',thBg:'#22252a',thTx:'#fff',footBg:'#fff',footTx:'#111',prColor:'#C8102E',botBorder:'#111',bg:'#e2e8f0',tdBg:'#fff',footBorder:'#ccc',npBg:'#1a1a1a'}
+  {layout:'la', group:'h'},
+  {layout:'lb', group:'h'},
+  {layout:'lc', group:'h'},
+  {layout:'lv', group:'v'},
+  {layout:'lw', group:'v'},
+  {layout:'lx', group:'v'},
 ];
+
+// PALETTES — each defines the full color set applied over any layout
+const PALETTES = [
+  { id:'red',      ja:'赤黒',  en:'Red / Black',
+    thBg:'#C8102E', thTx:'#fff',    prColor:'#C8102E', npBg:'#C8102E',
+    botBorder:'#111',    footBorder:'#ccc', bg:'#fff',     tdBg:'' },
+  { id:'navy',     ja:'紺金',  en:'Navy / Gold',
+    thBg:'#0D1B2A', thTx:'#C9A84C', prColor:'#C9A84C', npBg:'#0D1B2A',
+    botBorder:'#0D1B2A', footBorder:'#ccc', bg:'#fff',     tdBg:'' },
+  { id:'charcoal', ja:'墨白',  en:'Charcoal / White',
+    thBg:'#22252a', thTx:'#fff',    prColor:'#e2e8f0', npBg:'#1a1a1a',
+    botBorder:'#333',    footBorder:'#ccc', bg:'#e2e8f0', tdBg:'#fff' },
+  { id:'forest',   ja:'深緑',  en:'Forest / Cream',
+    thBg:'#1B4332', thTx:'#F5F0E8', prColor:'#1B4332', npBg:'#1B4332',
+    botBorder:'#1B4332', footBorder:'#ccc', bg:'#fff',     tdBg:'' },
+];
+
+// Independent palette memory: h = horizontal, v = vertical
+let paletteH = 0;
+let paletteV = 0;
+
+function activePalette() {
+  return PALETTES[DS[design].group === 'v' ? paletteV : paletteH];
+}
+
+function setPalette(idx) {
+  const group = DS[design].group;
+  if (group === 'v') paletteV = idx;
+  else paletteH = idx;
+  document.querySelectorAll('.pal-btn').forEach((b,i) => b.classList.toggle('on', i === idx));
+  upd();
+}
 
 
 
@@ -989,6 +1043,9 @@ function setDesign(idx, elem) {
   design = idx;
   document.querySelectorAll('.di').forEach(d => d.classList.remove('on'));
   if (elem) elem.classList.add('on');
+  // Sync palette buttons to the active group's current palette
+  const activeIdx = DS[design].group === 'v' ? paletteV : paletteH;
+  document.querySelectorAll('.pal-btn').forEach((b,i) => b.classList.toggle('on', i === activeIdx));
   upd();
 }
 
@@ -1653,6 +1710,7 @@ function initMapContainer(layoutId) {
 function applyDesign() {
   const ms=el('ms'); if(!ms)return;
   const d=DS[design]; if(!d) return;
+  const p=activePalette();
   const t=T[lang];
 
   compileActiveTemplateHTML();
@@ -1673,37 +1731,37 @@ function applyDesign() {
     bgLayer.style.display = 'none';
     bgLayer.style.background = '';
   }
-  ss('ms-pp','color',d.prColor);
+  ss('ms-pp','color',p.prColor);
   
   // Designs 0-5: all use sans; none of the current designs use serif by default
   ms.style.fontFamily = "'Noto Sans JP', sans-serif";
 
-  document.querySelectorAll('.mth').forEach(th=>{th.style.background=d.thBg; th.style.color=d.thTx;});
-  document.querySelectorAll('#ms-spec td').forEach(td=>{td.style.background=d.tdBg || '#ffffff';});
+  document.querySelectorAll('.mth').forEach(th=>{th.style.background=p.thBg; th.style.color=p.thTx;});
+  document.querySelectorAll('#ms-spec td').forEach(td=>{td.style.background=p.tdBg || '#ffffff';});
   
-  const foot=el('ms-foot'); if(foot){foot.style.background=d.footBg; foot.style.color=d.footTx;}
-  ss('ms-fr','background',d.thBg===d.footBg?'#C8102E':d.thBg);
-  ss('ms-fr','color',d.thTx);
-  ss('ms-fi','borderLeftColor',d.footBorder);
-  ss('ms-fk','borderLeftColor',d.footBorder);
+  const foot=el('ms-foot'); if(foot){foot.style.background='#fff'; foot.style.color='#111';}
+  ss('ms-fr','background',p.thBg==='#fff'?'#C8102E':p.thBg);
+  ss('ms-fr','color',p.thTx);
+  ss('ms-fi','borderLeftColor',p.footBorder);
+  ss('ms-fk','borderLeftColor',p.footBorder);
 
   const innerSpec = el('ms-spec');
-  if(innerSpec) innerSpec.style.borderColor = d.botBorder;
+  if(innerSpec) innerSpec.style.borderColor = p.botBorder;
 
   // ── Vertical layout header: apply accent background ──
   const lvertHeader = document.querySelector('.lvert-header');
   if (lvertHeader) {
-    lvertHeader.style.background = d.npBg;
+    lvertHeader.style.background = p.npBg;
     const lvertPt = lvertHeader.querySelector('.pt');
     const lvertPn = lvertHeader.querySelector('.pn');
     const lvertPp = lvertHeader.querySelector('.pp');
     if (lvertPt) { lvertPt.style.color = 'rgba(255,255,255,0.8)'; }
     if (lvertPn) { lvertPn.style.color = '#fff'; }
-    if (lvertPp) { lvertPp.style.color = d.thTx; }
+    if (lvertPp) { lvertPp.style.color = p.thTx; }
   }
 
-  if (DS[design] && DS[design].bg && DS[design].bg !== '#fff') {
-    ms.style.background = d.bg;
+  if (p && p.bg && p.bg !== '#fff') {
+    ms.style.background = p.bg;
     if (bgLayer && imgs.exterior) {
       bgLayer.style.display = 'block';
       bgLayer.style.background = `url(${imgs.exterior}) no-repeat center center`;
@@ -1711,7 +1769,7 @@ function applyDesign() {
       bgLayer.style.opacity = '0.18';
     }
     document.querySelectorAll('#ms-spec td').forEach(td => { td.style.background = '#ffffff'; });
-    document.querySelectorAll('.ms-tbl th').forEach(th => { th.style.background = d.thBg; th.style.color = d.thTx; });
+    document.querySelectorAll('.ms-tbl th').forEach(th => { th.style.background = p.thBg; th.style.color = p.thTx; });
   }
 
   const currentPType = gv('f-pt');
