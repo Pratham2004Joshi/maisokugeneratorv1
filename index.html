@@ -2829,6 +2829,9 @@ function showTab(i,e){
 
 window.addEventListener('DOMContentLoaded', () => {
   try{ const saved=localStorage.getItem('maisoku-lang'); if(saved==='en'||saved==='ja') lang=saved; }catch(e){}
+  // Sync lang toggle buttons to restored lang
+  if(el('lj')) el('lj').classList.toggle('on', lang==='ja');
+  if(el('le')) el('le').classList.toggle('on', lang==='en');
   buildAG(); applyLang(); autoEnFields(); applyDesign();
 });
 </script>
