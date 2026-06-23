@@ -269,9 +269,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .lvert-fp-col { display:flex; align-items:center; justify-content:center; overflow:hidden; background:#f0f0f0; position:relative; height:100%; padding:8px; box-sizing:border-box; }
 .lvert-fp-col img { max-width:100%; max-height:100%; object-fit:contain; display:block; margin:auto; }
 /* Bottom strip */
-.lvert-bottom { flex-shrink:0; display:grid; grid-template-columns:30% 35% 35%; height:155px; border-bottom:1px solid #e0e0e0; background:#fff; }
+.lvert-bottom { flex-shrink:0; display:grid; grid-template-columns:32% 68%; height:155px; border-bottom:1px solid #e0e0e0; background:#fff; }
 .lvert-ent-box { position:relative; overflow:hidden; border-right:1px solid #e0e0e0; background:#222; }
 .lvert-ent-box img { width:100%; height:100%; object-fit:cover; }
+.lvert-bottom-right { display:grid; grid-template-columns:50% 50%; height:100%; }
 .lvert-am-col { border-right:1px solid #e0e0e0; overflow:hidden; }
 .lvert-map-box { position:relative; overflow:hidden; }
 
@@ -1759,10 +1760,12 @@ function compileActiveTemplateHTML() {
       </div>
       <div class="lvert-bottom">
         <div class="lvert-ent-box">${entPhoto}</div>
-        <div class="lvert-am-col ms-am-2col">${amenitiesRendered2col}</div>
-        <div class="lvert-map-box" id="${mapId}" style="position:relative;">
-          ${sharedAccessOverlayBlock}
-          ${mapOverlayPhoto ? mapOverlayPhoto : ''}
+        <div class="lvert-bottom-right">
+          <div class="lvert-am-col ms-am-2col">${amenitiesRendered2col}</div>
+          <div class="lvert-map-box" id="${mapId}" style="position:relative;">
+            ${sharedAccessOverlayBlock}
+            ${mapOverlayPhoto ? mapOverlayPhoto : ''}
+          </div>
         </div>
       </div>`;
   }
