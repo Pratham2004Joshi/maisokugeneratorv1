@@ -3329,6 +3329,7 @@ function demoNext() {
   if (demoStep < DEMO_STEPS - 1) {
     demoGo(demoStep + 1);
   } else {
+    // Last step — go to app, don't crash
     lpEnter();
   }
 }
@@ -3350,7 +3351,7 @@ function demoScanStart() {
   if (dzt) dzt.innerHTML = '📄 物件資料PDF.pdf<br><span style="color:#7c3aed;font-weight:600">解析中...</span>';
   if (prog) prog.style.display = 'flex';
 
-  const labels = ['📡 AIが資料を解析中...', '🔍 物件情報を抽出中...', '✦ データを整理中...', '✅ スキャン完了！'];
+  const labels = (LP_COPY[lang] || LP_COPY.ja).scanLabels;
   let pct = 0;
   let fieldIdx = 0;
   const interval = setInterval(() => {
@@ -3415,6 +3416,19 @@ const LP_COPY = {
     s3t: 'デザインを選択', s3d: 'レイアウトとカラーを選択。写真をドラッグで調整できます。',
     s4t: 'PDFで書き出し', s4d: 'ワンクリックでA4横向きPDFを書き出し。そのまま印刷できます。',
     note: 'ブラウザのみで動作 · インストール不要 · 社内限定',
+    demoEyebrow: 'INTERACTIVE DEMO',
+    demoTitle: '実際に触ってみる',
+    demoSub: '各ステップをクリックして、ワークフローを体験してください。',
+    dp0: 'PDFスキャン', dp1: '情報確認', dp2: 'デザイン選択', dp3: 'PDF出力',
+    demoNext: '次のステップへ →', demoTry: '実際に試してみる →',
+    dcTitle0: 'AI スキャン', dcUpload: '物件PDFをここにドロップ', dcUploadSub: 'またはクリックしてアップロード',
+    dcScanBtn: '✦ AIスキャン開始',
+    dcTitle1: '物件情報', dcBadge: '✓ AI入力済み', dcNext1: '次へ：デザイン選択 →',
+    dcTitle3: 'ワンクリックでPDF出力', dcPdfBtn: '⬇ PDFを出力する',
+    dcPdfSub: 'A4横向き · 印刷対応 · ベクター品質',
+    dcPdfDone: '✓ 出力しました', dcPdfLabel2: 'PDF出力完了！',
+    scanLabels: ['📡 AIが資料を解析中...','🔍 物件情報を抽出中...','✦ データを整理中...','✅ スキャン完了！'],
+    scanProg: '解析中...',
   },
   en: {
     eyebrow: 'R.connect Property Flyer Tool',
@@ -3428,6 +3442,19 @@ const LP_COPY = {
     s3t: 'Choose a Design', s3d: 'Pick a layout and colour palette. Drag to reframe your photos.',
     s4t: 'Export as PDF', s4d: 'One click exports a print-ready A4 landscape PDF.',
     note: 'Runs in your browser · No install · Internal use only',
+    demoEyebrow: 'INTERACTIVE DEMO',
+    demoTitle: 'Try It Yourself',
+    demoSub: 'Click through each step to experience the workflow.',
+    dp0: 'Scan PDF', dp1: 'Review Info', dp2: 'Pick Design', dp3: 'Export PDF',
+    demoNext: 'Next Step →', demoTry: 'Try It For Real →',
+    dcTitle0: 'AI Scan', dcUpload: 'Drop your property PDF here', dcUploadSub: 'or click to upload',
+    dcScanBtn: '✦ Start AI Scan',
+    dcTitle1: 'Property Info', dcBadge: '✓ AI Filled', dcNext1: 'Next: Choose Design →',
+    dcTitle3: 'One-Click PDF Export', dcPdfBtn: '⬇ Export PDF',
+    dcPdfSub: 'A4 Landscape · Print-ready · Vector quality',
+    dcPdfDone: '✓ Exported', dcPdfLabel2: 'PDF Exported!',
+    scanLabels: ['📡 Scanning document...','🔍 Extracting property data...','✦ Organising fields...','✅ Scan complete!'],
+    scanProg: 'Scanning...',
   }
 };
 
@@ -3456,6 +3483,27 @@ function lpSetLang(l) {
   st('lp-s3-title', c.s3t); st('lp-s3-desc', c.s3d);
   st('lp-s4-title', c.s4t); st('lp-s4-desc', c.s4d);
   st('lp-footer-note', c.note);
+  // Demo section
+  st('lp-demo-eyebrow', c.demoEyebrow);
+  st('lp-demo-title', c.demoTitle);
+  st('lp-demo-sub', c.demoSub);
+  st('dp-l0', c.dp0); st('dp-l1', c.dp1); st('dp-l2', c.dp2); st('dp-l3', c.dp3);
+  const nb = document.getElementById('demo-next-btn');
+  if (nb) nb.textContent = demoStep < DEMO_STEPS - 1 ? c.demoNext : c.demoTry;
+  // Step 0
+  st('dz-0-txt', c.dcUpload + '<br><span>' + c.dcUploadSub + '</span>');
+  const sb = document.getElementById('demo-scan-btn');
+  if (sb) sb.textContent = c.dcScanBtn;
+  // Step 1
+  const t1 = document.querySelector('#ds-1 .lp-dc-title');
+  if (t1) t1.innerHTML = c.dcTitle1 + ' <span class="lp-dc-badge">' + c.dcBadge + '</span>';
+  const n1 = document.querySelector('#ds-1 .lp-dc-btn');
+  if (n1) n1.textContent = c.dcNext1;
+  // Step 3
+  st('demo-pdf-label', c.dcTitle3);
+  const pb = document.getElementById('demo-pdf-btn');
+  if (pb && !pb.disabled) pb.textContent = c.dcPdfBtn;
+  st('demo-pdf-sub', c.dcPdfSub);
 }
 
 function lpEnter() {
@@ -3467,6 +3515,29 @@ function lpEnter() {
 function lpExit() {
   const lp = document.getElementById('landing');
   if (lp) lp.classList.remove('hidden');
+  // Reset demo so it doesn't crash on re-entry
+  demoStep = 0;
+  demoScanRunning = false;
+  demoGo(0);
+  // Reset scan UI
+  const btn = document.getElementById('demo-scan-btn');
+  const zone = document.getElementById('dz-0');
+  const prog = document.getElementById('demo-scan-progress');
+  const bar = document.getElementById('demo-scan-bar');
+  const fields = document.getElementById('demo-scan-fields');
+  if (btn) { btn.style.display = ''; }
+  if (zone) { zone.style.borderColor = ''; zone.style.background = ''; }
+  if (prog) prog.style.display = 'none';
+  if (bar) bar.style.width = '0';
+  if (fields) fields.innerHTML = '';
+  // Reset PDF step
+  const pdfIcon = document.getElementById('demo-pdf-icon');
+  const pdfLabel = document.getElementById('demo-pdf-label');
+  const pdfBtn = document.getElementById('demo-pdf-btn');
+  const c = LP_COPY[lang] || LP_COPY.ja;
+  if (pdfIcon) pdfIcon.textContent = '📄';
+  if (pdfLabel) { pdfLabel.textContent = c.dcTitle3; pdfLabel.style.color = ''; }
+  if (pdfBtn) { pdfBtn.textContent = c.dcPdfBtn; pdfBtn.style.background = ''; pdfBtn.disabled = false; }
   lpSetLang(lang);
 }
 
