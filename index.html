@@ -3293,7 +3293,9 @@ function showTab(i,e){
 // ── DEMO WALKTHROUGH LOGIC ──
 let demoStep = 0;
 const DEMO_STEPS = 4;
-const DEMO_SCAN_FIELDS = [
+
+// Scan fields: [ja_label, value] — value stays the same in both languages
+const DEMO_SCAN_FIELDS_JA = [
   ['物件名', 'グラントレゾール広尾'],
   ['所在地', '東京都渋谷区恵比寿2-38-3'],
   ['価格', '¥ 45,000,000'],
@@ -3303,9 +3305,18 @@ const DEMO_SCAN_FIELDS = [
   ['賃料', '250,000円/月'],
   ['表面利回り', '6.67%'],
 ];
+const DEMO_SCAN_FIELDS_EN = [
+  ['Property Name', 'Grand Tresor Hiroo'],
+  ['Address', 'Ebisu 2-38-3, Shibuya-ku'],
+  ['Price', '¥ 45,000,000'],
+  ['Layout', '1DK Maisonette'],
+  ['Floor Area', '50.30 ㎡'],
+  ['Built', 'March 2011'],
+  ['Rent', '¥250,000/mo'],
+  ['Gross Yield', '6.67%'],
+];
 
 function demoGo(step) {
-  // Mark previous steps as done
   for (let i = 0; i < DEMO_STEPS; i++) {
     const pill = document.getElementById('dp-' + i);
     const sc = document.getElementById('ds-' + i);
@@ -3319,26 +3330,21 @@ function demoGo(step) {
   if (activePill) activePill.classList.add('active');
   if (activeScreen) activeScreen.classList.add('active');
   demoStep = step;
-
-  // Update next button label using current language
-  const nb = document.getElementById('demo-next-btn');
+  // Always read from LP_COPY — never hardcode
   const _c = LP_COPY[lang] || LP_COPY.ja;
-  if (nb) nb.textContent = step < DEMO_STEPS - 1 ? _c.demoNext : _c.demoTry;
+  const nb = document.getElementById('demo-next-btn');
+  if (nb) {
+    nb.textContent = step < DEMO_STEPS - 1 ? _c.demoNext : _c.demoTry;
+    nb.style.background = '';
+    nb.style.color = '';
+    nb.style.borderColor = '';
+  }
 }
 
 function demoNext() {
   if (demoStep < DEMO_STEPS - 1) {
     demoGo(demoStep + 1);
   } else {
-    // Already on last step — enter the app
-    const nb = document.getElementById('demo-next-btn');
-    const _c = LP_COPY[lang] || LP_COPY.ja;
-    if (nb) {
-      nb.style.background = '#C8102E';
-      nb.style.color = '#fff';
-      nb.style.borderColor = '#C8102E';
-      nb.textContent = _c.demoTry;
-    }
     lpEnter();
   }
 }
@@ -3347,20 +3353,22 @@ let demoScanRunning = false;
 function demoScanStart() {
   if (demoScanRunning) return;
   demoScanRunning = true;
+  const _c = LP_COPY[lang] || LP_COPY.ja;
   const btn = document.getElementById('demo-scan-btn');
   const zone = document.getElementById('dz-0');
   const prog = document.getElementById('demo-scan-progress');
   const bar = document.getElementById('demo-scan-bar');
   const label = document.getElementById('demo-scan-label');
   const fields = document.getElementById('demo-scan-fields');
-
   if (btn) btn.style.display = 'none';
   if (zone) { zone.style.borderColor = '#7c3aed'; zone.style.background = '#faf5ff'; }
   const dzt = document.getElementById('dz-0-txt');
-  if (dzt) dzt.innerHTML = '📄 物件資料PDF.pdf<br><span style="color:#7c3aed;font-weight:600">解析中...</span>';
+  const scanFileName = lang === 'en' ? '📄 property_doc.pdf' : '📄 物件資料PDF.pdf';
+  const scanningTxt = lang === 'en' ? 'Scanning...' : '解析中...';
+  if (dzt) dzt.innerHTML = scanFileName + '<br><span style="color:#7c3aed;font-weight:600">' + scanningTxt + '</span>';
   if (prog) prog.style.display = 'flex';
-
-  const labels = (LP_COPY[lang] || LP_COPY.ja).scanLabels;
+  const labels = _c.scanLabels;
+  const scanFields = lang === 'en' ? DEMO_SCAN_FIELDS_EN : DEMO_SCAN_FIELDS_JA;
   let pct = 0;
   let fieldIdx = 0;
   const interval = setInterval(() => {
@@ -3369,12 +3377,11 @@ function demoScanStart() {
     if (bar) bar.style.width = pct + '%';
     const li = Math.floor((pct / 100) * (labels.length - 1));
     if (label) label.textContent = labels[Math.min(li, labels.length - 1)];
-    // Reveal fields progressively
-    while (fieldIdx < DEMO_SCAN_FIELDS.length && pct > (fieldIdx + 1) * (100 / DEMO_SCAN_FIELDS.length)) {
+    while (fieldIdx < scanFields.length && pct > (fieldIdx + 1) * (100 / scanFields.length)) {
       const row = document.createElement('div');
       row.className = 'lp-dc-scan-row';
       row.style.animationDelay = '0s';
-      row.innerHTML = '<span>' + DEMO_SCAN_FIELDS[fieldIdx][0] + '</span><span>' + DEMO_SCAN_FIELDS[fieldIdx][1] + '</span>';
+      row.innerHTML = '<span>' + scanFields[fieldIdx][0] + '</span><span>' + scanFields[fieldIdx][1] + '</span>';
       if (fields) fields.appendChild(row);
       fieldIdx++;
     }
@@ -3397,18 +3404,20 @@ function demoPick(idx) {
 }
 
 function demoPdfExport() {
+  const _c = LP_COPY[lang] || LP_COPY.ja;
   const btn = document.getElementById('demo-pdf-btn');
   const icon = document.getElementById('demo-pdf-icon');
   const label = document.getElementById('demo-pdf-label');
   const sub = document.getElementById('demo-pdf-sub');
-  if (btn) { btn.textContent = '⏳ 生成中...'; btn.disabled = true; }
+  const nb = document.getElementById('demo-next-btn');
+  const loadingTxt = lang === 'en' ? '⏳ Generating...' : '⏳ 生成中...';
+  if (btn) { btn.textContent = loadingTxt; btn.disabled = true; }
   setTimeout(() => {
     if (icon) icon.textContent = '✅';
-    if (label) { label.textContent = 'PDF出力完了！'; label.style.color = '#16a34a'; }
-    if (sub) sub.textContent = 'A4横向き · 印刷対応 · ベクター品質';
-    if (btn) { btn.textContent = '✓ 出力しました'; btn.style.background = '#16a34a'; btn.disabled = false; }
-    const nb = document.getElementById('demo-next-btn');
-    if (nb) nb.textContent = '実際に試してみる →';
+    if (label) { label.textContent = _c.dcPdfLabel2; label.style.color = '#16a34a'; }
+    if (sub) sub.textContent = _c.dcPdfSub;
+    if (btn) { btn.textContent = _c.dcPdfDone; btn.style.background = '#16a34a'; btn.disabled = false; }
+    if (nb) nb.textContent = _c.demoTry;
   }, 1200);
 }
 
@@ -3527,11 +3536,8 @@ function lpSetLang(l) {
   const n1 = document.getElementById('ds1-next');
   if (n1) n1.textContent = c.dcNext1;
   if (c.dcFields) { c.dcFields.forEach((f,i) => st('ds1-f'+(i+1), f)); }
-  // Sidebar nav items (all steps)
+  // Sidebar nav items (steps 0, 1, 3)
   if (c.dcSidebar) {
-    [['s0','s1','s3']].flat().forEach(s => {
-      c.dcSidebar.forEach((txt,i) => st('dsb-'+s+'-'+(i+1), txt));
-    });
     ['s0','s1','s3'].forEach(s => {
       c.dcSidebar.forEach((txt,i) => st('dsb-'+s+'-'+(i+1), txt));
     });
@@ -3555,15 +3561,17 @@ function lpSetLang(l) {
 }
 
 function lpEnter() {
-  const lp = document.getElementById('landing');
-  if (lp) lp.classList.add('hidden');
-  // Explicitly ensure app is visible
+  // Show app FIRST before hiding landing — prevents white screen if applyLang throws
   const topbar = document.getElementById('topbar');
   const app = document.getElementById('app');
   if (topbar) topbar.style.display = 'flex';
   if (app) app.style.display = 'flex';
+  // Now hide landing
+  const lp = document.getElementById('landing');
+  if (lp) lp.classList.add('hidden');
   window.scrollTo(0, 0);
-  applyLang();
+  // Wrap render refresh — a throw here must never blank the page
+  try { applyLang(); } catch(err) { console.error('applyLang error on enter:', err); }
 }
 
 function lpExit() {
@@ -3579,9 +3587,9 @@ function lpExit() {
     if (pill) { pill.classList.remove('active','done'); if(i===0) pill.classList.add('active'); }
     if (sc) { sc.classList.remove('active'); if(i===0) sc.classList.add('active'); }
   }
-  // Reset next-btn styling
+  // Reset next-btn styling only — do NOT reassign onclick (stacks with HTML attribute)
   const nb = document.getElementById('demo-next-btn');
-  if (nb) { nb.style.background=''; nb.style.color=''; nb.style.borderColor=''; nb.onclick=function(){demoNext();}; }
+  if (nb) { nb.style.background=''; nb.style.color=''; nb.style.borderColor=''; }
   // Reset scan UI
   const btn = document.getElementById('demo-scan-btn');
   const zone = document.getElementById('dz-0');
