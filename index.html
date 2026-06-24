@@ -496,10 +496,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
         <div class="lp-demo-step active" id="ds-0">
           <div class="lp-demo-sidebar">
             <div class="lp-ds-logo">R</div>
-            <div class="lp-ds-item active">📋 物件情報</div>
-            <div class="lp-ds-item">📐 スペック</div>
-            <div class="lp-ds-item">🚉 アクセス</div>
-            <div class="lp-ds-item">🖼 画像</div>
+            <div class="lp-ds-item active" id="dsb-s0-1">📋 物件情報</div>
+            <div class="lp-ds-item" id="dsb-s0-2">📐 スペック</div>
+            <div class="lp-ds-item" id="dsb-s0-3">🚉 アクセス</div>
+            <div class="lp-ds-item" id="dsb-s0-4">🖼 画像</div>
           </div>
           <div class="lp-demo-content">
             <div class="lp-dc-title" id="ds0-title">AI スキャン</div>
@@ -519,10 +519,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
         <div class="lp-demo-step" id="ds-1">
           <div class="lp-demo-sidebar">
             <div class="lp-ds-logo">R</div>
-            <div class="lp-ds-item active">📋 物件情報</div>
-            <div class="lp-ds-item">📐 スペック</div>
-            <div class="lp-ds-item">🚉 アクセス</div>
-            <div class="lp-ds-item">🖼 画像</div>
+            <div class="lp-ds-item active" id="dsb-s1-1">📋 物件情報</div>
+            <div class="lp-ds-item" id="dsb-s1-2">📐 スペック</div>
+            <div class="lp-ds-item" id="dsb-s1-3">🚉 アクセス</div>
+            <div class="lp-ds-item" id="dsb-s1-4">🖼 画像</div>
           </div>
           <div class="lp-demo-content">
             <div class="lp-dc-title" id="ds1-title">物件情報 <span class="lp-dc-badge" id="ds1-badge">✓ AI入力済み</span></div>
@@ -541,11 +541,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
         <div class="lp-demo-step" id="ds-2">
           <div class="lp-demo-sidebar">
             <div class="lp-ds-logo">R</div>
-            <div class="lp-ds-sec-label">横型写真</div>
+            <div class="lp-ds-sec-label" id="ds2-grp-h">横型写真</div>
             <div class="lp-ds-item active" id="dd-0" onclick="demoPick(0)">クラシック</div>
             <div class="lp-ds-item" id="dd-1" onclick="demoPick(1)">プレミアム</div>
             <div class="lp-ds-item" id="dd-2" onclick="demoPick(2)">モダン</div>
-            <div class="lp-ds-sec-label">縦型写真</div>
+            <div class="lp-ds-sec-label" id="ds2-grp-v">縦型写真</div>
             <div class="lp-ds-item" id="dd-3" onclick="demoPick(3)">縦型</div>
           </div>
           <div class="lp-demo-content" style="padding:0;overflow:hidden;">
@@ -553,19 +553,19 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
               <!-- Classic -->
               <div class="ldm-layout ldm-classic active" id="ldm-0">
                 <div class="ldm-hero" style="background:linear-gradient(135deg,#1a1a1a 60%,#333);display:flex;align-items:flex-end;padding:12px;">
-                  <div><div style="font-size:8px;color:rgba(255,255,255,.7);margin-bottom:2px;">投資用物件</div><div style="font-size:15px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;">グラントレゾール広尾</div><div style="font-size:11px;font-weight:700;color:#C8102E;">¥ 45,000,000</div></div>
+                  <div><div id="ldm-0-tag" style="font-size:8px;color:rgba(255,255,255,.7);margin-bottom:2px;">投資用物件</div><div style="font-size:15px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;">グラントレゾール広尾</div><div style="font-size:11px;font-weight:700;color:#C8102E;">¥ 45,000,000</div></div>
                 </div>
                 <div class="ldm-spec">
-                  <div class="ldm-spec-head" style="background:#C8102E;color:#fff;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
+                  <div id="ldm-0-head" class="ldm-spec-head" style="background:#C8102E;color:#fff;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
                   <table class="ldm-tbl"><tbody>
-                    <tr><th>所在地</th><td>渋谷区恵比寿2-38-3</td></tr>
-                    <tr><th>間取り</th><td>1DK メゾネット型</td></tr>
-                    <tr><th>専有面積</th><td>50.30㎡</td></tr>
-                    <tr><th>築年月</th><td>2011年3月</td></tr>
-                    <tr><th>賃料</th><td>250,000円/月</td></tr>
-                    <tr><th>管理費</th><td>23,610円/月</td></tr>
-                    <tr><th>表面利回り</th><td>6.67%</td></tr>
-                    <tr><th>現況</th><td>賃貸中</td></tr>
+                    <tr><th id="ldm-0-r1">所在地</th><td>渋谷区恵比寿2-38-3</td></tr>
+                    <tr><th id="ldm-0-r2">間取り</th><td>1DK メゾネット型</td></tr>
+                    <tr><th id="ldm-0-r3">専有面積</th><td>50.30㎡</td></tr>
+                    <tr><th id="ldm-0-r4">築年月</th><td>2011年3月</td></tr>
+                    <tr><th id="ldm-0-r5">賃料</th><td>¥250,000/mo</td></tr>
+                    <tr><th id="ldm-0-r6">管理費</th><td>¥23,610/mo</td></tr>
+                    <tr><th id="ldm-0-r7">表面利回り</th><td>6.67%</td></tr>
+                    <tr><th id="ldm-0-r8">現況</th><td id="ldm-0-v8">賃貸中</td></tr>
                   </tbody></table>
                 </div>
               </div>
@@ -577,13 +577,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
                   <div style="font-size:10px;font-weight:700;color:#C9A84C;">¥ 45,000,000</div>
                 </div>
                 <div class="ldm-spec" style="background:#F4F1EC;">
-                  <div class="ldm-spec-head" style="background:#0D1B2A;color:#C9A84C;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
+                  <div id="ldm-1-head" class="ldm-spec-head" style="background:#0D1B2A;color:#C9A84C;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
                   <table class="ldm-tbl" style="background:#F4F1EC;"><tbody>
-                    <tr><th style="background:#0D1B2A;color:#C9A84C;">所在地</th><td>渋谷区恵比寿2-38-3</td></tr>
-                    <tr><th style="background:#0D1B2A;color:#C9A84C;">間取り</th><td>1DK メゾネット型</td></tr>
-                    <tr><th style="background:#0D1B2A;color:#C9A84C;">専有面積</th><td>50.30㎡</td></tr>
-                    <tr><th style="background:#0D1B2A;color:#C9A84C;">賃料</th><td>250,000円/月</td></tr>
-                    <tr><th style="background:#0D1B2A;color:#C9A84C;">表面利回り</th><td>6.67%</td></tr>
+                    <tr><th id="ldm-1-r1" style="background:#0D1B2A;color:#C9A84C;">所在地</th><td>渋谷区恵比寿2-38-3</td></tr>
+                    <tr><th id="ldm-1-r2" style="background:#0D1B2A;color:#C9A84C;">間取り</th><td>1DK メゾネット型</td></tr>
+                    <tr><th id="ldm-1-r3" style="background:#0D1B2A;color:#C9A84C;">専有面積</th><td>50.30㎡</td></tr>
+                    <tr><th id="ldm-1-r4" style="background:#0D1B2A;color:#C9A84C;">賃料</th><td>¥250,000/mo</td></tr>
+                    <tr><th id="ldm-1-r5" style="background:#0D1B2A;color:#C9A84C;">表面利回り</th><td>6.67%</td></tr>
                   </tbody></table>
                 </div>
               </div>
@@ -595,31 +595,31 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
                   <div style="font-size:10px;font-weight:700;color:#fff;">¥ 45,000,000</div>
                 </div>
                 <div class="ldm-spec" style="background:#fff;">
-                  <div class="ldm-spec-head" style="background:#111;color:#fff;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
+                  <div id="ldm-2-head" class="ldm-spec-head" style="background:#111;color:#fff;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
                   <table class="ldm-tbl"><tbody>
-                    <tr><th style="background:#111;color:#fff;">所在地</th><td>渋谷区恵比寿2-38-3</td></tr>
-                    <tr><th style="background:#111;color:#fff;">間取り</th><td>1DK メゾネット型</td></tr>
-                    <tr><th style="background:#111;color:#fff;">専有面積</th><td>50.30㎡</td></tr>
-                    <tr><th style="background:#111;color:#fff;">賃料</th><td>250,000円/月</td></tr>
-                    <tr><th style="background:#111;color:#fff;">表面利回り</th><td>6.67%</td></tr>
+                    <tr><th id="ldm-2-r1" style="background:#111;color:#fff;">所在地</th><td>渋谷区恵比寿2-38-3</td></tr>
+                    <tr><th id="ldm-2-r2" style="background:#111;color:#fff;">間取り</th><td>1DK メゾネット型</td></tr>
+                    <tr><th id="ldm-2-r3" style="background:#111;color:#fff;">専有面積</th><td>50.30㎡</td></tr>
+                    <tr><th id="ldm-2-r4" style="background:#111;color:#fff;">賃料</th><td>¥250,000/mo</td></tr>
+                    <tr><th id="ldm-2-r5" style="background:#111;color:#fff;">表面利回り</th><td>6.67%</td></tr>
                   </tbody></table>
                 </div>
               </div>
               <!-- Vertical -->
               <div class="ldm-layout ldm-vert" id="ldm-3">
                 <div class="ldm-vert-left" style="background:linear-gradient(180deg,#1a1a1a,#333);display:flex;flex-direction:column;justify-content:flex-end;padding:10px;">
-                  <div style="font-size:7px;color:rgba(255,255,255,.7);margin-bottom:2px;">縦型写真</div>
+                  <div id="ldm-3-tag" style="font-size:7px;color:rgba(255,255,255,.7);margin-bottom:2px;">縦型写真</div>
                   <div style="font-size:13px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;line-height:1.2;">グラントレゾール<br>広尾</div>
                   <div style="font-size:9px;font-weight:700;color:#C8102E;margin-top:3px;">¥ 45,000,000</div>
                 </div>
                 <div class="ldm-spec" style="background:#fff;">
-                  <div class="ldm-spec-head" style="background:#C8102E;color:#fff;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
+                  <div id="ldm-3-head" class="ldm-spec-head" style="background:#C8102E;color:#fff;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
                   <table class="ldm-tbl"><tbody>
-                    <tr><th>所在地</th><td>恵比寿2-38-3</td></tr>
-                    <tr><th>間取り</th><td>1DK</td></tr>
-                    <tr><th>面積</th><td>50.30㎡</td></tr>
-                    <tr><th>賃料</th><td>250,000円</td></tr>
-                    <tr><th>利回り</th><td>6.67%</td></tr>
+                    <tr><th id="ldm-3-r1">所在地</th><td>恵比寿2-38-3</td></tr>
+                    <tr><th id="ldm-3-r2">間取り</th><td>1DK</td></tr>
+                    <tr><th id="ldm-3-r3">面積</th><td>50.30㎡</td></tr>
+                    <tr><th id="ldm-3-r4">賃料</th><td>¥250,000</td></tr>
+                    <tr><th id="ldm-3-r5">利回り</th><td>6.67%</td></tr>
                   </tbody></table>
                 </div>
               </div>
@@ -630,10 +630,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
         <div class="lp-demo-step" id="ds-3">
           <div class="lp-demo-sidebar">
             <div class="lp-ds-logo">R</div>
-            <div class="lp-ds-item">📋 物件情報</div>
-            <div class="lp-ds-item">📐 スペック</div>
-            <div class="lp-ds-item">🚉 アクセス</div>
-            <div class="lp-ds-item">🖼 画像</div>
+            <div class="lp-ds-item" id="dsb-s3-1">📋 物件情報</div>
+            <div class="lp-ds-item" id="dsb-s3-2">📐 スペック</div>
+            <div class="lp-ds-item" id="dsb-s3-3">🚉 アクセス</div>
+            <div class="lp-ds-item" id="dsb-s3-4">🖼 画像</div>
           </div>
           <div class="lp-demo-content" style="align-items:center;justify-content:center;display:flex;flex-direction:column;gap:20px;">
             <div class="lp-dc-pdf-icon" id="demo-pdf-icon">📄</div>
@@ -3434,6 +3434,14 @@ const LP_COPY = {
     dcScanBtn: '✦ AIスキャン開始',
     dcTitle1: '物件情報', dcBadge: '✓ AI入力済み', dcNext1: '次へ：デザイン選択 →',
     dcFields: ['物件名','所在地','間取り','価格','専有面積','築年月'],
+    dcSidebar: ['📋 物件情報','📐 スペック','🚉 アクセス','🖼 画像'],
+    dcGrpH: '横型写真', dcGrpV: '縦型写真',
+    dcDesigns: ['クラシック','プレミアム','モダン','縦型'],
+    ldmTag0: '投資用物件', ldmTag3: '縦型写真',
+    ldmHead: '物件概要',
+    ldmRows: ['所在地','間取り','専有面積','築年月','賃料','管理費','表面利回り','現況'],
+    ldmRows3: ['所在地','間取り','面積','賃料','利回り'],
+    ldmV8: '賃貸中',
     dcTitle3: 'ワンクリックでPDF出力', dcPdfBtn: '⬇ PDFを出力する',
     dcPdfSub: 'A4横向き · 印刷対応 · ベクター品質',
     dcPdfDone: '✓ 出力しました', dcPdfLabel2: 'PDF出力完了！',
@@ -3461,6 +3469,14 @@ const LP_COPY = {
     dcScanBtn: '✦ Start AI Scan',
     dcTitle1: 'Property Info', dcBadge: '✓ AI Filled', dcNext1: 'Next: Choose Design →',
     dcFields: ['Property Name','Address','Layout','Price','Floor Area','Built'],
+    dcSidebar: ['📋 Property Info','📐 Specs','🚉 Access','🖼 Images'],
+    dcGrpH: 'Landscape Photo', dcGrpV: 'Portrait Photo',
+    dcDesigns: ['Classic','Premium','Modern','Vertical'],
+    ldmTag0: 'Investment Property', ldmTag3: 'Portrait Layout',
+    ldmHead: 'Property Overview',
+    ldmRows: ['Location','Layout','Floor Area','Built','Rent','Mgmt Fee','Gross Yield','Status'],
+    ldmRows3: ['Location','Layout','Area','Rent','Yield'],
+    ldmV8: 'Tenanted',
     dcTitle3: 'One-Click PDF Export', dcPdfBtn: '⬇ Export PDF',
     dcPdfSub: 'A4 Landscape · Print-ready · Vector quality',
     dcPdfDone: '✓ Exported', dcPdfLabel2: 'PDF Exported!',
@@ -3511,6 +3527,26 @@ function lpSetLang(l) {
   const n1 = document.getElementById('ds1-next');
   if (n1) n1.textContent = c.dcNext1;
   if (c.dcFields) { c.dcFields.forEach((f,i) => st('ds1-f'+(i+1), f)); }
+  // Sidebar nav items (all steps)
+  if (c.dcSidebar) {
+    [['s0','s1','s3']].flat().forEach(s => {
+      c.dcSidebar.forEach((txt,i) => st('dsb-'+s+'-'+(i+1), txt));
+    });
+    ['s0','s1','s3'].forEach(s => {
+      c.dcSidebar.forEach((txt,i) => st('dsb-'+s+'-'+(i+1), txt));
+    });
+  }
+  // Step 2 design sidebar
+  st('ds2-grp-h', c.dcGrpH); st('ds2-grp-v', c.dcGrpV);
+  if (c.dcDesigns) { c.dcDesigns.forEach((d,i) => st('dd-'+i, d)); }
+  // Mini maisoku labels
+  st('ldm-0-tag', c.ldmTag0); st('ldm-3-tag', c.ldmTag3);
+  ['ldm-0-head','ldm-1-head','ldm-2-head','ldm-3-head'].forEach(id => st(id, c.ldmHead));
+  if (c.ldmRows) {
+    c.ldmRows.forEach((r,i) => { st('ldm-0-r'+(i+1), r); if(i<5) st('ldm-1-r'+(i+1), r); if(i<5) st('ldm-2-r'+(i+1), r); });
+    st('ldm-0-v8', c.ldmV8);
+  }
+  if (c.ldmRows3) { c.ldmRows3.forEach((r,i) => st('ldm-3-r'+(i+1), r)); }
   // Step 3
   st('demo-pdf-label', c.dcTitle3);
   const pb = document.getElementById('demo-pdf-btn');
