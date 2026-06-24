@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Maisoku Generator — R.connect</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -127,7 +128,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .crop-ctrl{margin-top:6px;}
 .crop-thumb-btn{display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:4px 10px;background:var(--bg-chip);border:1px solid var(--border-input);border-radius:4px;cursor:pointer;font-size:11px;color:var(--text-label);transition:background .15s;}
 .crop-thumb-btn:hover{background:#e0e7ff;color:#4c1d95;}
-.crop-thumb-btn.has-crop{border-color:#7c3aed;color:#7c3aed;background:#f5f3ff;}
+.crop-thumb-btn.has-crop{border-color:#C8102E;color:#C8102E;background:#fff0f0;}
 /* Crop modal */
 #crop-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10000;align-items:center;justify-content:center;}
 #crop-modal-overlay.active{display:flex;}
@@ -137,11 +138,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 #crop-preview-wrap:active{cursor:grabbing;}
 #crop-preview-img{position:absolute;transform-origin:0 0;pointer-events:none;}
 #crop-zoom-bar{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:12px;color:#94a3b8;}
-#crop-zoom-bar input[type=range]{flex:1;accent-color:#7c3aed;}
+#crop-zoom-bar input[type=range]{flex:1;accent-color:#C8102E;}
 #crop-modal-btns{display:flex;gap:10px;justify-content:flex-end;}
 #crop-modal-btns button{padding:8px 20px;border-radius:6px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
-#crop-confirm-btn{background:#7c3aed;color:#fff;}
-#crop-confirm-btn:hover{background:#6d28d9;}
+#crop-confirm-btn{background:#C8102E;color:#fff;}
+#crop-confirm-btn:hover{background:#a50d25;}
 #crop-cancel-btn{background:#334155;color:#cbd5e1;}
 #crop-cancel-btn:hover{background:#475569;}
 #crop-reset-btn{background:transparent;color:#64748b;margin-right:auto;font-weight:400;text-decoration:underline;padding:8px 4px;}
@@ -163,7 +164,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .scan-result-row:last-child{border-bottom:none}
 .scan-result-key{color:var(--text-label);font-weight:500}
 .scan-result-val{color:var(--text-body);font-weight:600;max-width:240px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#scan-apikey:focus{border-color:#7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,.15);}
+#scan-apikey:focus{border-color:#C8102E;box-shadow:0 0 0 2px rgba(200,16,46,.15);}
 #scan-fields-preview{margin-top:16px;max-height:280px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px;display:none}
 .scan-err{background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:10px 14px;font-size:12px;color:#dc2626;margin-top:12px;display:none}
 #pp{padding:16px 20px;overflow-y:auto;max-height:calc(100vh - 56px);flex:1;overflow-x:auto;background:var(--bg-app);transition:background .25s}
@@ -401,6 +402,128 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .lp-demo-next-btn{background:transparent;border:1px solid #2a2a32;color:#666;padding:10px 28px;border-radius:40px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s}
 .lp-demo-next-btn:hover{border-color:#C8102E;color:#fff}
 
+/* ════ BLUEPRINT LANDING REDESIGN (appearance only) ════ */
+#landing{background:#0b0b0e}
+.bp-reveal{opacity:1;transform:translateY(22px);transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.bp-reveal.in{transform:none}
+/* nav */
+.bp-nav{display:flex;align-items:center;justify-content:space-between;padding:22px 48px;flex-shrink:0}
+.bp-brand{display:flex;align-items:center;gap:12px}
+.bp-mark{background:#C8102E;color:#fff;font:700 15px 'Space Grotesk',sans-serif;padding:3px 9px;border-radius:4px}
+.bp-name{font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.06em;color:#f2f2ee}
+.bp-by{font:400 11px 'Space Mono',monospace;color:#5c5c66}
+.bp-nav-right{display:flex;align-items:center;gap:20px}
+.bp-nav-link{font:500 12px 'Space Grotesk','Noto Sans JP',sans-serif;color:#8a8a94;cursor:pointer;transition:color .15s}
+.bp-nav-link:hover{color:#f2f2ee}
+.bp-lang{display:flex;gap:5px;border:1px solid #20202a;border-radius:5px;padding:3px}
+.bp-lang-btn{font:700 11px 'Space Mono',monospace;padding:4px 10px;border-radius:3px;color:#777;background:none;border:none;cursor:pointer;transition:all .15s}
+.bp-lang-btn.on{background:#f2f2ee;color:#0b0b0e}
+/* system strip */
+.bp-strip{display:flex;align-items:center;gap:14px;padding:9px 48px;border-top:1px solid #16161c;border-bottom:1px solid #16161c;font:400 11px 'Space Mono',monospace;color:#5c5c66;letter-spacing:.08em;flex-wrap:wrap;flex-shrink:0}
+.bp-strip .dot{width:7px;height:7px;border-radius:50%;background:#C8FF4A;box-shadow:0 0 8px #C8FF4A}
+.bp-strip .glow{color:#C8FF4A}
+.bp-strip .sep{color:#2a2a34}
+.bp-strip .right{margin-left:auto;color:#5c5c66}
+/* hero */
+.bp-hero{display:grid;grid-template-columns:1.4fr 1fr;flex-shrink:0}
+.bp-hero-left{padding:54px 48px;border-right:1px solid #16161c}
+.bp-eyebrow-row{display:flex;align-items:center;gap:12px;margin-bottom:26px;flex-wrap:wrap}
+.bp-eyebrow-tag{font:700 11px 'Space Mono',monospace;color:#C8FF4A;letter-spacing:.1em}
+.bp-eyebrow-line{height:1px;width:60px;background:#20202a}
+.bp-eyebrow{font:400 11px 'Space Mono','Noto Sans JP',sans-serif;color:#5c5c66;letter-spacing:.1em}
+.bp-headline{font:900 60px 'Noto Sans JP',sans-serif;line-height:1.06;letter-spacing:-.01em;color:#f2f2ee}
+.bp-headline-en{font:700 14px 'Space Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#7a7a84;margin-top:18px}
+.bp-sub{font:400 14.5px 'Noto Sans JP',sans-serif;color:#8a8a94;max-width:440px;line-height:1.85;margin-top:22px}
+.bp-cta-row{margin-top:32px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.bp-cta{display:inline-flex;align-items:center;gap:11px;background:#C8102E;color:#fff;font:700 14px 'Space Grotesk','Noto Sans JP',sans-serif;padding:14px 32px;border-radius:5px;border:none;cursor:pointer;transition:background .15s,transform .15s}
+.bp-cta:hover{background:#a50d25;transform:translateY(-1px)}
+.bp-cta .ar{font-family:'Space Mono',monospace}
+.bp-ghost{display:inline-flex;align-items:center;gap:8px;color:#c9c9c2;font:600 13px 'Space Grotesk','Noto Sans JP',sans-serif;padding:14px 22px;border-radius:5px;border:1px solid #20202a;background:none;cursor:pointer;transition:all .15s}
+.bp-ghost:hover{border-color:#C8102E;color:#fff}
+.bp-stats{display:flex;gap:36px;margin-top:42px;padding-top:26px;border-top:1px solid #16161c}
+.bp-stat-n{font:700 30px 'Space Grotesk',sans-serif;color:#f2f2ee}
+.bp-stat-n small{font-size:14px;color:#8a8a94}
+.bp-stat-l{font:400 10px 'Space Mono','Noto Sans JP',sans-serif;color:#5c5c66;letter-spacing:.12em;margin-top:4px}
+/* hero preview card */
+.bp-hero-right{padding:32px 34px;background:#0f0f13;display:flex;flex-direction:column}
+.bp-pv-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.bp-pv-tag{font:400 10px 'Space Mono',monospace;color:#5c5c66;letter-spacing:.16em}
+.bp-pv-tabs{display:flex;gap:5px}
+.bp-pv-tabs i{width:8px;height:5px;border-radius:3px;background:#2a2a34;display:block}
+.bp-pv-tabs i.on{width:20px;background:#C8102E}
+.bp-pv-card{border:1px solid #23232c;border-radius:5px;overflow:hidden;background:#08080b}
+.bp-pv-hero{position:relative;background:linear-gradient(135deg,#15151c,#2a2a34);height:128px;display:flex;align-items:flex-end;padding:14px;overflow:hidden}
+.bp-pv-grid{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 22px,rgba(255,255,255,.025) 22px 23px)}
+.bp-pv-hero-txt{position:relative}
+.bp-pv-kicker{font:400 9px 'Space Mono',monospace;color:#C8FF4A;letter-spacing:.12em}
+.bp-pv-name{font:900 19px 'Noto Sans JP',sans-serif;color:#fff;margin-top:4px}
+.bp-pv-price{font:700 15px 'Space Grotesk',sans-serif;color:#C8102E;margin-top:3px}
+.bp-pv-tbl{width:100%;border-collapse:collapse;font:400 11px 'Noto Sans JP',sans-serif}
+.bp-pv-tbl th{text-align:left;background:#101015;color:#8a8a94;font-weight:500;padding:7px 13px;width:36%;border-bottom:1px solid #1a1a22}
+.bp-pv-tbl td{padding:7px 13px;color:#dcdcd6;border-bottom:1px solid #1a1a22}
+.bp-pv-tbl tr:last-child th,.bp-pv-tbl tr:last-child td{border-bottom:none}
+.bp-pv-tbl td.hl{color:#C8FF4A;font-weight:700}
+.bp-pv-status{display:flex;align-items:center;gap:8px;margin-top:14px;font:400 10px 'Space Mono','Noto Sans JP',sans-serif;color:#C8FF4A;letter-spacing:.08em}
+.bp-pv-status .bdot{width:7px;height:7px;border-radius:50%;background:#C8FF4A;animation:bpBlink 1.2s steps(1) infinite}
+.bp-pv-chips{margin-top:auto;display:flex;gap:7px;padding-top:18px}
+.bp-pv-chips span{flex:1;text-align:center;font:600 10px 'Space Grotesk','Noto Sans JP',sans-serif;padding:8px 0;border-radius:4px;border:1px solid #23232c;color:#777}
+.bp-pv-chips span.on{background:#C8102E;color:#fff;border-color:#C8102E}
+@keyframes bpBlink{0%,49%{opacity:1}50%,100%{opacity:.12}}
+/* steps */
+.bp-steps{padding:36px 48px 46px;background:#0d0d11;border-top:1px solid #16161c}
+.bp-steps-title{font:400 11px 'Space Mono','Noto Sans JP',sans-serif;color:#5c5c66;letter-spacing:.16em;margin-bottom:22px}
+.bp-steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.bp-step{border:1px solid #1c1c24;border-radius:6px;padding:24px 20px;background:#101015;transition:border-color .2s,transform .2s}
+.bp-step:hover{border-color:#C8102E;transform:translateY(-3px)}
+.bp-step-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.bp-step-num{font:700 12px 'Space Mono',monospace;color:#C8102E}
+.bp-step-tick{width:26px;height:2px;background:#C8102E}
+.bp-step-title{font:700 15px 'Noto Sans JP',sans-serif;color:#f2f2ee;margin-bottom:7px}
+.bp-step-desc{font:400 12px 'Noto Sans JP',sans-serif;color:#7a7a84;line-height:1.65}
+/* footer */
+.bp-footer{display:flex;align-items:center;justify-content:space-between;padding:40px 48px;border-top:1px solid #16161c;background:#0b0b0e;flex-wrap:wrap;gap:20px}
+.bp-footer-h{font:700 30px 'Space Grotesk','Noto Sans JP',sans-serif;letter-spacing:-.02em;color:#f2f2ee}
+.bp-footer-h .r{color:#C8102E}
+.bp-footer-note{font:400 11px 'Space Mono','Noto Sans JP',sans-serif;color:#555;letter-spacing:.06em;margin-top:8px}
+/* interactive demo retone */
+.lp-demo-section{background:#09090c;border-top:1px solid #16161c}
+.lp-demo-eyebrow{color:#5c5c66;font-family:'Space Mono',monospace;letter-spacing:.2em}
+.lp-demo-title{font-family:'Space Grotesk','Noto Sans JP',sans-serif;color:#f2f2ee}
+.lp-demo-sub{color:#7a7a84}
+.lp-demo-pill{background:#101015;border-color:#20202a}
+.lp-demo-pill.active{border-color:#C8102E;background:rgba(200,16,46,.12);color:#fff}
+.lp-demo-pill.done{border-color:#C8FF4A;background:rgba(200,255,74,.07);color:#C8FF4A}
+.lp-demo-pill.done .dp-num{background:#C8FF4A;color:#0b0b0e}
+.lp-demo-window{border-color:#23232c}
+.lp-demo-chrome{background:#0e0e13;border-color:#1a1a22}
+.lp-demo-url{background:#060608;color:#5c5c66;font-family:'Space Mono',monospace}
+.lp-demo-next-btn{border-color:#20202a;color:#7a7a84;font-family:'Space Grotesk','Noto Sans JP',sans-serif}
+.lp-demo-next-btn:hover{border-color:#C8102E;color:#fff}
+.lp-dc-scan-label{color:#C8102E}
+.lp-dc-bar{background:linear-gradient(90deg,#C8FF4A,#C8102E)}
+.lp-dc-btn-ai{background:linear-gradient(135deg,#C8102E,#8a0a1f)}
+.lp-dc-btn-ai:hover{background:linear-gradient(135deg,#C8102E,#8a0a1f)}
+/* ════ TOOL CHROME RESKIN (appearance only) ════ */
+#topbar{background:#0b0b0e}
+body.dark #topbar{background:#0b0b0e}
+#sidebar{background:#0b0b0e}
+body.dark #sidebar{background:#0b0b0e}
+.logo-title{font-family:'Space Grotesk','Noto Sans JP',sans-serif;letter-spacing:.05em}
+.logo-sub{font-family:'Space Mono',monospace}
+.btn,.lang-btn{font-family:'Space Grotesk','Noto Sans JP',sans-serif}
+.stitle{font-family:'Space Grotesk','Noto Sans JP',sans-serif;letter-spacing:.01em}
+.sb-lbl{font-family:'Space Mono',monospace}
+.btn-ai{background:linear-gradient(135deg,#C8102E,#8a0a1f)}
+.scan-bar{background:linear-gradient(90deg,#C8FF4A,#C8102E)}
+.scan-status{color:#C8102E}
+@media(max-width:900px){
+  .bp-hero{grid-template-columns:1fr}
+  .bp-hero-left{border-right:none;border-bottom:1px solid #16161c}
+  .bp-headline{font-size:44px}
+  .bp-steps-grid{grid-template-columns:repeat(2,1fr)}
+  .bp-nav,.bp-strip,.bp-hero-left,.bp-hero-right,.bp-steps,.bp-footer{padding-left:24px;padding-right:24px}
+}
+
 @media print {
   @page{size:A4 landscape;margin:0}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;box-sizing:border-box}
@@ -417,52 +540,95 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 </head>
 <body>
 <div id="landing">
-  <nav class="lp-nav">
-    <div class="lp-logo">
-      <span class="lp-logo-mark">R</span>
-      <span class="lp-logo-name">Maisoku Generator</span>
-      <span class="lp-logo-by">by R.connect</span>
+  <nav class="bp-nav">
+    <div class="bp-brand">
+      <span class="bp-mark">R</span>
+      <span class="bp-name">Maisoku Generator</span>
+      <span class="bp-by">by R.connect</span>
     </div>
-    <div class="lp-lang-toggle">
-      <button class="lp-lang-btn on" id="lp-lj" onclick="lpSetLang('ja')">日本語</button>
-      <button class="lp-lang-btn" id="lp-le" onclick="lpSetLang('en')">EN</button>
+    <div class="bp-nav-right">
+      <span class="bp-nav-link" onclick="bpScroll('.bp-steps')">使い方</span>
+      <span class="bp-nav-link" onclick="bpScroll('.lp-demo-section')">デモ</span>
+      <div class="bp-lang">
+        <button class="bp-lang-btn lp-lang-btn on" id="lp-lj" onclick="lpSetLang('ja')">JA</button>
+        <button class="bp-lang-btn lp-lang-btn" id="lp-le" onclick="lpSetLang('en')">EN</button>
+      </div>
     </div>
   </nav>
-  <div class="lp-hero">
-    <div class="lp-glow"></div>
-    <div class="lp-eyebrow" id="lp-eyebrow">R.connect 物件資料作成ツール</div>
-    <div class="lp-headline-ja" id="lp-headline">マイソクを、<br>もっと速く。</div>
-    <div class="lp-divider-line"></div>
-    <div class="lp-headline-en" id="lp-headline-en">Property Flyers · Reimagined</div>
-    <p class="lp-sub" id="lp-sub">物件PDFをAIがスキャン。情報を自動入力。プロ品質のマイソクを、数分で完成。</p>
-    <button class="lp-cta" onclick="lpEnter()"><span id="lp-cta-text">作成をはじめる</span> →</button>
+  <div class="bp-strip">
+    <span class="dot"></span><span class="glow">SYSTEM ONLINE</span>
+    <span class="sep">/</span><span>REAL&#8209;ESTATE FLYER ENGINE</span>
+    <span class="sep">/</span><span>TOKYO</span>
+    <span class="sep">/</span><span>v4.1</span>
+    <span class="right">AI SCAN · 4 LAYOUTS · A4 PDF · JP/EN</span>
   </div>
-  <div class="lp-steps">
-    <div class="lp-steps-title" id="lp-steps-title">使い方 · HOW IT WORKS</div>
-    <div class="lp-steps-grid">
-      <div class="lp-step">
-        <div class="lp-step-icon">📄</div>
-        <div class="lp-step-label">STEP 1</div>
-        <div class="lp-step-title" id="lp-s1-title">PDFをスキャン</div>
-        <div class="lp-step-desc" id="lp-s1-desc">物件資料PDFをアップロード。AIが物件情報を自動で読み取ります。</div>
+  <div class="bp-hero">
+    <div class="bp-hero-left">
+      <div class="bp-eyebrow-row bp-reveal">
+        <span class="bp-eyebrow-tag">[ AI&#8209;POWERED ]</span>
+        <span class="bp-eyebrow-line"></span>
+        <span class="bp-eyebrow" id="lp-eyebrow">R.connect 物件資料作成ツール</span>
       </div>
-      <div class="lp-step">
-        <div class="lp-step-icon">✏️</div>
-        <div class="lp-step-label">STEP 2</div>
-        <div class="lp-step-title" id="lp-s2-title">情報を確認・編集</div>
-        <div class="lp-step-desc" id="lp-s2-desc">入力された情報を確認し、必要に応じて修正・追加します。</div>
+      <div class="bp-headline bp-reveal" id="lp-headline" style="transition-delay:.06s">マイソクを、<br>もっと速く。</div>
+      <div class="bp-headline-en bp-reveal" id="lp-headline-en" style="transition-delay:.12s">Property Flyers · Reimagined</div>
+      <p class="bp-sub bp-reveal" id="lp-sub" style="transition-delay:.18s">物件PDFをAIがスキャン。情報を自動入力。プロ品質のマイソクを、数分で完成。</p>
+      <div class="bp-cta-row bp-reveal" style="transition-delay:.24s">
+        <button class="bp-cta" onclick="lpEnter()"><span id="lp-cta-text">作成をはじめる</span> <span class="ar">→</span></button>
+        <button class="bp-ghost" onclick="bpScroll('.lp-demo-section')">▷ デモを見る</button>
       </div>
-      <div class="lp-step">
-        <div class="lp-step-icon">🎨</div>
-        <div class="lp-step-label">STEP 3</div>
-        <div class="lp-step-title" id="lp-s3-title">デザインを選択</div>
-        <div class="lp-step-desc" id="lp-s3-desc">レイアウトとカラーを選択。写真をドラッグで調整できます。</div>
+      <div class="bp-stats bp-reveal" style="transition-delay:.30s">
+        <div><div class="bp-stat-n">&lt;3<small>min</small></div><div class="bp-stat-l">PER FLYER</div></div>
+        <div><div class="bp-stat-n">04</div><div class="bp-stat-l">TEMPLATES</div></div>
+        <div><div class="bp-stat-n">100<small>%</small></div><div class="bp-stat-l">ブラウザ完結</div></div>
       </div>
-      <div class="lp-step">
-        <div class="lp-step-icon">⬇️</div>
-        <div class="lp-step-label">STEP 4</div>
-        <div class="lp-step-title" id="lp-s4-title">PDFで書き出し</div>
-        <div class="lp-step-desc" id="lp-s4-desc">ワンクリックでA4横向きPDFを書き出し。そのまま印刷できます。</div>
+    </div>
+    <div class="bp-hero-right bp-reveal" style="transition-delay:.2s">
+      <div class="bp-pv-top">
+        <span class="bp-pv-tag">// LIVE PREVIEW</span>
+        <span class="bp-pv-tabs"><i class="on"></i><i></i><i></i><i></i></span>
+      </div>
+      <div class="bp-pv-card">
+        <div class="bp-pv-hero">
+          <div class="bp-pv-grid"></div>
+          <div class="bp-pv-hero-txt">
+            <div class="bp-pv-kicker">INVESTMENT PROPERTY</div>
+            <div class="bp-pv-name">グラントレゾール広尾</div>
+            <div class="bp-pv-price">¥ 45,000,000</div>
+          </div>
+        </div>
+        <table class="bp-pv-tbl"><tbody>
+          <tr><th>所在地</th><td>渋谷区恵比寿2-38-3</td></tr>
+          <tr><th>間取り</th><td>1DK メゾネット型</td></tr>
+          <tr><th>専有面積</th><td>50.30 ㎡</td></tr>
+          <tr><th>表面利回り</th><td class="hl">6.67 %</td></tr>
+        </tbody></table>
+      </div>
+      <div class="bp-pv-status"><span class="bdot"></span> AI SCAN COMPLETE — 6 FIELDS · 自動入力済み</div>
+      <div class="bp-pv-chips"><span class="on">クラシック</span><span>プレミアム</span><span>モダン</span><span>縦型</span></div>
+    </div>
+  </div>
+  <div class="bp-steps">
+    <div class="bp-steps-title" id="lp-steps-title">使い方 · HOW IT WORKS</div>
+    <div class="bp-steps-grid">
+      <div class="bp-step bp-reveal">
+        <div class="bp-step-top"><span class="bp-step-num">01</span><span class="bp-step-tick"></span></div>
+        <div class="bp-step-title" id="lp-s1-title">PDFをスキャン</div>
+        <div class="bp-step-desc" id="lp-s1-desc">物件資料PDFをアップロード。AIが物件情報を自動で読み取ります。</div>
+      </div>
+      <div class="bp-step bp-reveal" style="transition-delay:.08s">
+        <div class="bp-step-top"><span class="bp-step-num">02</span><span class="bp-step-tick"></span></div>
+        <div class="bp-step-title" id="lp-s2-title">情報を確認・編集</div>
+        <div class="bp-step-desc" id="lp-s2-desc">入力された情報を確認し、必要に応じて修正・追加します。</div>
+      </div>
+      <div class="bp-step bp-reveal" style="transition-delay:.16s">
+        <div class="bp-step-top"><span class="bp-step-num">03</span><span class="bp-step-tick"></span></div>
+        <div class="bp-step-title" id="lp-s3-title">デザインを選択</div>
+        <div class="bp-step-desc" id="lp-s3-desc">レイアウトとカラーを選択。写真をドラッグで調整できます。</div>
+      </div>
+      <div class="bp-step bp-reveal" style="transition-delay:.24s">
+        <div class="bp-step-top"><span class="bp-step-num">04</span><span class="bp-step-tick"></span></div>
+        <div class="bp-step-title" id="lp-s4-title">PDFで書き出し</div>
+        <div class="bp-step-desc" id="lp-s4-desc">ワンクリックでA4横向きPDFを書き出し。そのまま印刷できます。</div>
       </div>
     </div>
   </div>
@@ -650,9 +816,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
       <button class="lp-demo-next-btn" id="demo-next-btn" onclick="demoNext()">次のステップへ →</button>
     </div>
   </div>
-  <div class="lp-footer-cta">
-    <button class="lp-cta" onclick="lpEnter()"><span id="lp-cta2-text">作成をはじめる</span> →</button>
-    <div class="lp-footer-note" id="lp-footer-note">ブラウザのみで動作 · インストール不要 · 社内限定</div>
+  <div class="bp-footer bp-reveal">
+    <div>
+      <div class="bp-footer-h">Start building <span class="r">faster.</span></div>
+      <div class="bp-footer-note" id="lp-footer-note">ブラウザのみで動作 · インストール不要 · 社内限定</div>
+    </div>
+    <button class="bp-cta" onclick="lpEnter()"><span id="lp-cta2-text">作成をはじめる</span> <span class="ar">→</span></button>
   </div>
 </div>
 <div id="topbar">
@@ -720,7 +889,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
     <button class="btn btn-ai" style="padding:7px 14px;" id="btn-scan-txt" onclick="startPDFScan(this)">
       ✨ AIでPDFを読み込む
     </button>
-    <button class="btn btn-ai" style="padding:7px 14px;background:#7c3aed;" id="btn-add-doc-txt" onclick="addDocumentToQueue()">
+    <button class="btn btn-ai" style="padding:7px 14px;" id="btn-add-doc-txt" onclick="addDocumentToQueue()">
       ➕ 書類を追加
     </button>
     <button class="btn btn-save" onclick="saveDataDraft()" id="btn-save-txt">💾 本体の設定を保存する</button>
@@ -852,8 +1021,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
     <div class="ms-disc-bar" id="ms-disc"></div>
     <div id="ms-foot">
       <div class="ms-fr-logo-container" style="background-color:#ffffff">
-        <img id="ms-fr-sketch-logo" src="" class="ms-fr-sketch-logo" alt="R" style="mix-blend-mode:multiply;background-color:#ffffff">
-        <img id="ms-fc-logo-img" src="" class="ms-fc-logo-img" alt="R.connect">
+        <img id="ms-fr-sketch-logo" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" class="ms-fr-sketch-logo" alt="R" style="mix-blend-mode:multiply;background-color:#ffffff">
+        <img id="ms-fc-logo-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" class="ms-fc-logo-img" alt="R.connect">
       </div>
       <div class="ms-fi">
         <div id="ms-fa">〒106-6034 東京都港区六本木1-6-1 泉ガーデンタワー34階</div>
@@ -3769,5 +3938,28 @@ window.addEventListener('DOMContentLoaded', () => {
     </div>
   </div>
 </div>
+<script>
+(function(){
+  // Smooth-scroll helper for landing nav (scrolls the #landing container)
+  window.bpScroll = function(sel){
+    var c = document.getElementById('landing');
+    var t = document.querySelector(sel);
+    if (c && t) { c.scrollTo({ top: t.offsetTop - 16, behavior: 'smooth' }); }
+  };
+  // Scroll-reveal for .bp-reveal elements
+  function bpReveal(){
+    var els = document.querySelectorAll('.bp-reveal');
+    if (!('IntersectionObserver' in window)) { els.forEach(function(e){ e.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.14 });
+    els.forEach(function(e){ io.observe(e); });
+    // Safety fallback: ensure nothing stays hidden
+    setTimeout(function(){ els.forEach(function(e){ e.classList.add('in'); }); }, 1600);
+  }
+  if (document.readyState !== 'loading') bpReveal();
+  else document.addEventListener('DOMContentLoaded', bpReveal);
+})();
+</script>
 </body>
 </html>
