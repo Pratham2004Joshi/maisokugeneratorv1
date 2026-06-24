@@ -468,7 +468,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
   <!-- ── INTERACTIVE DEMO SECTION ── -->
   <div class="lp-demo-section">
     <div class="lp-demo-header">
-      <div class="lp-demo-eyebrow">INTERACTIVE DEMO</div>
+      <div class="lp-demo-eyebrow" id="lp-demo-eyebrow">INTERACTIVE DEMO</div>
       <div class="lp-demo-title" id="lp-demo-title">実際に触ってみる</div>
       <p class="lp-demo-sub" id="lp-demo-sub">各ステップをクリックして、ワークフローを体験してください。</p>
     </div>
@@ -502,7 +502,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
             <div class="lp-ds-item">🖼 画像</div>
           </div>
           <div class="lp-demo-content">
-            <div class="lp-dc-title">AI スキャン</div>
+            <div class="lp-dc-title" id="ds0-title">AI スキャン</div>
             <div class="lp-dc-upload-zone" id="dz-0">
               <div class="lp-dc-upload-icon">📄</div>
               <div class="lp-dc-upload-text" id="dz-0-txt">物件PDFをここにドロップ<br><span>またはクリックしてアップロード</span></div>
@@ -525,16 +525,16 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
             <div class="lp-ds-item">🖼 画像</div>
           </div>
           <div class="lp-demo-content">
-            <div class="lp-dc-title">物件情報 <span class="lp-dc-badge">✓ AI入力済み</span></div>
+            <div class="lp-dc-title" id="ds1-title">物件情報 <span class="lp-dc-badge" id="ds1-badge">✓ AI入力済み</span></div>
             <div class="lp-dc-fields">
-              <div class="lp-dc-field"><label>物件名</label><div class="lp-dc-val lp-dc-filled">グラントレゾール広尾</div></div>
-              <div class="lp-dc-field"><label>所在地</label><div class="lp-dc-val lp-dc-filled">東京都渋谷区恵比寿2-38-3</div></div>
-              <div class="lp-dc-field"><label>間取り</label><div class="lp-dc-val lp-dc-filled">1DK メゾネット型</div></div>
-              <div class="lp-dc-field"><label>価格</label><div class="lp-dc-val lp-dc-filled">¥ 45,000,000</div></div>
-              <div class="lp-dc-field"><label>専有面積</label><div class="lp-dc-val lp-dc-filled">50.30 ㎡</div></div>
-              <div class="lp-dc-field"><label>築年月</label><div class="lp-dc-val lp-dc-filled">2011年3月</div></div>
+              <div class="lp-dc-field"><label id="ds1-f1">物件名</label><div class="lp-dc-val lp-dc-filled">グラントレゾール広尾</div></div>
+              <div class="lp-dc-field"><label id="ds1-f2">所在地</label><div class="lp-dc-val lp-dc-filled">東京都渋谷区恵比寿2-38-3</div></div>
+              <div class="lp-dc-field"><label id="ds1-f3">間取り</label><div class="lp-dc-val lp-dc-filled">1DK メゾネット型</div></div>
+              <div class="lp-dc-field"><label id="ds1-f4">価格</label><div class="lp-dc-val lp-dc-filled">¥ 45,000,000</div></div>
+              <div class="lp-dc-field"><label id="ds1-f5">専有面積</label><div class="lp-dc-val lp-dc-filled">50.30 ㎡</div></div>
+              <div class="lp-dc-field"><label id="ds1-f6">築年月</label><div class="lp-dc-val lp-dc-filled">2011年3月</div></div>
             </div>
-            <button class="lp-dc-btn" onclick="demoGo(2)">次へ：デザイン選択 →</button>
+            <button class="lp-dc-btn" id="ds1-next" onclick="demoGo(2)">次へ：デザイン選択 →</button>
           </div>
         </div>
         <!-- STEP 2: Design picker -->
@@ -3424,6 +3424,7 @@ const LP_COPY = {
     dcTitle0: 'AI スキャン', dcUpload: '物件PDFをここにドロップ', dcUploadSub: 'またはクリックしてアップロード',
     dcScanBtn: '✦ AIスキャン開始',
     dcTitle1: '物件情報', dcBadge: '✓ AI入力済み', dcNext1: '次へ：デザイン選択 →',
+    dcFields: ['物件名','所在地','間取り','価格','専有面積','築年月'],
     dcTitle3: 'ワンクリックでPDF出力', dcPdfBtn: '⬇ PDFを出力する',
     dcPdfSub: 'A4横向き · 印刷対応 · ベクター品質',
     dcPdfDone: '✓ 出力しました', dcPdfLabel2: 'PDF出力完了！',
@@ -3450,6 +3451,7 @@ const LP_COPY = {
     dcTitle0: 'AI Scan', dcUpload: 'Drop your property PDF here', dcUploadSub: 'or click to upload',
     dcScanBtn: '✦ Start AI Scan',
     dcTitle1: 'Property Info', dcBadge: '✓ AI Filled', dcNext1: 'Next: Choose Design →',
+    dcFields: ['Property Name','Address','Layout','Price','Floor Area','Built'],
     dcTitle3: 'One-Click PDF Export', dcPdfBtn: '⬇ Export PDF',
     dcPdfSub: 'A4 Landscape · Print-ready · Vector quality',
     dcPdfDone: '✓ Exported', dcPdfLabel2: 'PDF Exported!',
@@ -3491,14 +3493,15 @@ function lpSetLang(l) {
   const nb = document.getElementById('demo-next-btn');
   if (nb) nb.textContent = demoStep < DEMO_STEPS - 1 ? c.demoNext : c.demoTry;
   // Step 0
+  st('ds0-title', c.dcTitle0);
   st('dz-0-txt', c.dcUpload + '<br><span>' + c.dcUploadSub + '</span>');
   const sb = document.getElementById('demo-scan-btn');
   if (sb) sb.textContent = c.dcScanBtn;
   // Step 1
-  const t1 = document.querySelector('#ds-1 .lp-dc-title');
-  if (t1) t1.innerHTML = c.dcTitle1 + ' <span class="lp-dc-badge">' + c.dcBadge + '</span>';
-  const n1 = document.querySelector('#ds-1 .lp-dc-btn');
+  st('ds1-title', c.dcTitle1 + ' <span class="lp-dc-badge" id="ds1-badge">' + c.dcBadge + '</span>');
+  const n1 = document.getElementById('ds1-next');
   if (n1) n1.textContent = c.dcNext1;
+  if (c.dcFields) { c.dcFields.forEach((f,i) => st('ds1-f'+(i+1), f)); }
   // Step 3
   st('demo-pdf-label', c.dcTitle3);
   const pb = document.getElementById('demo-pdf-btn');
