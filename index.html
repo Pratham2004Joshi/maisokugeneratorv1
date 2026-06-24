@@ -3320,16 +3320,25 @@ function demoGo(step) {
   if (activeScreen) activeScreen.classList.add('active');
   demoStep = step;
 
-  // Update next button label
+  // Update next button label using current language
   const nb = document.getElementById('demo-next-btn');
-  if (nb) nb.textContent = step < DEMO_STEPS - 1 ? '次のステップへ →' : '実際に試してみる →';
+  const _c = LP_COPY[lang] || LP_COPY.ja;
+  if (nb) nb.textContent = step < DEMO_STEPS - 1 ? _c.demoNext : _c.demoTry;
 }
 
 function demoNext() {
   if (demoStep < DEMO_STEPS - 1) {
     demoGo(demoStep + 1);
   } else {
-    // Last step — go to app, don't crash
+    // Already on last step — enter the app
+    const nb = document.getElementById('demo-next-btn');
+    const _c = LP_COPY[lang] || LP_COPY.ja;
+    if (nb) {
+      nb.style.background = '#C8102E';
+      nb.style.color = '#fff';
+      nb.style.borderColor = '#C8102E';
+      nb.textContent = _c.demoTry;
+    }
     lpEnter();
   }
 }
@@ -3512,16 +3521,31 @@ function lpSetLang(l) {
 function lpEnter() {
   const lp = document.getElementById('landing');
   if (lp) lp.classList.add('hidden');
+  // Explicitly ensure app is visible
+  const topbar = document.getElementById('topbar');
+  const app = document.getElementById('app');
+  if (topbar) topbar.style.display = 'flex';
+  if (app) app.style.display = 'flex';
+  window.scrollTo(0, 0);
   applyLang();
 }
 
 function lpExit() {
   const lp = document.getElementById('landing');
   if (lp) lp.classList.remove('hidden');
-  // Reset demo so it doesn't crash on re-entry
+  // Reset demo state
   demoStep = 0;
   demoScanRunning = false;
-  demoGo(0);
+  // Reset pill + screen states manually (don't call demoGo which would set hardcoded text)
+  for (let i = 0; i < DEMO_STEPS; i++) {
+    const pill = document.getElementById('dp-' + i);
+    const sc = document.getElementById('ds-' + i);
+    if (pill) { pill.classList.remove('active','done'); if(i===0) pill.classList.add('active'); }
+    if (sc) { sc.classList.remove('active'); if(i===0) sc.classList.add('active'); }
+  }
+  // Reset next-btn styling
+  const nb = document.getElementById('demo-next-btn');
+  if (nb) { nb.style.background=''; nb.style.color=''; nb.style.borderColor=''; nb.onclick=function(){demoNext();}; }
   // Reset scan UI
   const btn = document.getElementById('demo-scan-btn');
   const zone = document.getElementById('dz-0');
@@ -3541,7 +3565,7 @@ function lpExit() {
   if (pdfIcon) pdfIcon.textContent = '📄';
   if (pdfLabel) { pdfLabel.textContent = c.dcTitle3; pdfLabel.style.color = ''; }
   if (pdfBtn) { pdfBtn.textContent = c.dcPdfBtn; pdfBtn.style.background = ''; pdfBtn.disabled = false; }
-  lpSetLang(lang);
+  lpSetLang(lang); // handles all text including next-btn
 }
 
 window.addEventListener('DOMContentLoaded', () => {
