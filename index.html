@@ -311,96 +311,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 .lp-footer-cta{background:#0d0d0f;border-top:1px solid #1e1e24;padding:48px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px}
 .lp-footer-note{font-size:11px;color:#444;letter-spacing:.06em}
 
-/* ── INTERACTIVE DEMO SECTION ── */
-.lp-demo-section{background:#0a0a0d;padding:72px 48px;border-top:1px solid #1e1e24}
-.lp-demo-header{text-align:center;margin-bottom:40px}
-.lp-demo-eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#C8102E;font-weight:700;margin-bottom:12px}
-.lp-demo-title{font-family:'Noto Serif JP',serif;font-size:32px;font-weight:900;color:#fff;margin-bottom:10px}
-.lp-demo-sub{font-size:13px;color:#666;max-width:420px;margin:0 auto;line-height:1.7}
-/* Pills */
-.lp-demo-pills{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:32px;flex-wrap:wrap}
-.lp-demo-pill{display:flex;align-items:center;gap:8px;padding:8px 18px;border-radius:40px;border:1px solid #2a2a32;background:#111114;cursor:pointer;transition:all .2s;font-size:12px;color:#666}
-.lp-demo-pill.active{border-color:#C8102E;background:rgba(200,16,46,.1);color:#fff}
-.lp-demo-pill.done{border-color:#22c55e;background:rgba(34,197,94,.08);color:#22c55e}
-.lp-demo-pill:hover:not(.active){border-color:#444;color:#aaa}
-.dp-num{width:20px;height:20px;border-radius:50%;background:#1e1e24;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
-.lp-demo-pill.active .dp-num{background:#C8102E;color:#fff}
-.lp-demo-pill.done .dp-num{background:#22c55e;color:#fff}
-.lp-demo-pill-arrow{color:#333;font-size:18px}
-/* Browser window */
-.lp-demo-window{max-width:860px;margin:0 auto;border-radius:10px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.6);border:1px solid #2a2a32}
-.lp-demo-chrome{background:#1e1e24;padding:10px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2a32}
-.lp-demo-dots{display:flex;gap:6px}
-.lp-demo-dots span{width:10px;height:10px;border-radius:50%;background:#333}
-.lp-demo-dots span:nth-child(1){background:#ff5f57}
-.lp-demo-dots span:nth-child(2){background:#febc2e}
-.lp-demo-dots span:nth-child(3){background:#28c840}
-.lp-demo-url{flex:1;background:#111;border-radius:4px;padding:4px 12px;font-size:11px;color:#555;font-family:monospace}
-.lp-demo-win-btns{display:flex;gap:6px}
-.lp-demo-win-btn{width:22px;height:8px;border-radius:2px;background:#2a2a32}
-/* Screen */
-.lp-demo-screen{height:400px;display:flex;background:#fff;position:relative;overflow:hidden}
-.lp-demo-step{position:absolute;inset:0;display:flex;opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease;transform:translateX(30px)}
-.lp-demo-step.active{opacity:1;pointer-events:all;transform:translateX(0)}
-/* Sidebar */
-.lp-demo-sidebar{width:130px;background:#1a1a1a;display:flex;flex-direction:column;padding:14px 0;gap:2px;flex-shrink:0}
-.lp-ds-logo{background:#C8102E;color:#fff;font-weight:900;padding:2px 7px;border-radius:3px;font-size:13px;font-family:'Noto Serif JP',serif;margin:0 12px 12px;display:inline-block;align-self:flex-start}
-.lp-ds-item{padding:8px 14px;font-size:10px;color:#666;cursor:pointer;border-left:2px solid transparent;transition:all .15s;white-space:nowrap}
-.lp-ds-item.active{color:#C8102E;border-left-color:#C8102E;background:#222}
-.lp-ds-item:hover:not(.active){color:#aaa;background:#1f1f1f}
-.lp-ds-sec-label{padding:10px 14px 4px;font-size:9px;color:#444;letter-spacing:.08em;text-transform:uppercase}
-/* Content area */
-.lp-demo-content{flex:1;padding:20px 24px;background:#f8fafc;overflow:hidden;display:flex;flex-direction:column;gap:14px}
-.lp-dc-title{font-size:14px;font-weight:800;color:#111;display:flex;align-items:center;gap:8px}
-.lp-dc-badge{font-size:10px;background:#dcfce7;color:#16a34a;padding:2px 8px;border-radius:20px;font-weight:600}
-/* Upload zone */
-.lp-dc-upload-zone{border:2px dashed #cbd5e1;border-radius:8px;padding:20px;text-align:center;background:#fff;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
-.lp-dc-upload-icon{font-size:32px}
-.lp-dc-upload-text{font-size:12px;color:#94a3b8;line-height:1.6}
-.lp-dc-upload-text span{font-size:11px;color:#cbd5e1}
-/* Scan progress */
-.lp-dc-scan-progress{display:none;flex-direction:column;gap:8px;padding:16px;background:#fff;border-radius:8px;flex:1}
-.lp-dc-scan-label{font-size:12px;font-weight:600;color:#7c3aed}
-.lp-dc-bar-wrap{height:5px;background:#e2e8f0;border-radius:3px;overflow:hidden}
-.lp-dc-bar{height:100%;width:0;background:linear-gradient(90deg,#7c3aed,#C8102E);border-radius:3px;transition:width .15s linear}
-.lp-dc-scan-fields{display:flex;flex-direction:column;gap:4px;margin-top:4px;max-height:200px;overflow:hidden}
-.lp-dc-scan-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9;font-size:11px;opacity:0;animation:fadeInRow .3s forwards}
-@keyframes fadeInRow{to{opacity:1}}
-.lp-dc-scan-row span:first-child{color:#94a3b8}
-.lp-dc-scan-row span:last-child{color:#111;font-weight:600}
-/* Fields */
-.lp-dc-fields{display:flex;flex-direction:column;gap:8px;flex:1}
-.lp-dc-field{display:flex;flex-direction:column;gap:3px}
-.lp-dc-field label{font-size:10px;color:#94a3b8;font-weight:500}
-.lp-dc-val{font-size:12px;padding:5px 9px;border-radius:4px;border:1px solid #e2e8f0;background:#fff;color:#111}
-.lp-dc-val.lp-dc-filled{border-color:#86efac;background:#f0fdf4;color:#15803d;font-weight:600}
-/* Buttons */
-.lp-dc-btn{padding:8px 18px;border-radius:5px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;background:#1a1a1a;color:#fff;align-self:flex-start;transition:background .15s}
-.lp-dc-btn:hover{background:#333}
-.lp-dc-btn-ai{background:linear-gradient(135deg,#7c3aed,#C8102E);color:#fff}
-.lp-dc-btn-ai:hover{opacity:.88;background:linear-gradient(135deg,#7c3aed,#C8102E)}
-.lp-dc-btn-green{background:#16a34a;color:#fff}
-.lp-dc-btn-green:hover{background:#15803d}
-/* Mini maisoku preview */
-.lp-demo-maisoku{width:100%;height:100%;position:relative}
-.ldm-layout{position:absolute;inset:0;display:grid;grid-template-rows:45% 55%;opacity:0;transition:opacity .3s;pointer-events:none}
-.ldm-layout.active{opacity:1;pointer-events:all}
-.ldm-hero{background:#1a1a1a;overflow:hidden}
-.ldm-banner-prem{overflow:hidden}
-.ldm-vert-left{width:35%;background:#1a1a1a}
-.ldm-layout.ldm-vert{grid-template-rows:none;grid-template-columns:35% 65%}
-.ldm-spec{overflow:hidden;display:flex;flex-direction:column}
-.ldm-spec-head{padding:3px 6px;font-size:8px;font-weight:700}
-.ldm-tbl{width:100%;border-collapse:collapse;font-size:9px}
-.ldm-tbl th{background:#C8102E;color:#fff;padding:2px 5px;font-weight:600;width:35%;font-size:8px;text-align:left}
-.ldm-tbl td{padding:2px 5px;border-bottom:1px solid #f0f0f0;font-size:9px;color:#111}
-/* PDF export step */
-.lp-dc-pdf-icon{font-size:48px;transition:all .5s}
-.lp-dc-pdf-label{font-size:15px;font-weight:700;color:#111}
-.lp-dc-pdf-sub{font-size:11px;color:#94a3b8}
-.lp-demo-next-btn{background:transparent;border:1px solid #2a2a32;color:#666;padding:10px 28px;border-radius:40px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s}
-.lp-demo-next-btn:hover{border-color:#C8102E;color:#fff}
-
+@media print{
   @page{size:A4 landscape;margin:0}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;box-sizing:border-box}
   html,body{margin:0!important;padding:0!important;background:#fff!important;width:297mm!important;height:210mm!important;overflow:hidden!important}
@@ -463,190 +374,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
         <div class="lp-step-title" id="lp-s4-title">PDFで書き出し</div>
         <div class="lp-step-desc" id="lp-s4-desc">ワンクリックでA4横向きPDFを書き出し。そのまま印刷できます。</div>
       </div>
-    </div>
-  </div>
-  <!-- ── INTERACTIVE DEMO SECTION ── -->
-  <div class="lp-demo-section">
-    <div class="lp-demo-header">
-      <div class="lp-demo-eyebrow" id="lp-demo-eyebrow">INTERACTIVE DEMO</div>
-      <div class="lp-demo-title" id="lp-demo-title">実際に触ってみる</div>
-      <p class="lp-demo-sub" id="lp-demo-sub">各ステップをクリックして、ワークフローを体験してください。</p>
-    </div>
-    <!-- Step pills -->
-    <div class="lp-demo-pills">
-      <div class="lp-demo-pill active" id="dp-0" onclick="demoGo(0)"><span class="dp-num">1</span><span class="dp-lbl" id="dp-l0">PDFスキャン</span></div>
-      <div class="lp-demo-pill-arrow">›</div>
-      <div class="lp-demo-pill" id="dp-1" onclick="demoGo(1)"><span class="dp-num">2</span><span class="dp-lbl" id="dp-l1">情報確認</span></div>
-      <div class="lp-demo-pill-arrow">›</div>
-      <div class="lp-demo-pill" id="dp-2" onclick="demoGo(2)"><span class="dp-num">3</span><span class="dp-lbl" id="dp-l2">デザイン選択</span></div>
-      <div class="lp-demo-pill-arrow">›</div>
-      <div class="lp-demo-pill" id="dp-3" onclick="demoGo(3)"><span class="dp-num">4</span><span class="dp-lbl" id="dp-l3">PDF出力</span></div>
-    </div>
-    <!-- Mock app window -->
-    <div class="lp-demo-window">
-      <div class="lp-demo-chrome">
-        <div class="lp-demo-dots"><span></span><span></span><span></span></div>
-        <div class="lp-demo-url">pratham2004joshi.github.io/maisokugeneratorv1/</div>
-        <div class="lp-demo-win-btns">
-          <div class="lp-demo-win-btn"></div><div class="lp-demo-win-btn"></div>
-        </div>
-      </div>
-      <div class="lp-demo-screen">
-        <!-- STEP 0: PDF Scan -->
-        <div class="lp-demo-step active" id="ds-0">
-          <div class="lp-demo-sidebar">
-            <div class="lp-ds-logo">R</div>
-            <div class="lp-ds-item active" id="dsb-s0-1">📋 物件情報</div>
-            <div class="lp-ds-item" id="dsb-s0-2">📐 スペック</div>
-            <div class="lp-ds-item" id="dsb-s0-3">🚉 アクセス</div>
-            <div class="lp-ds-item" id="dsb-s0-4">🖼 画像</div>
-          </div>
-          <div class="lp-demo-content">
-            <div class="lp-dc-title" id="ds0-title">AI スキャン</div>
-            <div class="lp-dc-upload-zone" id="dz-0">
-              <div class="lp-dc-upload-icon">📄</div>
-              <div class="lp-dc-upload-text" id="dz-0-txt">物件PDFをここにドロップ<br><span>またはクリックしてアップロード</span></div>
-              <button class="lp-dc-btn lp-dc-btn-ai" onclick="demoScanStart()" id="demo-scan-btn">✦ AIスキャン開始</button>
-            </div>
-            <div class="lp-dc-scan-progress" id="demo-scan-progress">
-              <div class="lp-dc-scan-label" id="demo-scan-label">📡 AIが資料を解析中...</div>
-              <div class="lp-dc-bar-wrap"><div class="lp-dc-bar" id="demo-scan-bar"></div></div>
-              <div class="lp-dc-scan-fields" id="demo-scan-fields"></div>
-            </div>
-          </div>
-        </div>
-        <!-- STEP 1: Form review -->
-        <div class="lp-demo-step" id="ds-1">
-          <div class="lp-demo-sidebar">
-            <div class="lp-ds-logo">R</div>
-            <div class="lp-ds-item active" id="dsb-s1-1">📋 物件情報</div>
-            <div class="lp-ds-item" id="dsb-s1-2">📐 スペック</div>
-            <div class="lp-ds-item" id="dsb-s1-3">🚉 アクセス</div>
-            <div class="lp-ds-item" id="dsb-s1-4">🖼 画像</div>
-          </div>
-          <div class="lp-demo-content">
-            <div class="lp-dc-title" id="ds1-title">物件情報 <span class="lp-dc-badge" id="ds1-badge">✓ AI入力済み</span></div>
-            <div class="lp-dc-fields">
-              <div class="lp-dc-field"><label id="ds1-f1">物件名</label><div class="lp-dc-val lp-dc-filled">グラントレゾール広尾</div></div>
-              <div class="lp-dc-field"><label id="ds1-f2">所在地</label><div class="lp-dc-val lp-dc-filled">東京都渋谷区恵比寿2-38-3</div></div>
-              <div class="lp-dc-field"><label id="ds1-f3">間取り</label><div class="lp-dc-val lp-dc-filled">1DK メゾネット型</div></div>
-              <div class="lp-dc-field"><label id="ds1-f4">価格</label><div class="lp-dc-val lp-dc-filled">¥ 45,000,000</div></div>
-              <div class="lp-dc-field"><label id="ds1-f5">専有面積</label><div class="lp-dc-val lp-dc-filled">50.30 ㎡</div></div>
-              <div class="lp-dc-field"><label id="ds1-f6">築年月</label><div class="lp-dc-val lp-dc-filled">2011年3月</div></div>
-            </div>
-            <button class="lp-dc-btn" id="ds1-next" onclick="demoGo(2)">次へ：デザイン選択 →</button>
-          </div>
-        </div>
-        <!-- STEP 2: Design picker -->
-        <div class="lp-demo-step" id="ds-2">
-          <div class="lp-demo-sidebar">
-            <div class="lp-ds-logo">R</div>
-            <div class="lp-ds-sec-label" id="ds2-grp-h">横型写真</div>
-            <div class="lp-ds-item active" id="dd-0" onclick="demoPick(0)">クラシック</div>
-            <div class="lp-ds-item" id="dd-1" onclick="demoPick(1)">プレミアム</div>
-            <div class="lp-ds-item" id="dd-2" onclick="demoPick(2)">モダン</div>
-            <div class="lp-ds-sec-label" id="ds2-grp-v">縦型写真</div>
-            <div class="lp-ds-item" id="dd-3" onclick="demoPick(3)">縦型</div>
-          </div>
-          <div class="lp-demo-content" style="padding:0;overflow:hidden;">
-            <div class="lp-demo-maisoku" id="demo-maisoku">
-              <!-- Classic -->
-              <div class="ldm-layout ldm-classic active" id="ldm-0">
-                <div class="ldm-hero" style="background:linear-gradient(135deg,#1a1a1a 60%,#333);display:flex;align-items:flex-end;padding:12px;">
-                  <div><div id="ldm-0-tag" style="font-size:8px;color:rgba(255,255,255,.7);margin-bottom:2px;">投資用物件</div><div style="font-size:15px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;">グラントレゾール広尾</div><div style="font-size:11px;font-weight:700;color:#C8102E;">¥ 45,000,000</div></div>
-                </div>
-                <div class="ldm-spec">
-                  <div id="ldm-0-head" class="ldm-spec-head" style="background:#C8102E;color:#fff;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
-                  <table class="ldm-tbl"><tbody>
-                    <tr><th id="ldm-0-r1">所在地</th><td>渋谷区恵比寿2-38-3</td></tr>
-                    <tr><th id="ldm-0-r2">間取り</th><td>1DK メゾネット型</td></tr>
-                    <tr><th id="ldm-0-r3">専有面積</th><td>50.30㎡</td></tr>
-                    <tr><th id="ldm-0-r4">築年月</th><td>2011年3月</td></tr>
-                    <tr><th id="ldm-0-r5">賃料</th><td>¥250,000/mo</td></tr>
-                    <tr><th id="ldm-0-r6">管理費</th><td>¥23,610/mo</td></tr>
-                    <tr><th id="ldm-0-r7">表面利回り</th><td>6.67%</td></tr>
-                    <tr><th id="ldm-0-r8">現況</th><td id="ldm-0-v8">賃貸中</td></tr>
-                  </tbody></table>
-                </div>
-              </div>
-              <!-- Premium -->
-              <div class="ldm-layout ldm-premium" id="ldm-1">
-                <div class="ldm-banner-prem" style="background:linear-gradient(135deg,#0D1B2A,#1a3a5c);padding:14px 16px;display:flex;flex-direction:column;justify-content:flex-end;">
-                  <div style="font-size:7px;color:rgba(201,168,76,.8);margin-bottom:2px;letter-spacing:.1em;">INVESTMENT PROPERTY</div>
-                  <div style="font-size:14px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;margin-bottom:3px;">グラントレゾール広尾</div>
-                  <div style="font-size:10px;font-weight:700;color:#C9A84C;">¥ 45,000,000</div>
-                </div>
-                <div class="ldm-spec" style="background:#F4F1EC;">
-                  <div id="ldm-1-head" class="ldm-spec-head" style="background:#0D1B2A;color:#C9A84C;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
-                  <table class="ldm-tbl" style="background:#F4F1EC;"><tbody>
-                    <tr><th id="ldm-1-r1" style="background:#0D1B2A;color:#C9A84C;">所在地</th><td>渋谷区恵比寿2-38-3</td></tr>
-                    <tr><th id="ldm-1-r2" style="background:#0D1B2A;color:#C9A84C;">間取り</th><td>1DK メゾネット型</td></tr>
-                    <tr><th id="ldm-1-r3" style="background:#0D1B2A;color:#C9A84C;">専有面積</th><td>50.30㎡</td></tr>
-                    <tr><th id="ldm-1-r4" style="background:#0D1B2A;color:#C9A84C;">賃料</th><td>¥250,000/mo</td></tr>
-                    <tr><th id="ldm-1-r5" style="background:#0D1B2A;color:#C9A84C;">表面利回り</th><td>6.67%</td></tr>
-                  </tbody></table>
-                </div>
-              </div>
-              <!-- Modern -->
-              <div class="ldm-layout ldm-modern" id="ldm-2">
-                <div style="background:linear-gradient(135deg,#7c0a1e,#C8102E);padding:14px 16px;display:flex;flex-direction:column;justify-content:flex-end;">
-                  <div style="font-size:7px;color:rgba(255,255,255,.7);margin-bottom:2px;letter-spacing:.1em;">PROPERTY</div>
-                  <div style="font-size:14px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;margin-bottom:3px;">グラントレゾール広尾</div>
-                  <div style="font-size:10px;font-weight:700;color:#fff;">¥ 45,000,000</div>
-                </div>
-                <div class="ldm-spec" style="background:#fff;">
-                  <div id="ldm-2-head" class="ldm-spec-head" style="background:#111;color:#fff;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
-                  <table class="ldm-tbl"><tbody>
-                    <tr><th id="ldm-2-r1" style="background:#111;color:#fff;">所在地</th><td>渋谷区恵比寿2-38-3</td></tr>
-                    <tr><th id="ldm-2-r2" style="background:#111;color:#fff;">間取り</th><td>1DK メゾネット型</td></tr>
-                    <tr><th id="ldm-2-r3" style="background:#111;color:#fff;">専有面積</th><td>50.30㎡</td></tr>
-                    <tr><th id="ldm-2-r4" style="background:#111;color:#fff;">賃料</th><td>¥250,000/mo</td></tr>
-                    <tr><th id="ldm-2-r5" style="background:#111;color:#fff;">表面利回り</th><td>6.67%</td></tr>
-                  </tbody></table>
-                </div>
-              </div>
-              <!-- Vertical -->
-              <div class="ldm-layout ldm-vert" id="ldm-3">
-                <div class="ldm-vert-left" style="background:linear-gradient(180deg,#1a1a1a,#333);display:flex;flex-direction:column;justify-content:flex-end;padding:10px;">
-                  <div id="ldm-3-tag" style="font-size:7px;color:rgba(255,255,255,.7);margin-bottom:2px;">縦型写真</div>
-                  <div style="font-size:13px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;line-height:1.2;">グラントレゾール<br>広尾</div>
-                  <div style="font-size:9px;font-weight:700;color:#C8102E;margin-top:3px;">¥ 45,000,000</div>
-                </div>
-                <div class="ldm-spec" style="background:#fff;">
-                  <div id="ldm-3-head" class="ldm-spec-head" style="background:#C8102E;color:#fff;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
-                  <table class="ldm-tbl"><tbody>
-                    <tr><th id="ldm-3-r1">所在地</th><td>恵比寿2-38-3</td></tr>
-                    <tr><th id="ldm-3-r2">間取り</th><td>1DK</td></tr>
-                    <tr><th id="ldm-3-r3">面積</th><td>50.30㎡</td></tr>
-                    <tr><th id="ldm-3-r4">賃料</th><td>¥250,000</td></tr>
-                    <tr><th id="ldm-3-r5">利回り</th><td>6.67%</td></tr>
-                  </tbody></table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- STEP 3: PDF export -->
-        <div class="lp-demo-step" id="ds-3">
-          <div class="lp-demo-sidebar">
-            <div class="lp-ds-logo">R</div>
-            <div class="lp-ds-item" id="dsb-s3-1">📋 物件情報</div>
-            <div class="lp-ds-item" id="dsb-s3-2">📐 スペック</div>
-            <div class="lp-ds-item" id="dsb-s3-3">🚉 アクセス</div>
-            <div class="lp-ds-item" id="dsb-s3-4">🖼 画像</div>
-          </div>
-          <div class="lp-demo-content" style="align-items:center;justify-content:center;display:flex;flex-direction:column;gap:20px;">
-            <div class="lp-dc-pdf-icon" id="demo-pdf-icon">📄</div>
-            <div class="lp-dc-pdf-label" id="demo-pdf-label">ワンクリックでPDF出力</div>
-            <button class="lp-dc-btn lp-dc-btn-green" id="demo-pdf-btn" onclick="demoPdfExport()">⬇ PDFを出力する</button>
-            <div class="lp-dc-pdf-sub" id="demo-pdf-sub">A4横向き · 印刷対応 · ベクター品質</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Next step CTA -->
-    <div style="text-align:center;margin-top:28px;">
-      <button class="lp-demo-next-btn" id="demo-next-btn" onclick="demoNext()">次のステップへ →</button>
     </div>
   </div>
   <div class="lp-footer-cta">
@@ -3290,137 +3017,7 @@ function showTab(i,e){
   if(e) e.classList.add('on');
 }
 
-// ── DEMO WALKTHROUGH LOGIC ──
-let demoStep = 0;
-const DEMO_STEPS = 4;
-
-// Scan fields: [ja_label, value] — value stays the same in both languages
-const DEMO_SCAN_FIELDS_JA = [
-  ['物件名', 'グラントレゾール広尾'],
-  ['所在地', '東京都渋谷区恵比寿2-38-3'],
-  ['価格', '¥ 45,000,000'],
-  ['間取り', '1DK メゾネット型'],
-  ['専有面積', '50.30 ㎡'],
-  ['築年月', '2011年3月'],
-  ['賃料', '250,000円/月'],
-  ['表面利回り', '6.67%'],
-];
-const DEMO_SCAN_FIELDS_EN = [
-  ['Property Name', 'Grand Tresor Hiroo'],
-  ['Address', 'Ebisu 2-38-3, Shibuya-ku'],
-  ['Price', '¥ 45,000,000'],
-  ['Layout', '1DK Maisonette'],
-  ['Floor Area', '50.30 ㎡'],
-  ['Built', 'March 2011'],
-  ['Rent', '¥250,000/mo'],
-  ['Gross Yield', '6.67%'],
-];
-
-function demoGo(step) {
-  for (let i = 0; i < DEMO_STEPS; i++) {
-    const pill = document.getElementById('dp-' + i);
-    const sc = document.getElementById('ds-' + i);
-    if (!pill || !sc) continue;
-    pill.classList.remove('active', 'done');
-    sc.classList.remove('active');
-    if (i < step) pill.classList.add('done');
-  }
-  const activePill = document.getElementById('dp-' + step);
-  const activeScreen = document.getElementById('ds-' + step);
-  if (activePill) activePill.classList.add('active');
-  if (activeScreen) activeScreen.classList.add('active');
-  demoStep = step;
-  // Always read from LP_COPY — never hardcode
-  const _c = LP_COPY[lang] || LP_COPY.ja;
-  const nb = document.getElementById('demo-next-btn');
-  if (nb) {
-    nb.textContent = step < DEMO_STEPS - 1 ? _c.demoNext : _c.demoTry;
-    nb.style.background = '';
-    nb.style.color = '';
-    nb.style.borderColor = '';
-  }
-}
-
-function demoNext() {
-  if (demoStep < DEMO_STEPS - 1) {
-    demoGo(demoStep + 1);
-  } else {
-    lpEnter();
-  }
-}
-
-let demoScanRunning = false;
-function demoScanStart() {
-  if (demoScanRunning) return;
-  demoScanRunning = true;
-  const _c = LP_COPY[lang] || LP_COPY.ja;
-  const btn = document.getElementById('demo-scan-btn');
-  const zone = document.getElementById('dz-0');
-  const prog = document.getElementById('demo-scan-progress');
-  const bar = document.getElementById('demo-scan-bar');
-  const label = document.getElementById('demo-scan-label');
-  const fields = document.getElementById('demo-scan-fields');
-  if (btn) btn.style.display = 'none';
-  if (zone) { zone.style.borderColor = '#7c3aed'; zone.style.background = '#faf5ff'; }
-  const dzt = document.getElementById('dz-0-txt');
-  const scanFileName = lang === 'en' ? '📄 property_doc.pdf' : '📄 物件資料PDF.pdf';
-  const scanningTxt = lang === 'en' ? 'Scanning...' : '解析中...';
-  if (dzt) dzt.innerHTML = scanFileName + '<br><span style="color:#7c3aed;font-weight:600">' + scanningTxt + '</span>';
-  if (prog) prog.style.display = 'flex';
-  const labels = _c.scanLabels;
-  const scanFields = lang === 'en' ? DEMO_SCAN_FIELDS_EN : DEMO_SCAN_FIELDS_JA;
-  let pct = 0;
-  let fieldIdx = 0;
-  const interval = setInterval(() => {
-    pct += 3 + Math.random() * 4;
-    if (pct > 100) pct = 100;
-    if (bar) bar.style.width = pct + '%';
-    const li = Math.floor((pct / 100) * (labels.length - 1));
-    if (label) label.textContent = labels[Math.min(li, labels.length - 1)];
-    while (fieldIdx < scanFields.length && pct > (fieldIdx + 1) * (100 / scanFields.length)) {
-      const row = document.createElement('div');
-      row.className = 'lp-dc-scan-row';
-      row.style.animationDelay = '0s';
-      row.innerHTML = '<span>' + scanFields[fieldIdx][0] + '</span><span>' + scanFields[fieldIdx][1] + '</span>';
-      if (fields) fields.appendChild(row);
-      fieldIdx++;
-    }
-    if (pct >= 100) {
-      clearInterval(interval);
-      setTimeout(() => demoGo(1), 700);
-    }
-  }, 80);
-}
-
-let demoPickIdx = 0;
-function demoPick(idx) {
-  demoPickIdx = idx;
-  document.querySelectorAll('.ldm-layout').forEach((l, i) => {
-    l.classList.toggle('active', i === idx);
-  });
-  document.querySelectorAll('#ds-2 .lp-ds-item[id^="dd-"]').forEach((d, i) => {
-    d.classList.toggle('active', i === idx);
-  });
-}
-
-function demoPdfExport() {
-  const _c = LP_COPY[lang] || LP_COPY.ja;
-  const btn = document.getElementById('demo-pdf-btn');
-  const icon = document.getElementById('demo-pdf-icon');
-  const label = document.getElementById('demo-pdf-label');
-  const sub = document.getElementById('demo-pdf-sub');
-  const nb = document.getElementById('demo-next-btn');
-  const loadingTxt = lang === 'en' ? '⏳ Generating...' : '⏳ 生成中...';
-  if (btn) { btn.textContent = loadingTxt; btn.disabled = true; }
-  setTimeout(() => {
-    if (icon) icon.textContent = '✅';
-    if (label) { label.textContent = _c.dcPdfLabel2; label.style.color = '#16a34a'; }
-    if (sub) sub.textContent = _c.dcPdfSub;
-    if (btn) { btn.textContent = _c.dcPdfDone; btn.style.background = '#16a34a'; btn.disabled = false; }
-    if (nb) nb.textContent = _c.demoTry;
-  }, 1200);
-}
-
+// ── LANDING PAGE LOGIC ──
 const LP_COPY = {
   ja: {
     eyebrow: 'R.connect 物件資料作成ツール',
@@ -3434,28 +3031,6 @@ const LP_COPY = {
     s3t: 'デザインを選択', s3d: 'レイアウトとカラーを選択。写真をドラッグで調整できます。',
     s4t: 'PDFで書き出し', s4d: 'ワンクリックでA4横向きPDFを書き出し。そのまま印刷できます。',
     note: 'ブラウザのみで動作 · インストール不要 · 社内限定',
-    demoEyebrow: 'INTERACTIVE DEMO',
-    demoTitle: '実際に触ってみる',
-    demoSub: '各ステップをクリックして、ワークフローを体験してください。',
-    dp0: 'PDFスキャン', dp1: '情報確認', dp2: 'デザイン選択', dp3: 'PDF出力',
-    demoNext: '次のステップへ →', demoTry: '実際に試してみる →',
-    dcTitle0: 'AI スキャン', dcUpload: '物件PDFをここにドロップ', dcUploadSub: 'またはクリックしてアップロード',
-    dcScanBtn: '✦ AIスキャン開始',
-    dcTitle1: '物件情報', dcBadge: '✓ AI入力済み', dcNext1: '次へ：デザイン選択 →',
-    dcFields: ['物件名','所在地','間取り','価格','専有面積','築年月'],
-    dcSidebar: ['📋 物件情報','📐 スペック','🚉 アクセス','🖼 画像'],
-    dcGrpH: '横型写真', dcGrpV: '縦型写真',
-    dcDesigns: ['クラシック','プレミアム','モダン','縦型'],
-    ldmTag0: '投資用物件', ldmTag3: '縦型写真',
-    ldmHead: '物件概要',
-    ldmRows: ['所在地','間取り','専有面積','築年月','賃料','管理費','表面利回り','現況'],
-    ldmRows3: ['所在地','間取り','面積','賃料','利回り'],
-    ldmV8: '賃貸中',
-    dcTitle3: 'ワンクリックでPDF出力', dcPdfBtn: '⬇ PDFを出力する',
-    dcPdfSub: 'A4横向き · 印刷対応 · ベクター品質',
-    dcPdfDone: '✓ 出力しました', dcPdfLabel2: 'PDF出力完了！',
-    scanLabels: ['📡 AIが資料を解析中...','🔍 物件情報を抽出中...','✦ データを整理中...','✅ スキャン完了！'],
-    scanProg: '解析中...',
   },
   en: {
     eyebrow: 'R.connect Property Flyer Tool',
@@ -3469,28 +3044,6 @@ const LP_COPY = {
     s3t: 'Choose a Design', s3d: 'Pick a layout and colour palette. Drag to reframe your photos.',
     s4t: 'Export as PDF', s4d: 'One click exports a print-ready A4 landscape PDF.',
     note: 'Runs in your browser · No install · Internal use only',
-    demoEyebrow: 'INTERACTIVE DEMO',
-    demoTitle: 'Try It Yourself',
-    demoSub: 'Click through each step to experience the workflow.',
-    dp0: 'Scan PDF', dp1: 'Review Info', dp2: 'Pick Design', dp3: 'Export PDF',
-    demoNext: 'Next Step →', demoTry: 'Try It For Real →',
-    dcTitle0: 'AI Scan', dcUpload: 'Drop your property PDF here', dcUploadSub: 'or click to upload',
-    dcScanBtn: '✦ Start AI Scan',
-    dcTitle1: 'Property Info', dcBadge: '✓ AI Filled', dcNext1: 'Next: Choose Design →',
-    dcFields: ['Property Name','Address','Layout','Price','Floor Area','Built'],
-    dcSidebar: ['📋 Property Info','📐 Specs','🚉 Access','🖼 Images'],
-    dcGrpH: 'Landscape Photo', dcGrpV: 'Portrait Photo',
-    dcDesigns: ['Classic','Premium','Modern','Vertical'],
-    ldmTag0: 'Investment Property', ldmTag3: 'Portrait Layout',
-    ldmHead: 'Property Overview',
-    ldmRows: ['Location','Layout','Floor Area','Built','Rent','Mgmt Fee','Gross Yield','Status'],
-    ldmRows3: ['Location','Layout','Area','Rent','Yield'],
-    ldmV8: 'Tenanted',
-    dcTitle3: 'One-Click PDF Export', dcPdfBtn: '⬇ Export PDF',
-    dcPdfSub: 'A4 Landscape · Print-ready · Vector quality',
-    dcPdfDone: '✓ Exported', dcPdfLabel2: 'PDF Exported!',
-    scanLabels: ['📡 Scanning document...','🔍 Extracting property data...','✦ Organising fields...','✅ Scan complete!'],
-    scanProg: 'Scanning...',
   }
 };
 
@@ -3519,114 +3072,28 @@ function lpSetLang(l) {
   st('lp-s3-title', c.s3t); st('lp-s3-desc', c.s3d);
   st('lp-s4-title', c.s4t); st('lp-s4-desc', c.s4d);
   st('lp-footer-note', c.note);
-  // Demo section
-  st('lp-demo-eyebrow', c.demoEyebrow);
-  st('lp-demo-title', c.demoTitle);
-  st('lp-demo-sub', c.demoSub);
-  st('dp-l0', c.dp0); st('dp-l1', c.dp1); st('dp-l2', c.dp2); st('dp-l3', c.dp3);
-  const nb = document.getElementById('demo-next-btn');
-  if (nb) nb.textContent = demoStep < DEMO_STEPS - 1 ? c.demoNext : c.demoTry;
-  // Step 0
-  st('ds0-title', c.dcTitle0);
-  st('dz-0-txt', c.dcUpload + '<br><span>' + c.dcUploadSub + '</span>');
-  const sb = document.getElementById('demo-scan-btn');
-  if (sb) sb.textContent = c.dcScanBtn;
-  // Step 1
-  st('ds1-title', c.dcTitle1 + ' <span class="lp-dc-badge" id="ds1-badge">' + c.dcBadge + '</span>');
-  const n1 = document.getElementById('ds1-next');
-  if (n1) n1.textContent = c.dcNext1;
-  if (c.dcFields) { c.dcFields.forEach((f,i) => st('ds1-f'+(i+1), f)); }
-  // Sidebar nav items (steps 0, 1, 3)
-  if (c.dcSidebar) {
-    ['s0','s1','s3'].forEach(s => {
-      c.dcSidebar.forEach((txt,i) => st('dsb-'+s+'-'+(i+1), txt));
-    });
-  }
-  // Step 2 design sidebar
-  st('ds2-grp-h', c.dcGrpH); st('ds2-grp-v', c.dcGrpV);
-  if (c.dcDesigns) { c.dcDesigns.forEach((d,i) => st('dd-'+i, d)); }
-  // Mini maisoku labels
-  st('ldm-0-tag', c.ldmTag0); st('ldm-3-tag', c.ldmTag3);
-  ['ldm-0-head','ldm-1-head','ldm-2-head','ldm-3-head'].forEach(id => st(id, c.ldmHead));
-  if (c.ldmRows) {
-    c.ldmRows.forEach((r,i) => { st('ldm-0-r'+(i+1), r); if(i<5) st('ldm-1-r'+(i+1), r); if(i<5) st('ldm-2-r'+(i+1), r); });
-    st('ldm-0-v8', c.ldmV8);
-  }
-  if (c.ldmRows3) { c.ldmRows3.forEach((r,i) => st('ldm-3-r'+(i+1), r)); }
-  // Step 3
-  st('demo-pdf-label', c.dcTitle3);
-  const pb = document.getElementById('demo-pdf-btn');
-  if (pb && !pb.disabled) pb.textContent = c.dcPdfBtn;
-  st('demo-pdf-sub', c.dcPdfSub);
 }
 
 function lpEnter() {
-  // Show app FIRST before hiding landing — prevents white screen if applyLang throws
-  const topbar = document.getElementById('topbar');
-  const app = document.getElementById('app');
-  if (topbar) topbar.style.display = 'flex';
-  if (app) app.style.display = 'flex';
-  // Now hide landing
   const lp = document.getElementById('landing');
   if (lp) lp.classList.add('hidden');
-  window.scrollTo(0, 0);
-  // Wrap render refresh — a throw here must never blank the page
-  try { applyLang(); } catch(err) { console.error('applyLang error on enter:', err); }
+  applyLang();
 }
 
 function lpExit() {
   const lp = document.getElementById('landing');
   if (lp) lp.classList.remove('hidden');
-  // Reset demo state
-  demoStep = 0;
-  demoScanRunning = false;
-  // Reset pill + screen states manually (don't call demoGo which would set hardcoded text)
-  for (let i = 0; i < DEMO_STEPS; i++) {
-    const pill = document.getElementById('dp-' + i);
-    const sc = document.getElementById('ds-' + i);
-    if (pill) { pill.classList.remove('active','done'); if(i===0) pill.classList.add('active'); }
-    if (sc) { sc.classList.remove('active'); if(i===0) sc.classList.add('active'); }
-  }
-  // Reset next-btn styling only — do NOT reassign onclick (stacks with HTML attribute)
-  const nb = document.getElementById('demo-next-btn');
-  if (nb) { nb.style.background=''; nb.style.color=''; nb.style.borderColor=''; }
-  // Reset scan UI
-  const btn = document.getElementById('demo-scan-btn');
-  const zone = document.getElementById('dz-0');
-  const prog = document.getElementById('demo-scan-progress');
-  const bar = document.getElementById('demo-scan-bar');
-  const fields = document.getElementById('demo-scan-fields');
-  if (btn) { btn.style.display = ''; }
-  if (zone) { zone.style.borderColor = ''; zone.style.background = ''; }
-  if (prog) prog.style.display = 'none';
-  if (bar) bar.style.width = '0';
-  if (fields) fields.innerHTML = '';
-  // Reset PDF step
-  const pdfIcon = document.getElementById('demo-pdf-icon');
-  const pdfLabel = document.getElementById('demo-pdf-label');
-  const pdfBtn = document.getElementById('demo-pdf-btn');
-  const c = LP_COPY[lang] || LP_COPY.ja;
-  if (pdfIcon) pdfIcon.textContent = '📄';
-  if (pdfLabel) { pdfLabel.textContent = c.dcTitle3; pdfLabel.style.color = ''; }
-  if (pdfBtn) { pdfBtn.textContent = c.dcPdfBtn; pdfBtn.style.background = ''; pdfBtn.disabled = false; }
-  lpSetLang(lang); // handles all text including next-btn
+  lpSetLang(lang);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
   try{ const saved=localStorage.getItem('maisoku-lang'); if(saved==='en'||saved==='ja') lang=saved; }catch(e){}
-  // Ensure app is always visible underneath the landing (never hidden by default)
-  const _tb=document.getElementById('topbar'); if(_tb) _tb.style.display='flex';
-  const _ap=document.getElementById('app'); if(_ap) _ap.style.display='flex';
   // Init landing page in correct language
   lpSetLang(lang);
   // Sync lang toggle buttons to restored lang
   if(el('lj')) el('lj').classList.toggle('on', lang==='ja');
   if(el('le')) el('le').classList.toggle('on', lang==='en');
-  // Boot the app — wrap in try/catch so a throw here NEVER breaks the landing buttons
-  try { buildAG(); } catch(e){ console.error('buildAG:', e); }
-  try { applyLang(); } catch(e){ console.error('applyLang:', e); }
-  try { autoEnFields(); } catch(e){ console.error('autoEnFields:', e); }
-  try { applyDesign(); } catch(e){ console.error('applyDesign:', e); }
+  buildAG(); applyLang(); autoEnFields(); applyDesign();
 });
 </script>
 <!-- Crop editor modal -->
