@@ -278,6 +278,39 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 
 .ms-disc-bar { padding: 2px 14px; font-size: 8px; text-align: right; color: #555; background: #fff; height: 20px; line-height: 16px; flex-shrink: 0; border-top: 1px solid #ddd; z-index: 10; width: 100%; box-sizing: border-box; }
 
+/* ── LANDING PAGE ── */
+#landing{position:fixed;inset:0;z-index:9999;background:#0d0d0f;display:flex;flex-direction:column;overflow-y:auto;font-family:'Noto Sans JP',sans-serif}
+#landing.hidden{display:none}
+.lp-nav{display:flex;align-items:center;justify-content:space-between;padding:20px 48px;flex-shrink:0}
+.lp-logo{display:flex;align-items:center;gap:10px}
+.lp-logo-mark{background:#C8102E;color:#fff;font-weight:900;padding:3px 8px;border-radius:3px;font-size:15px;font-family:'Noto Serif JP',serif}
+.lp-logo-name{font-size:13px;font-weight:600;color:#fff;letter-spacing:.04em}
+.lp-logo-by{font-size:11px;color:#555;margin-left:4px}
+.lp-lang-toggle{display:flex;gap:4px}
+.lp-lang-btn{padding:4px 12px;border-radius:4px;font-size:12px;cursor:pointer;border:1px solid #333;color:#888;background:none;transition:all .15s}
+.lp-lang-btn.on{background:#fff;color:#0d0d0f;border-color:#fff;font-weight:700}
+.lp-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 48px 48px;position:relative}
+.lp-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(200,16,46,0.18) 0%,transparent 70%);pointer-events:none}
+.lp-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#C8102E;font-weight:700;margin-bottom:24px}
+.lp-headline-ja{font-family:'Noto Serif JP',serif;font-size:52px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:0}
+.lp-divider-line{width:0;height:2px;background:#C8102E;margin:16px auto;animation:lineGrow .8s .3s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes lineGrow{to{width:120px}}
+.lp-headline-en{font-size:14px;color:#666;letter-spacing:.1em;text-transform:uppercase;margin-bottom:28px}
+.lp-sub{font-size:15px;color:#aaa;max-width:500px;line-height:1.75;margin-bottom:44px}
+.lp-cta{display:inline-flex;align-items:center;gap:10px;background:#C8102E;color:#fff;font-size:15px;font-weight:700;padding:14px 36px;border-radius:6px;cursor:pointer;border:none;transition:background .15s,transform .15s;letter-spacing:.04em;font-family:'Noto Sans JP',sans-serif}
+.lp-cta:hover{background:#a50d25;transform:translateY(-1px)}
+.lp-steps{background:#111114;padding:56px 48px;border-top:1px solid #1e1e24}
+.lp-steps-title{text-align:center;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#555;margin-bottom:40px}
+.lp-steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;max-width:920px;margin:0 auto}
+.lp-step{background:#16161a;padding:28px 24px;display:flex;flex-direction:column;gap:12px;border:1px solid #1e1e24;transition:border-color .2s}
+.lp-step:hover{border-color:#C8102E}
+.lp-step-icon{font-size:26px;line-height:1}
+.lp-step-label{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#C8102E;font-weight:700}
+.lp-step-title{font-size:14px;font-weight:700;color:#fff;font-family:'Noto Serif JP',serif;line-height:1.3}
+.lp-step-desc{font-size:12px;color:#666;line-height:1.65}
+.lp-footer-cta{background:#0d0d0f;border-top:1px solid #1e1e24;padding:48px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px}
+.lp-footer-note{font-size:11px;color:#444;letter-spacing:.06em}
+
 @media print{
   @page{size:A4 landscape;margin:0}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;box-sizing:border-box}
@@ -293,6 +326,61 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg-page);color:var(-
 </style>
 </head>
 <body>
+<div id="landing">
+  <nav class="lp-nav">
+    <div class="lp-logo">
+      <span class="lp-logo-mark">R</span>
+      <span class="lp-logo-name">Maisoku Generator</span>
+      <span class="lp-logo-by">by R.connect</span>
+    </div>
+    <div class="lp-lang-toggle">
+      <button class="lp-lang-btn on" id="lp-lj" onclick="lpSetLang('ja')">日本語</button>
+      <button class="lp-lang-btn" id="lp-le" onclick="lpSetLang('en')">EN</button>
+    </div>
+  </nav>
+  <div class="lp-hero">
+    <div class="lp-glow"></div>
+    <div class="lp-eyebrow" id="lp-eyebrow">R.connect 物件資料作成ツール</div>
+    <div class="lp-headline-ja" id="lp-headline">マイソクを、<br>もっと速く。</div>
+    <div class="lp-divider-line"></div>
+    <div class="lp-headline-en" id="lp-headline-en">Property Flyers · Reimagined</div>
+    <p class="lp-sub" id="lp-sub">物件PDFをAIがスキャン。情報を自動入力。プロ品質のマイソクを、数分で完成。</p>
+    <button class="lp-cta" onclick="lpEnter()"><span id="lp-cta-text">作成をはじめる</span> →</button>
+  </div>
+  <div class="lp-steps">
+    <div class="lp-steps-title" id="lp-steps-title">使い方 · HOW IT WORKS</div>
+    <div class="lp-steps-grid">
+      <div class="lp-step">
+        <div class="lp-step-icon">📄</div>
+        <div class="lp-step-label">STEP 1</div>
+        <div class="lp-step-title" id="lp-s1-title">PDFをスキャン</div>
+        <div class="lp-step-desc" id="lp-s1-desc">物件資料PDFをアップロード。AIが物件情報を自動で読み取ります。</div>
+      </div>
+      <div class="lp-step">
+        <div class="lp-step-icon">✏️</div>
+        <div class="lp-step-label">STEP 2</div>
+        <div class="lp-step-title" id="lp-s2-title">情報を確認・編集</div>
+        <div class="lp-step-desc" id="lp-s2-desc">入力された情報を確認し、必要に応じて修正・追加します。</div>
+      </div>
+      <div class="lp-step">
+        <div class="lp-step-icon">🎨</div>
+        <div class="lp-step-label">STEP 3</div>
+        <div class="lp-step-title" id="lp-s3-title">デザインを選択</div>
+        <div class="lp-step-desc" id="lp-s3-desc">レイアウトとカラーを選択。写真をドラッグで調整できます。</div>
+      </div>
+      <div class="lp-step">
+        <div class="lp-step-icon">⬇️</div>
+        <div class="lp-step-label">STEP 4</div>
+        <div class="lp-step-title" id="lp-s4-title">PDFで書き出し</div>
+        <div class="lp-step-desc" id="lp-s4-desc">ワンクリックでA4横向きPDFを書き出し。そのまま印刷できます。</div>
+      </div>
+    </div>
+  </div>
+  <div class="lp-footer-cta">
+    <button class="lp-cta" onclick="lpEnter()"><span id="lp-cta2-text">作成をはじめる</span> →</button>
+    <div class="lp-footer-note" id="lp-footer-note">ブラウザのみで動作 · インストール不要 · 社内限定</div>
+  </div>
+</div>
 <div id="topbar">
   <div class="logo">
     <div style="background:#C8102E; color:#fff; font-weight:900; padding:2px 7px; border-radius:3px; font-size:14px; font-family:'Noto Serif JP',serif; margin-right:4px;">R</div>
@@ -2928,8 +3016,74 @@ function showTab(i,e){
   if(e) e.classList.add('on');
 }
 
+// ── LANDING PAGE LOGIC ──
+const LP_COPY = {
+  ja: {
+    eyebrow: 'R.connect 物件資料作成ツール',
+    headline: 'マイソクを、<br>もっと速く。',
+    headlineEn: 'Property Flyers · Reimagined',
+    sub: '物件PDFをAIがスキャン。情報を自動入力。プロ品質のマイソクを、数分で完成。',
+    cta: '作成をはじめる',
+    stepsTitle: '使い方 · HOW IT WORKS',
+    s1t: 'PDFをスキャン', s1d: '物件資料PDFをアップロード。AIが物件情報を自動で読み取ります。',
+    s2t: '情報を確認・編集', s2d: '入力された情報を確認し、必要に応じて修正・追加します。',
+    s3t: 'デザインを選択', s3d: 'レイアウトとカラーを選択。写真をドラッグで調整できます。',
+    s4t: 'PDFで書き出し', s4d: 'ワンクリックでA4横向きPDFを書き出し。そのまま印刷できます。',
+    note: 'ブラウザのみで動作 · インストール不要 · 社内限定',
+  },
+  en: {
+    eyebrow: 'R.connect Property Flyer Tool',
+    headline: 'Maisoku,<br>Faster.',
+    headlineEn: 'Property Flyers · Reimagined',
+    sub: 'AI scans your property PDF, fills the form, and generates a print-ready maisoku in minutes.',
+    cta: 'Start Creating',
+    stepsTitle: 'HOW IT WORKS',
+    s1t: 'Scan the PDF', s1d: 'Upload your property document. AI reads and extracts all key details automatically.',
+    s2t: 'Review & Edit', s2d: 'Check the auto-filled information and make any corrections or additions.',
+    s3t: 'Choose a Design', s3d: 'Pick a layout and colour palette. Drag to reframe your photos.',
+    s4t: 'Export as PDF', s4d: 'One click exports a print-ready A4 landscape PDF.',
+    note: 'Runs in your browser · No install · Internal use only',
+  }
+};
+
+function lpSetLang(l) {
+  lang = l;
+  try { localStorage.setItem('maisoku-lang', l); } catch(e) {}
+  // Sync landing lang buttons
+  document.querySelectorAll('.lp-lang-btn').forEach(b => b.classList.remove('on'));
+  const lpBtn = document.getElementById(l === 'ja' ? 'lp-lj' : 'lp-le');
+  if (lpBtn) lpBtn.classList.add('on');
+  // Sync main app lang buttons
+  if(el('lj')) el('lj').className='lang-btn'+(l==='ja'?' on':'');
+  if(el('le')) el('le').className='lang-btn'+(l==='en'?' on':'');
+  // Apply copy
+  const c = LP_COPY[l] || LP_COPY.ja;
+  const st = (id, html) => { const e = document.getElementById(id); if(e) e.innerHTML = html; };
+  st('lp-eyebrow', c.eyebrow);
+  st('lp-headline', c.headline);
+  st('lp-headline-en', c.headlineEn);
+  st('lp-sub', c.sub);
+  st('lp-cta-text', c.cta);
+  st('lp-cta2-text', c.cta);
+  st('lp-steps-title', c.stepsTitle);
+  st('lp-s1-title', c.s1t); st('lp-s1-desc', c.s1d);
+  st('lp-s2-title', c.s2t); st('lp-s2-desc', c.s2d);
+  st('lp-s3-title', c.s3t); st('lp-s3-desc', c.s3d);
+  st('lp-s4-title', c.s4t); st('lp-s4-desc', c.s4d);
+  st('lp-footer-note', c.note);
+}
+
+function lpEnter() {
+  const lp = document.getElementById('landing');
+  if (lp) lp.classList.add('hidden');
+  // Apply lang to main app
+  applyLang();
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   try{ const saved=localStorage.getItem('maisoku-lang'); if(saved==='en'||saved==='ja') lang=saved; }catch(e){}
+  // Init landing page in correct language
+  lpSetLang(lang);
   // Sync lang toggle buttons to restored lang
   if(el('lj')) el('lj').classList.toggle('on', lang==='ja');
   if(el('le')) el('le').classList.toggle('on', lang==='en');
