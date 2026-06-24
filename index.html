@@ -3614,12 +3614,19 @@ function lpExit() {
 
 window.addEventListener('DOMContentLoaded', () => {
   try{ const saved=localStorage.getItem('maisoku-lang'); if(saved==='en'||saved==='ja') lang=saved; }catch(e){}
+  // Ensure app is always visible underneath the landing (never hidden by default)
+  const _tb=document.getElementById('topbar'); if(_tb) _tb.style.display='flex';
+  const _ap=document.getElementById('app'); if(_ap) _ap.style.display='flex';
   // Init landing page in correct language
   lpSetLang(lang);
   // Sync lang toggle buttons to restored lang
   if(el('lj')) el('lj').classList.toggle('on', lang==='ja');
   if(el('le')) el('le').classList.toggle('on', lang==='en');
-  buildAG(); applyLang(); autoEnFields(); applyDesign();
+  // Boot the app — wrap in try/catch so a throw here NEVER breaks the landing buttons
+  try { buildAG(); } catch(e){ console.error('buildAG:', e); }
+  try { applyLang(); } catch(e){ console.error('applyLang:', e); }
+  try { autoEnFields(); } catch(e){ console.error('autoEnFields:', e); }
+  try { applyDesign(); } catch(e){ console.error('applyDesign:', e); }
 });
 </script>
 <!-- Crop editor modal -->
