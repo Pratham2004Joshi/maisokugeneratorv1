@@ -2538,11 +2538,128 @@ function toggleView(){
   if(isPrev){applyLang(); upd();}
 }
 
+/* ── Japanese-leak export gate ──────────────────────────────────
+   In EN mode, the rendered A4 sheet (#ms) must contain NO Japanese
+   except the fixed company footer (#ms-foot: postal address, license,
+   agent). Scans the live canvas DOM, so it catches every field —
+   scanned values, review extras, custom rows — automatically. */
+const JA_RE = /[\u3040-\u30ff\u4e00-\u9fff]/;
+
+function findJaLeaks(){
+  const root = document.getElementById('ms');
+  if(!root) return [];
+  const foot = document.getElementById('ms-foot');
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node){
+      if(foot && foot.contains(node)) return NodeFilter.FILTER_REJECT;      // company footer is allowed to stay JP
+      if(!node.nodeValue || !JA_RE.test(node.nodeValue)) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const seen = new Set(), leaks = [];
+  let n;
+  while((n = walker.nextNode())){
+    const text = n.nodeValue.trim();
+    if(!text || seen.has(text)) continue;
+    seen.add(text);
+    leaks.push({ text, field: leakFieldFor(text) });
+  }
+  return leaks;
+}
+
+/* Best-effort: trace a leaking snippet back to the form input that holds it,
+   so the user gets a one-tap jump. Footer inputs are exempt. */
+function leakFieldFor(text){
+  const exempt = new Set(['f-cn','f-ca','f-tel','f-fax','f-li','f-ag']);
+  const inputs = [...document.querySelectorAll('#fp input, #fp textarea, #fp select')];
+  for(const inp of inputs){
+    if(exempt.has(inp.id)) continue;
+    const v = (inp.value||'').trim();
+    if(v && (v.includes(text) || text.includes(v))){
+      const key = inp.id.replace('f-','');
+      const lbl = (el('l-'+key)?.textContent||'').trim();   // already English in EN mode
+      return { id: inp.id, label: lbl || key };
+    }
+  }
+  return null;   // review extra / custom row — not a plain input
+}
+
+function jumpToInput(id){
+  if(isPrev) toggleView();                  // export fires from preview; return to the form
+  const inp = el(id); if(!inp) return;
+  const tc = inp.closest('.tc');
+  if(tc){
+    const tcs = [...document.querySelectorAll('.tc')];
+    const idx = tcs.indexOf(tc);
+    tcs.forEach((t,j)=> t.style.display = j===idx ? 'block' : 'none');
+    document.querySelectorAll('.ti').forEach((t,j)=> t.classList.toggle('on', j===idx));
+  }
+  closeJaLeakModal();
+  inp.focus();
+  inp.scrollIntoView({block:'center', behavior:'smooth'});
+  inp.style.transition = 'box-shadow .3s';
+  inp.style.boxShadow = '0 0 0 3px #f59e0b';
+  setTimeout(()=>{ inp.style.boxShadow=''; }, 2600);
+}
+
+function closeJaLeakModal(){ const m = el('ja-leak-modal'); if(m) m.remove(); }
+
+function showJaLeakModal(leaks){
+  closeJaLeakModal();
+  const rows = leaks.map((lk)=>{
+    const jp = lk.text.length > 40 ? lk.text.slice(0,40)+'…' : lk.text;
+    const safe = jp.replace(/</g,'&lt;');
+    if(lk.field){
+      return `<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;border:1px solid #fde68a;background:#fffbeb;border-radius:8px">
+        <div style="min-width:0"><div style="font-weight:700;color:#92400e">${lk.field.label}</div>
+        <div style="font-size:12px;color:#78716c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${safe}</div></div>
+        <button onclick="jumpToInput('${lk.field.id}')" style="flex-shrink:0;background:#f59e0b;color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Fix this →</button>
+      </div>`;
+    }
+    return `<div style="padding:8px 10px;border:1px solid #fde68a;background:#fffbeb;border-radius:8px">
+      <div style="font-weight:700;color:#92400e">Scanned item (re-scan or remove)</div>
+      <div style="font-size:12px;color:#78716c">${safe}</div></div>`;
+  }).join('');
+
+  const ov = document.createElement('div');
+  ov.id = 'ja-leak-modal';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;padding:20px;font-family:inherit';
+  ov.innerHTML = `
+    <div style="background:#fff;border-radius:14px;max-width:440px;width:100%;max-height:85vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+      <div style="padding:18px 20px;border-bottom:1px solid #eee">
+        <div style="font-size:17px;font-weight:800;color:#111">⚠️ Export blocked — Japanese on the English sheet</div>
+        <div style="font-size:13px;color:#555;margin-top:6px;line-height:1.5">
+          The English maisoku still has Japanese in ${leaks.length} ${leaks.length===1?'field':'fields'}.
+          To keep the English output clean, it can't be exported until these are translated.
+          Fix each field below (type the English in, or re-scan the PDF), then export again.
+          The company footer is allowed to stay Japanese and is never flagged.
+        </div>
+      </div>
+      <div style="padding:16px 20px;display:flex;flex-direction:column;gap:8px">${rows}</div>
+      <div style="padding:14px 20px;border-top:1px solid #eee;text-align:right">
+        <button onclick="closeJaLeakModal()" style="background:#111;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Back to editing</button>
+      </div>
+    </div>`;
+  ov.addEventListener('click', (e)=>{ if(e.target===ov) closeJaLeakModal(); });
+  document.body.appendChild(ov);
+}
+
+/* Returns true if export may proceed; otherwise shows the block modal. */
+function passesJaGate(){
+  if(lang !== 'en') return true;            // JA sheet: Japanese is expected
+  const leaks = findJaLeaks();
+  if(leaks.length === 0) return true;
+  showJaLeakModal(leaks);
+  return false;
+}
+
 function doPrint(){
+  if(!passesJaGate()) return;
   window.print();
 }
 
 function doExportPDF() {
+  if(!passesJaGate()) return;
   // Show a one-time hint about print dialog settings
   const hintKey = 'ms-pdf-hint-shown';
   if (!sessionStorage.getItem(hintKey)) {
