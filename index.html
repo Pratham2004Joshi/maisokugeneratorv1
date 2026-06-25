@@ -536,9 +536,123 @@ body.dark #sidebar{background:#0b0b0e}
   #ms-canvas-body{flex:1!important;min-height:0!important;overflow:hidden!important}
   #ms-foot{flex-shrink:0!important;position:relative!important}
 }
+
+/* ════ INTRO / SPLASH SCREEN ════ */
+#intro{position:fixed;inset:0;z-index:11000;background:radial-gradient(ellipse at 50% 42%,#11140f 0%,#0a0b0d 60%,#070708 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;font-family:'Space Grotesk','Noto Sans JP',sans-serif;opacity:1;transition:opacity .85s ease}
+#intro.exiting{pointer-events:none}
+#intro.gone{display:none}
+/* animated green grid (two layers, parallax) */
+.intro-grid{position:absolute;top:-60%;left:-60%;width:220%;height:220%;background-image:linear-gradient(rgba(200,255,74,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(200,255,74,.05) 1px,transparent 1px);background-size:52px 52px;animation:introGrid 14s linear infinite;will-change:transform}
+.intro-grid.fine{background-image:linear-gradient(rgba(200,255,74,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(200,255,74,.03) 1px,transparent 1px);background-size:13px 13px;animation-duration:9s;animation-direction:reverse}
+@keyframes introGrid{from{transform:translate(0,0)}to{transform:translate(52px,52px)}}
+/* perspective floor that scrolls toward camera */
+.intro-floor{position:absolute;left:-25%;right:-25%;bottom:-10%;height:55%;background-image:linear-gradient(rgba(200,255,74,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(200,255,74,.07) 1px,transparent 1px);background-size:60px 60px;transform:perspective(420px) rotateX(70deg);transform-origin:bottom center;animation:introFloor 4.5s linear infinite;opacity:.5;pointer-events:none;mask-image:linear-gradient(to top,#000 10%,transparent 92%);-webkit-mask-image:linear-gradient(to top,#000 10%,transparent 92%)}
+@keyframes introFloor{from{background-position:0 0}to{background-position:0 60px}}
+/* sweeping scan line */
+.intro-sweep{position:absolute;top:0;bottom:0;width:42%;left:-42%;background:linear-gradient(90deg,transparent,rgba(200,255,74,.06) 60%,rgba(200,255,74,.12));animation:introSweep 7.5s linear infinite;pointer-events:none;mix-blend-mode:screen}
+@keyframes introSweep{0%{left:-42%}100%{left:120%}}
+.intro-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 36%,rgba(6,7,9,.92) 100%);pointer-events:none}
+.intro-glow{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.intro-glow.g1{width:560px;height:560px;background:radial-gradient(circle,rgba(200,255,74,.18),transparent 70%);top:10%;left:14%;animation:introDrift1 13s ease-in-out infinite}
+.intro-glow.g2{width:520px;height:520px;background:radial-gradient(circle,rgba(200,16,46,.16),transparent 70%);bottom:8%;right:10%;animation:introDrift2 16s ease-in-out infinite}
+.intro-glow.g3{width:360px;height:360px;background:radial-gradient(circle,rgba(120,200,255,.10),transparent 70%);top:46%;left:60%;animation:introDrift1 19s ease-in-out infinite reverse}
+@keyframes introDrift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(80px,52px) scale(1.12)}}
+@keyframes introDrift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-66px,-48px) scale(1.1)}}
+/* drifting particles */
+.intro-particles{position:absolute;inset:0;pointer-events:none}
+.ipart{position:absolute;border-radius:50%;background:#C8FF4A;will-change:transform,opacity;animation:introPart linear infinite}
+@keyframes introPart{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-120px) translateX(var(--dx,0));opacity:0}}
+/* stage */
+.intro-stage{position:relative;width:min(80vw,500px);height:min(80vw,500px);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2}
+/* 3D core glow behind the dot-shell */
+.intro-core{position:absolute;width:62%;height:62%;border-radius:50%;background:radial-gradient(circle at 40% 34%,rgba(200,255,74,.28),rgba(120,200,255,.10) 42%,rgba(10,16,10,0) 70%);filter:blur(6px);animation:introBreath 5s ease-in-out infinite;pointer-events:none}
+.intro-radar{position:absolute;width:74%;height:74%;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg,rgba(200,255,74,.16) 30deg,transparent 70deg);animation:introSpin 7s linear infinite;mix-blend-mode:screen;pointer-events:none;opacity:.7}
+@keyframes introBreath{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.07);opacity:1}}
+@keyframes introSpin{to{transform:rotate(360deg)}}
+/* dot shell — dots positioned by JS */
+.intro-sphere{position:absolute;inset:0;pointer-events:none}
+.idot{position:absolute;left:50%;top:50%;border-radius:50%;background:#C8FF4A;box-shadow:0 0 6px rgba(200,255,74,.6);will-change:transform,opacity}
+/* the R, revealed from inside */
+.intro-reveal{position:absolute;left:50%;top:50%;opacity:0;will-change:transform,opacity;transform:translate(-50%,-50%);z-index:5;pointer-events:none}
+.intro-float{animation:introFloat 5.5s ease-in-out infinite}
+@keyframes introFloat{0%,100%{transform:translateY(-10px)}50%{transform:translateY(14px)}}
+.intro-logo{display:block;width:min(50vw,300px);height:auto;filter:drop-shadow(0 24px 40px rgba(0,0,0,.55)) drop-shadow(0 0 28px rgba(200,255,74,.22))}
+/* hint */
+.intro-hint{position:absolute;bottom:46px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:11px;font:600 11px 'Space Mono','Noto Sans JP',monospace;letter-spacing:.2em;color:#5c6b3a;z-index:6;transition:color .35s;white-space:nowrap}
+.intro-hint.revealed{color:#b3bd97}
+.intro-hint .dot{width:6px;height:6px;border-radius:50%;background:#C8FF4A;box-shadow:0 0 10px #C8FF4A;animation:introBlink 1.4s steps(1) infinite}
+@keyframes introBlink{0%,55%{opacity:1}56%,100%{opacity:.15}}
+/* ── construction / skyline transition ── */
+.intro-build{position:absolute;left:0;right:0;bottom:0;height:100%;display:flex;align-items:flex-end;justify-content:center;gap:0;pointer-events:none;z-index:8}
+.bldg{flex:1;transform-origin:bottom center;transform:scaleY(0);transition:transform .8s cubic-bezier(.16,.84,.32,1);background:linear-gradient(180deg,#11160f,#0a0d0a);border-left:1px solid rgba(200,255,74,.18);border-top:2px solid rgba(200,255,74,.55);box-shadow:0 0 18px rgba(200,255,74,.10),inset 0 0 30px rgba(0,0,0,.6);position:relative}
+.bldg::after{content:"";position:absolute;left:14%;right:14%;top:14px;bottom:0;background-image:radial-gradient(rgba(200,255,74,.35) 38%,transparent 42%);background-size:11px 16px;opacity:.5}
+.bldg.rise{transform:scaleY(1)}
+@media (prefers-reduced-motion:reduce){.intro-grid,.intro-floor,.intro-glow,.intro-sweep,.intro-core,.intro-radar,.intro-float,.intro-hint .dot,.ipart{animation:none}}
+
+/* ════════════ WORKBENCH EDITOR SKIN ════════════ */
+#app{max-width:1240px;border:1px solid #d9ded8}
+body:not(.dark){--bg-app:#eef1ee}
+/* topbar */
+#topbar{background:#0b0d0c;font-family:'Space Grotesk','Noto Sans JP',sans-serif;border-bottom:1px solid #1a1f1a}
+.logo-title{font-family:'Space Grotesk','Noto Sans JP',sans-serif;letter-spacing:.03em}
+.lang-btn.on{background:#C8FF4A;color:#0b0d0c}
+.btn-prev{background:#C8FF4A;color:#0b0d0c}.btn-prev.on{background:#C8FF4A;color:#0b0d0c}
+/* dark rail */
+#sidebar{width:214px;background:#08090a;font-family:'Space Grotesk','Noto Sans JP',sans-serif}
+.ti{font-weight:500;color:#6a746a;padding:11px 18px}
+.ti:hover{background:#101410;color:#d7e6cf}
+.ti.on{color:#fff;background:#101410;border-left-color:#C8FF4A;font-weight:700}
+.sb-sec{border-top-color:#16191a}
+.sb-lbl{color:#4a544a;font-family:'Space Mono',monospace;letter-spacing:.14em;font-size:9px}
+.di{color:#6a746a}.di:hover{background:#101410;color:#d7e6cf}
+.di.on{color:#C8FF4A;border-left-color:#C8FF4A;background:#101410}
+.pal-btn{color:#6a746a}.pal-btn:hover{background:#101410;color:#d7e6cf}
+.pal-btn.on{color:#C8FF4A;border-left-color:#C8FF4A;background:#101410}
+/* sticky action bar */
+.io-row{background:#fff;border:1px solid #dde2dd;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.05);padding:12px 16px}
+body.dark .io-row{background:#171b24;border-color:#2e3344}
+.btn-ai{background:#C8FF4A!important;color:#0b0d0c!important}
+/* section cards */
+.tc{background:#fff;border:1px solid #dde2dd;border-radius:12px;padding:22px 24px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+body.dark .tc{background:#171b24;border-color:#2e3344}
+.stitle{font:900 19px 'Space Grotesk','Noto Sans JP',sans-serif;border-bottom:none;padding-bottom:0;margin-bottom:20px;display:flex;align-items:center;gap:10px;color:var(--text-body)}
+.stitle::before{content:"";width:8px;height:8px;border-radius:50%;background:#C8FF4A;box-shadow:0 0 8px #C8FF4A;flex-shrink:0}
+body:not(.dark) .sbox{background:#f5f7f5;border-color:#e3e7e3}
+/* labels + inputs */
+.fl{font-family:'Space Grotesk','Noto Sans JP',sans-serif;font-weight:600;color:#566056}
+body.dark .fl{color:var(--text-label)}
+.fi input,.fi select,.fi textarea{border-radius:7px;padding:9px 12px;font-size:13px}
+body:not(.dark) .fi input,body:not(.dark) .fi select,body:not(.dark) .fi textarea{background:#f5f7f5;border-color:#dde2dd}
+body:not(.dark) .fi input:focus,body:not(.dark) .fi select:focus,body:not(.dark) .fi textarea:focus{border-color:#C8FF4A;box-shadow:0 0 0 3px rgba(200,255,74,.22)}
+/* amenity chips */
+.ac{border-radius:7px;padding:6px 12px}
+body:not(.dark) .ac{background:#f5f7f5;border-color:#dde2dd;color:#566056}
+body:not(.dark) .ac.on{background:#eefcc8;border-color:#C8FF4A;color:#0b0d0c;font-weight:600}
+body.dark .ac.on{background:rgba(200,255,74,.12);border-color:#C8FF4A;color:#C8FF4A}
 </style>
 </head>
 <body>
+<div id="intro">
+  <div class="intro-grid"></div>
+  <div class="intro-grid fine"></div>
+  <div class="intro-floor"></div>
+  <div class="intro-sweep"></div>
+  <div class="intro-glow g1"></div>
+  <div class="intro-glow g2"></div>
+  <div class="intro-glow g3"></div>
+  <div class="intro-particles" id="introParticles"></div>
+  <div class="intro-vignette"></div>
+  <div class="intro-stage" id="introStage">
+    <div class="intro-core"></div>
+    <div class="intro-radar"></div>
+    <div class="intro-sphere" id="introSphere"></div>
+    <div class="intro-reveal" id="introReveal">
+      <div class="intro-float"><img class="intro-logo" src="logo-R.png" alt="R.connect" draggable="false"></div>
+    </div>
+  </div>
+  <div class="intro-hint" id="introHint"><span class="dot"></span><span id="introHintText">球体にカーソルを合わせて R を呼び出す</span></div>
+  <div class="intro-build" id="introBuild"></div>
+</div>
 <div id="landing">
   <nav class="bp-nav">
     <div class="bp-brand">
@@ -547,8 +661,7 @@ body.dark #sidebar{background:#0b0b0e}
       <span class="bp-by">by R.connect</span>
     </div>
     <div class="bp-nav-right">
-      <span class="bp-nav-link" onclick="bpScroll('.bp-steps')">使い方</span>
-      <span class="bp-nav-link" onclick="bpScroll('.lp-demo-section')">デモ</span>
+      <span class="bp-nav-link" id="bp-nav-demo" onclick="bpScroll('.lp-demo-section')">デモ</span>
       <div class="bp-lang">
         <button class="bp-lang-btn lp-lang-btn on" id="lp-lj" onclick="lpSetLang('ja')">JA</button>
         <button class="bp-lang-btn lp-lang-btn" id="lp-le" onclick="lpSetLang('en')">EN</button>
@@ -574,12 +687,12 @@ body.dark #sidebar{background:#0b0b0e}
       <p class="bp-sub bp-reveal" id="lp-sub" style="transition-delay:.18s">物件PDFをAIがスキャン。情報を自動入力。プロ品質のマイソクを、数分で完成。</p>
       <div class="bp-cta-row bp-reveal" style="transition-delay:.24s">
         <button class="bp-cta" onclick="lpEnter()"><span id="lp-cta-text">作成をはじめる</span> <span class="ar">→</span></button>
-        <button class="bp-ghost" onclick="bpScroll('.lp-demo-section')">▷ デモを見る</button>
+        <button class="bp-ghost" id="bp-demo-btn" onclick="bpScroll('.lp-demo-section')">▷ デモを見る</button>
       </div>
       <div class="bp-stats bp-reveal" style="transition-delay:.30s">
-        <div><div class="bp-stat-n">&lt;3<small>min</small></div><div class="bp-stat-l">PER FLYER</div></div>
-        <div><div class="bp-stat-n">04</div><div class="bp-stat-l">TEMPLATES</div></div>
-        <div><div class="bp-stat-n">100<small>%</small></div><div class="bp-stat-l">ブラウザ完結</div></div>
+        <div><div class="bp-stat-n">&lt;3<small>min</small></div><div class="bp-stat-l" id="bp-stat-l1">PER FLYER</div></div>
+        <div><div class="bp-stat-n">04</div><div class="bp-stat-l" id="bp-stat-l2">TEMPLATES</div></div>
+        <div><div class="bp-stat-n">100<small>%</small></div><div class="bp-stat-l" id="bp-stat-l3">ブラウザ完結</div></div>
       </div>
     </div>
     <div class="bp-hero-right bp-reveal" style="transition-delay:.2s">
@@ -591,20 +704,20 @@ body.dark #sidebar{background:#0b0b0e}
         <div class="bp-pv-hero">
           <div class="bp-pv-grid"></div>
           <div class="bp-pv-hero-txt">
-            <div class="bp-pv-kicker">INVESTMENT PROPERTY</div>
-            <div class="bp-pv-name">グラントレゾール広尾</div>
+            <div class="bp-pv-kicker" id="bp-pv-kicker">INVESTMENT PROPERTY</div>
+            <div class="bp-pv-name" id="bp-pv-name">グラントレゾール広尾</div>
             <div class="bp-pv-price">¥ 45,000,000</div>
           </div>
         </div>
         <table class="bp-pv-tbl"><tbody>
-          <tr><th>所在地</th><td>渋谷区恵比寿2-38-3</td></tr>
-          <tr><th>間取り</th><td>1DK メゾネット型</td></tr>
-          <tr><th>専有面積</th><td>50.30 ㎡</td></tr>
-          <tr><th>表面利回り</th><td class="hl">6.67 %</td></tr>
+          <tr><th id="bp-pv-r1">所在地</th><td id="bp-pv-v1">渋谷区恵比寿2-38-3</td></tr>
+          <tr><th id="bp-pv-r2">間取り</th><td id="bp-pv-v2">1DK メゾネット型</td></tr>
+          <tr><th id="bp-pv-r3">専有面積</th><td id="bp-pv-v3">50.30 ㎡</td></tr>
+          <tr><th id="bp-pv-r4">表面利回り</th><td class="hl" id="bp-pv-v4">6.67 %</td></tr>
         </tbody></table>
       </div>
-      <div class="bp-pv-status"><span class="bdot"></span> AI SCAN COMPLETE — 6 FIELDS · 自動入力済み</div>
-      <div class="bp-pv-chips"><span class="on">クラシック</span><span>プレミアム</span><span>モダン</span><span>縦型</span></div>
+      <div class="bp-pv-status" id="bp-pv-status"><span class="bdot"></span> AI SCAN COMPLETE — 6 FIELDS · 自動入力済み</div>
+      <div class="bp-pv-chips"><span class="on" id="bp-pv-c1">クラシック</span><span id="bp-pv-c2">プレミアム</span><span id="bp-pv-c3">モダン</span><span id="bp-pv-c4">縦型</span></div>
     </div>
   </div>
   <div class="bp-steps">
@@ -694,12 +807,12 @@ body.dark #sidebar{background:#0b0b0e}
           <div class="lp-demo-content">
             <div class="lp-dc-title" id="ds1-title">物件情報 <span class="lp-dc-badge" id="ds1-badge">✓ AI入力済み</span></div>
             <div class="lp-dc-fields">
-              <div class="lp-dc-field"><label id="ds1-f1">物件名</label><div class="lp-dc-val lp-dc-filled">グラントレゾール広尾</div></div>
-              <div class="lp-dc-field"><label id="ds1-f2">所在地</label><div class="lp-dc-val lp-dc-filled">東京都渋谷区恵比寿2-38-3</div></div>
-              <div class="lp-dc-field"><label id="ds1-f3">間取り</label><div class="lp-dc-val lp-dc-filled">1DK メゾネット型</div></div>
-              <div class="lp-dc-field"><label id="ds1-f4">価格</label><div class="lp-dc-val lp-dc-filled">¥ 45,000,000</div></div>
-              <div class="lp-dc-field"><label id="ds1-f5">専有面積</label><div class="lp-dc-val lp-dc-filled">50.30 ㎡</div></div>
-              <div class="lp-dc-field"><label id="ds1-f6">築年月</label><div class="lp-dc-val lp-dc-filled">2011年3月</div></div>
+              <div class="lp-dc-field"><label id="ds1-f1">物件名</label><div class="lp-dc-val lp-dc-filled" id="ds1-v1">グラントレゾール広尾</div></div>
+              <div class="lp-dc-field"><label id="ds1-f2">所在地</label><div class="lp-dc-val lp-dc-filled" id="ds1-v2">東京都渋谷区恵比寿2-38-3</div></div>
+              <div class="lp-dc-field"><label id="ds1-f3">間取り</label><div class="lp-dc-val lp-dc-filled" id="ds1-v3">1DK メゾネット型</div></div>
+              <div class="lp-dc-field"><label id="ds1-f4">価格</label><div class="lp-dc-val lp-dc-filled" id="ds1-v4">¥ 45,000,000</div></div>
+              <div class="lp-dc-field"><label id="ds1-f5">専有面積</label><div class="lp-dc-val lp-dc-filled" id="ds1-v5">50.30 ㎡</div></div>
+              <div class="lp-dc-field"><label id="ds1-f6">築年月</label><div class="lp-dc-val lp-dc-filled" id="ds1-v6">2011年3月</div></div>
             </div>
             <button class="lp-dc-btn" id="ds1-next" onclick="demoGo(2)">次へ：デザイン選択 →</button>
           </div>
@@ -720,18 +833,18 @@ body.dark #sidebar{background:#0b0b0e}
               <!-- Classic -->
               <div class="ldm-layout ldm-classic active" id="ldm-0">
                 <div class="ldm-hero" style="background:linear-gradient(135deg,#1a1a1a 60%,#333);display:flex;align-items:flex-end;padding:12px;">
-                  <div><div id="ldm-0-tag" style="font-size:8px;color:rgba(255,255,255,.7);margin-bottom:2px;">投資用物件</div><div style="font-size:15px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;">グラントレゾール広尾</div><div style="font-size:11px;font-weight:700;color:#C8102E;">¥ 45,000,000</div></div>
+                  <div><div id="ldm-0-tag" style="font-size:8px;color:rgba(255,255,255,.7);margin-bottom:2px;">投資用物件</div><div style="font-size:15px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;" id="ldm-0-name">グラントレゾール広尾</div><div style="font-size:11px;font-weight:700;color:#C8102E;">¥ 45,000,000</div></div>
                 </div>
                 <div class="ldm-spec">
                   <div id="ldm-0-head" class="ldm-spec-head" style="background:#C8102E;color:#fff;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
                   <table class="ldm-tbl"><tbody>
-                    <tr><th id="ldm-0-r1">所在地</th><td>渋谷区恵比寿2-38-3</td></tr>
-                    <tr><th id="ldm-0-r2">間取り</th><td>1DK メゾネット型</td></tr>
-                    <tr><th id="ldm-0-r3">専有面積</th><td>50.30㎡</td></tr>
-                    <tr><th id="ldm-0-r4">築年月</th><td>2011年3月</td></tr>
-                    <tr><th id="ldm-0-r5">賃料</th><td>¥250,000/mo</td></tr>
-                    <tr><th id="ldm-0-r6">管理費</th><td>¥23,610/mo</td></tr>
-                    <tr><th id="ldm-0-r7">表面利回り</th><td>6.67%</td></tr>
+                    <tr><th id="ldm-0-r1">所在地</th><td id="ldm-0-v1">渋谷区恵比寿2-38-3</td></tr>
+                    <tr><th id="ldm-0-r2">間取り</th><td id="ldm-0-v2">1DK メゾネット型</td></tr>
+                    <tr><th id="ldm-0-r3">専有面積</th><td id="ldm-0-v3">50.30㎡</td></tr>
+                    <tr><th id="ldm-0-r4">築年月</th><td id="ldm-0-v4">2011年3月</td></tr>
+                    <tr><th id="ldm-0-r5">賃料</th><td id="ldm-0-v5">¥250,000/mo</td></tr>
+                    <tr><th id="ldm-0-r6">管理費</th><td id="ldm-0-v6">¥23,610/mo</td></tr>
+                    <tr><th id="ldm-0-r7">表面利回り</th><td id="ldm-0-v7">6.67%</td></tr>
                     <tr><th id="ldm-0-r8">現況</th><td id="ldm-0-v8">賃貸中</td></tr>
                   </tbody></table>
                 </div>
@@ -740,17 +853,17 @@ body.dark #sidebar{background:#0b0b0e}
               <div class="ldm-layout ldm-premium" id="ldm-1">
                 <div class="ldm-banner-prem" style="background:linear-gradient(135deg,#0D1B2A,#1a3a5c);padding:14px 16px;display:flex;flex-direction:column;justify-content:flex-end;">
                   <div style="font-size:7px;color:rgba(201,168,76,.8);margin-bottom:2px;letter-spacing:.1em;">INVESTMENT PROPERTY</div>
-                  <div style="font-size:14px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;margin-bottom:3px;">グラントレゾール広尾</div>
+                  <div style="font-size:14px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;margin-bottom:3px;" id="ldm-1-name">グラントレゾール広尾</div>
                   <div style="font-size:10px;font-weight:700;color:#C9A84C;">¥ 45,000,000</div>
                 </div>
                 <div class="ldm-spec" style="background:#F4F1EC;">
                   <div id="ldm-1-head" class="ldm-spec-head" style="background:#0D1B2A;color:#C9A84C;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
                   <table class="ldm-tbl" style="background:#F4F1EC;"><tbody>
-                    <tr><th id="ldm-1-r1" style="background:#0D1B2A;color:#C9A84C;">所在地</th><td>渋谷区恵比寿2-38-3</td></tr>
-                    <tr><th id="ldm-1-r2" style="background:#0D1B2A;color:#C9A84C;">間取り</th><td>1DK メゾネット型</td></tr>
-                    <tr><th id="ldm-1-r3" style="background:#0D1B2A;color:#C9A84C;">専有面積</th><td>50.30㎡</td></tr>
-                    <tr><th id="ldm-1-r4" style="background:#0D1B2A;color:#C9A84C;">賃料</th><td>¥250,000/mo</td></tr>
-                    <tr><th id="ldm-1-r5" style="background:#0D1B2A;color:#C9A84C;">表面利回り</th><td>6.67%</td></tr>
+                    <tr><th id="ldm-1-r1" style="background:#0D1B2A;color:#C9A84C;">所在地</th><td id="ldm-1-v1">渋谷区恵比寿2-38-3</td></tr>
+                    <tr><th id="ldm-1-r2" style="background:#0D1B2A;color:#C9A84C;">間取り</th><td id="ldm-1-v2">1DK メゾネット型</td></tr>
+                    <tr><th id="ldm-1-r3" style="background:#0D1B2A;color:#C9A84C;">専有面積</th><td id="ldm-1-v3">50.30㎡</td></tr>
+                    <tr><th id="ldm-1-r4" style="background:#0D1B2A;color:#C9A84C;">賃料</th><td id="ldm-1-v4">¥250,000/mo</td></tr>
+                    <tr><th id="ldm-1-r5" style="background:#0D1B2A;color:#C9A84C;">表面利回り</th><td id="ldm-1-v5">6.67%</td></tr>
                   </tbody></table>
                 </div>
               </div>
@@ -758,17 +871,17 @@ body.dark #sidebar{background:#0b0b0e}
               <div class="ldm-layout ldm-modern" id="ldm-2">
                 <div style="background:linear-gradient(135deg,#7c0a1e,#C8102E);padding:14px 16px;display:flex;flex-direction:column;justify-content:flex-end;">
                   <div style="font-size:7px;color:rgba(255,255,255,.7);margin-bottom:2px;letter-spacing:.1em;">PROPERTY</div>
-                  <div style="font-size:14px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;margin-bottom:3px;">グラントレゾール広尾</div>
+                  <div style="font-size:14px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;margin-bottom:3px;" id="ldm-2-name">グラントレゾール広尾</div>
                   <div style="font-size:10px;font-weight:700;color:#fff;">¥ 45,000,000</div>
                 </div>
                 <div class="ldm-spec" style="background:#fff;">
                   <div id="ldm-2-head" class="ldm-spec-head" style="background:#111;color:#fff;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
                   <table class="ldm-tbl"><tbody>
-                    <tr><th id="ldm-2-r1" style="background:#111;color:#fff;">所在地</th><td>渋谷区恵比寿2-38-3</td></tr>
-                    <tr><th id="ldm-2-r2" style="background:#111;color:#fff;">間取り</th><td>1DK メゾネット型</td></tr>
-                    <tr><th id="ldm-2-r3" style="background:#111;color:#fff;">専有面積</th><td>50.30㎡</td></tr>
-                    <tr><th id="ldm-2-r4" style="background:#111;color:#fff;">賃料</th><td>¥250,000/mo</td></tr>
-                    <tr><th id="ldm-2-r5" style="background:#111;color:#fff;">表面利回り</th><td>6.67%</td></tr>
+                    <tr><th id="ldm-2-r1" style="background:#111;color:#fff;">所在地</th><td id="ldm-2-v1">渋谷区恵比寿2-38-3</td></tr>
+                    <tr><th id="ldm-2-r2" style="background:#111;color:#fff;">間取り</th><td id="ldm-2-v2">1DK メゾネット型</td></tr>
+                    <tr><th id="ldm-2-r3" style="background:#111;color:#fff;">専有面積</th><td id="ldm-2-v3">50.30㎡</td></tr>
+                    <tr><th id="ldm-2-r4" style="background:#111;color:#fff;">賃料</th><td id="ldm-2-v4">¥250,000/mo</td></tr>
+                    <tr><th id="ldm-2-r5" style="background:#111;color:#fff;">表面利回り</th><td id="ldm-2-v5">6.67%</td></tr>
                   </tbody></table>
                 </div>
               </div>
@@ -776,17 +889,17 @@ body.dark #sidebar{background:#0b0b0e}
               <div class="ldm-layout ldm-vert" id="ldm-3">
                 <div class="ldm-vert-left" style="background:linear-gradient(180deg,#1a1a1a,#333);display:flex;flex-direction:column;justify-content:flex-end;padding:10px;">
                   <div id="ldm-3-tag" style="font-size:7px;color:rgba(255,255,255,.7);margin-bottom:2px;">縦型写真</div>
-                  <div style="font-size:13px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;line-height:1.2;">グラントレゾール<br>広尾</div>
+                  <div style="font-size:13px;font-weight:900;color:#fff;font-family:'Noto Serif JP',serif;line-height:1.2;" id="ldm-3-name">グラントレゾール<br>広尾</div>
                   <div style="font-size:9px;font-weight:700;color:#C8102E;margin-top:3px;">¥ 45,000,000</div>
                 </div>
                 <div class="ldm-spec" style="background:#fff;">
                   <div id="ldm-3-head" class="ldm-spec-head" style="background:#C8102E;color:#fff;font-size:8px;font-weight:700;padding:3px 6px;">物件概要</div>
                   <table class="ldm-tbl"><tbody>
-                    <tr><th id="ldm-3-r1">所在地</th><td>恵比寿2-38-3</td></tr>
-                    <tr><th id="ldm-3-r2">間取り</th><td>1DK</td></tr>
-                    <tr><th id="ldm-3-r3">面積</th><td>50.30㎡</td></tr>
-                    <tr><th id="ldm-3-r4">賃料</th><td>¥250,000</td></tr>
-                    <tr><th id="ldm-3-r5">利回り</th><td>6.67%</td></tr>
+                    <tr><th id="ldm-3-r1">所在地</th><td id="ldm-3-v1">恵比寿2-38-3</td></tr>
+                    <tr><th id="ldm-3-r2">間取り</th><td id="ldm-3-v2">1DK</td></tr>
+                    <tr><th id="ldm-3-r3">面積</th><td id="ldm-3-v3">50.30㎡</td></tr>
+                    <tr><th id="ldm-3-r4">賃料</th><td id="ldm-3-v4">¥250,000</td></tr>
+                    <tr><th id="ldm-3-r5">利回り</th><td id="ldm-3-v5">6.67%</td></tr>
                   </tbody></table>
                 </div>
               </div>
@@ -818,7 +931,7 @@ body.dark #sidebar{background:#0b0b0e}
   </div>
   <div class="bp-footer bp-reveal">
     <div>
-      <div class="bp-footer-h">Start building <span class="r">faster.</span></div>
+      <div class="bp-footer-h" id="bp-footer-h">Start building <span class="r">faster.</span></div>
       <div class="bp-footer-note" id="lp-footer-note">ブラウザのみで動作 · インストール不要 · 社内限定</div>
     </div>
     <button class="bp-cta" onclick="lpEnter()"><span id="lp-cta2-text">作成をはじめる</span> <span class="ar">→</span></button>
@@ -3957,8 +4070,197 @@ window.addEventListener('DOMContentLoaded', () => {
     // Safety fallback: ensure nothing stays hidden
     setTimeout(function(){ els.forEach(function(e){ e.classList.add('in'); }); }, 1600);
   }
+  // Translate Blueprint landing + demo elements the original lang switcher doesn't cover
+  function bpI18n(l){
+    var en = (l === 'en');
+    var T = function(id, ja, eng){ var e = document.getElementById(id); if(e) e.textContent = en ? eng : ja; };
+    var H = function(id, ja, eng){ var e = document.getElementById(id); if(e) e.innerHTML = en ? eng : ja; };
+    // nav + cta
+    T('bp-nav-demo','デモ','Demo');
+    T('bp-demo-btn','▷ デモを見る','▷ Watch demo');
+    // stats
+    T('bp-stat-l1','1物件あたり','PER FLYER');
+    T('bp-stat-l2','テンプレート','TEMPLATES');
+    T('bp-stat-l3','ブラウザ完結','IN-BROWSER');
+    // footer
+    H('bp-footer-h','もっと速く、<span class="r">つくろう。</span>','Start building <span class="r">faster.</span>');
+    // hero live-preview card
+    T('bp-pv-kicker','投資用物件','INVESTMENT PROPERTY');
+    T('bp-pv-name','グラントレゾール広尾','Grand Tresor Hiroo');
+    T('bp-pv-r1','所在地','Location');   T('bp-pv-v1','渋谷区恵比寿2-38-3','Ebisu, Shibuya-ku');
+    T('bp-pv-r2','間取り','Layout');     T('bp-pv-v2','1DK メゾネット型','1DK Maisonette');
+    T('bp-pv-r3','専有面積','Floor Area');T('bp-pv-v3','50.30 ㎡','50.30 m²');
+    T('bp-pv-r4','表面利回り','Gross Yield');T('bp-pv-v4','6.67 %','6.67 %');
+    H('bp-pv-status','<span class="bdot"></span> AI SCAN COMPLETE — 6 FIELDS · 自動入力済み','<span class="bdot"></span> AI SCAN COMPLETE — 6 FIELDS · Auto-filled');
+    T('bp-pv-c1','クラシック','Classic'); T('bp-pv-c2','プレミアム','Premium'); T('bp-pv-c3','モダン','Modern'); T('bp-pv-c4','縦型','Vertical');
+    // demo step 1 values
+    T('ds1-v1','グラントレゾール広尾','Grand Tresor Hiroo');
+    T('ds1-v2','東京都渋谷区恵比寿2-38-3','2-38-3 Ebisu, Shibuya-ku, Tokyo');
+    T('ds1-v3','1DK メゾネット型','1DK Maisonette');
+    T('ds1-v4','¥ 45,000,000','¥ 45,000,000');
+    T('ds1-v5','50.30 ㎡','50.30 m²');
+    T('ds1-v6','2011年3月','March 2011');
+    // demo flyer names
+    T('ldm-0-name','グラントレゾール広尾','Grand Tresor Hiroo');
+    T('ldm-1-name','グラントレゾール広尾','Grand Tresor Hiroo');
+    T('ldm-2-name','グラントレゾール広尾','Grand Tresor Hiroo');
+    H('ldm-3-name','グラントレゾール<br>広尾','Grand Tresor<br>Hiroo');
+    // demo flyer values
+    var loc='渋谷区恵比寿2-38-3', locE='Ebisu, Shibuya-ku 2-38-3', lay='1DK メゾネット型', layE='1DK Maisonette', area='50.30㎡', areaE='50.30 m²';
+    T('ldm-0-v1',loc,locE); T('ldm-0-v2',lay,layE); T('ldm-0-v3',area,areaE); T('ldm-0-v4','2011年3月','March 2011'); T('ldm-0-v5','¥250,000/mo','¥250,000/mo'); T('ldm-0-v6','¥23,610/mo','¥23,610/mo'); T('ldm-0-v7','6.67%','6.67%'); T('ldm-0-v8','賃貸中','Tenanted');
+    T('ldm-1-v1',loc,locE); T('ldm-1-v2',lay,layE); T('ldm-1-v3',area,areaE); T('ldm-1-v4','¥250,000/mo','¥250,000/mo'); T('ldm-1-v5','6.67%','6.67%');
+    T('ldm-2-v1',loc,locE); T('ldm-2-v2',lay,layE); T('ldm-2-v3',area,areaE); T('ldm-2-v4','¥250,000/mo','¥250,000/mo'); T('ldm-2-v5','6.67%','6.67%');
+    T('ldm-3-v1','恵比寿2-38-3','Ebisu 2-38-3'); T('ldm-3-v2','1DK','1DK'); T('ldm-3-v3',area,areaE); T('ldm-3-v4','¥250,000','¥250,000'); T('ldm-3-v5','6.67%','6.67%');
+  }
+  window.bpI18n = bpI18n;
+  // Hook into the existing language switcher so it also covers these elements
+  if (typeof window.lpSetLang === 'function'){
+    var _origLp = window.lpSetLang;
+    window.lpSetLang = function(l){ _origLp(l); try { bpI18n(l); } catch(e){} };
+  }
+  // Apply once on load for the persisted language
+  var _cur = 'ja';
+  try { _cur = localStorage.getItem('maisoku-lang') || 'ja'; } catch(e){}
+  try { bpI18n(_cur); } catch(e){}
   if (document.readyState !== 'loading') bpReveal();
   else document.addEventListener('DOMContentLoaded', bpReveal);
+})();
+</script>
+<script>
+(function(){
+  var intro=document.getElementById('intro'); if(!intro) return;
+  var stage=document.getElementById('introStage');
+  var sphereEl=document.getElementById('introSphere');
+  var rev=document.getElementById('introReveal');
+  var hint=document.getElementById('introHint');
+  var hintText=document.getElementById('introHintText');
+  var partWrap=document.getElementById('introParticles');
+  var buildWrap=document.getElementById('introBuild');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  // ── drifting particles ──
+  for(var i=0;i<30;i++){
+    var p=document.createElement('div'); p.className='ipart';
+    var sz=(1+Math.random()*2.6);
+    p.style.width=p.style.height=sz.toFixed(1)+'px';
+    p.style.left=(Math.random()*100)+'%'; p.style.top=(Math.random()*100)+'%';
+    var dur=7+Math.random()*9;
+    p.style.animationDuration=dur.toFixed(1)+'s';
+    p.style.animationDelay=(-Math.random()*dur).toFixed(1)+'s';
+    p.style.setProperty('--dx',(Math.random()*60-30).toFixed(0)+'px');
+    if(Math.random()<0.15){ p.style.background='#C8102E'; }
+    partWrap.appendChild(p);
+  }
+
+  // ── dot-shell sphere ──
+  var N = reduce?120:230;
+  var R=160;
+  function calcR(){ R=Math.min(stage.clientWidth, stage.clientHeight)*0.36||160; }
+  var pts=[], dots=[];
+  var GA=Math.PI*(3-Math.sqrt(5));
+  for(var k=0;k<N;k++){
+    var yy=1-(k/(N-1))*2, rr=Math.sqrt(Math.max(0,1-yy*yy)), th=k*GA;
+    var col = Math.random()<0.07?(Math.random()<0.5?'#C8102E':'#eafff0'):'#C8FF4A';
+    pts.push({x:Math.cos(th)*rr, y:yy, z:Math.sin(th)*rr});
+    var d=document.createElement('div'); d.className='idot';
+    var bs=(2.1+Math.random()*1.7); d.dataset.bs=bs;
+    d.style.width=d.style.height=bs.toFixed(1)+'px';
+    d.style.marginLeft=d.style.marginTop=(-bs/2).toFixed(2)+'px';
+    d.style.background=col;
+    if(col!=='#C8FF4A') d.style.boxShadow='0 0 7px '+col;
+    sphereEl.appendChild(d); dots.push(d);
+  }
+
+  // ── state ──
+  var ay=0, tiltX=0, tiltY=0, tTiltX=0, tTiltY=0;
+  var pointerActive=false, cx=0, cy=0;
+  var reveal=0, explode=0, entering=false;
+  var persp=500, openR=100, openPush=90;
+  function recalc(){ calcR(); openR=R*0.6; openPush=R*0.5; }
+  recalc();
+  window.addEventListener('resize', recalc);
+
+  stage.addEventListener('pointerenter', function(){ pointerActive=true; });
+  stage.addEventListener('pointerleave', function(){ pointerActive=false; tTiltX=0; tTiltY=0; });
+  stage.addEventListener('pointermove', function(e){
+    pointerActive=true;
+    var r=stage.getBoundingClientRect();
+    cx=e.clientX-(r.left+r.width/2);
+    cy=e.clientY-(r.top+r.height/2);
+    tTiltY=(cx/(r.width/2))*0.45;
+    tTiltX=-(cy/(r.height/2))*0.45;
+  });
+
+  function frame(){
+    if(intro.classList.contains('gone')) return;
+    ay+=0.0019;
+    tiltX+=(tTiltX-tiltX)*0.07; tiltY+=(tTiltY-tiltY)*0.07;
+    var Ay=ay+tiltY, Ax=tiltX;
+    var cY=Math.cos(Ay), sY=Math.sin(Ay), cX=Math.cos(Ax), sX=Math.sin(Ax);
+    if(!entering){
+      if(pointerActive) reveal=Math.min(1,reveal+0.018); else reveal=Math.max(0,reveal-0.012);
+      rev.style.opacity=reveal.toFixed(3);
+      if(reveal>0.5 && !hint.classList.contains('revealed')){ hint.classList.add('revealed'); hintText.textContent='クリックして起動 →'; }
+    }
+    for(var k=0;k<N;k++){
+      var p=pts[k];
+      var x1=p.x*cY+p.z*sY, z1=-p.x*sY+p.z*cY, y1=p.y;
+      var y2=y1*cX-z1*sX, z2=y1*sX+z1*cX, x2=x1;
+      var sc=persp/(persp-z2*R);
+      var sx=x2*R*sc, sy=y2*R*sc;
+      var depth=(z2+1)/2, off=0, fade=1;
+      if(explode>0){ off+=explode*R*2.4; fade*=(1-explode); }
+      else if(pointerActive && z2>0){
+        var dd=Math.hypot(sx-cx,sy-cy);
+        if(dd<openR){ var t=1-dd/openR; off+=t*openPush; fade*=(1-t*0.85); }
+      }
+      var len=Math.hypot(sx,sy)||1;
+      var ox=sx+sx/len*off, oy=sy+sy/len*off;
+      var el=dots[k];
+      el.style.transform='translate('+ox.toFixed(1)+'px,'+oy.toFixed(1)+'px) scale('+sc.toFixed(3)+')';
+      el.style.opacity=((0.16+depth*0.84)*fade).toFixed(3);
+      el.style.zIndex=Math.round(depth*100);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // ── enter / build transition ──
+  function buildSkyline(){
+    if(buildWrap.childElementCount) return;
+    var n=Math.max(11,Math.min(20,Math.round(window.innerWidth/90)));
+    for(var i=0;i<n;i++){
+      var b=document.createElement('div'); b.className='bldg';
+      b.style.height=(36+Math.random()*60).toFixed(0)+'%';
+      b.style.transitionDelay=(i*0.05).toFixed(3)+'s';
+      buildWrap.appendChild(b);
+      (function(el){ requestAnimationFrame(function(){ requestAnimationFrame(function(){ el.classList.add('rise'); }); }); })(b);
+    }
+  }
+  function slideUp(){
+    intro.style.transition='transform .9s cubic-bezier(.7,0,.25,1)';
+    intro.style.transform='translateY(-100%)';
+    try{ document.querySelectorAll('#landing .bp-reveal').forEach(function(e){ e.classList.add('in'); }); }catch(e){}
+    var lp=document.getElementById('landing'); if(lp) lp.scrollTop=0;
+    setTimeout(function(){ intro.classList.add('gone'); }, 950);
+  }
+  function enter(){
+    if(entering) return; entering=true; pointerActive=false;
+    hint.classList.add('revealed'); hintText.textContent='構築中…';
+    rev.style.transition='opacity .55s ease, transform .8s cubic-bezier(.5,0,.75,0)';
+    rev.style.opacity='1';
+    var t0=performance.now();
+    (function boom(){ explode=Math.min(1,(performance.now()-t0)/520); if(explode<1) requestAnimationFrame(boom); })();
+    setTimeout(function(){ rev.style.transform='translate(-50%,-50%) scale(2.6)'; rev.style.opacity='0'; }, 230);
+    setTimeout(buildSkyline, 470);
+    setTimeout(slideUp, 1500);
+  }
+
+  stage.addEventListener('click', enter);
+  document.addEventListener('keydown', function(e){
+    if(intro.classList.contains('gone')) return;
+    if(e.key==='Enter'||e.key===' '||e.key==='Escape'){ e.preventDefault(); enter(); }
+  });
 })();
 </script>
 </body>
