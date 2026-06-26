@@ -6,11 +6,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&family=Shippori+Mincho+B1:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
 <style id="redesign-overrides">
-  /* --- professional redesign overrides (sandbox) --- */
-  #intro{display:none!important}              /* remove cosmic scroll-gate intro */
-  .intro-bg,.intro-particles,#introSphere{display:none!important}
+  /* --- professional sphere variant overrides (sandbox) --- */
   #edAtmos{display:none!important}            /* calm editor work surface */
   #lpAtmos{opacity:.5}                        /* dim landing atmosphere */
+
+.lp-guide-section{background:transparent;border-top:1px solid #16161c;padding:72px 48px}
+.lp-guide-inner{max-width:1000px;margin:0 auto}
+.lp-guide-eyebrow{font:700 10px 'IBM Plex Sans JP',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#C8102E;margin-bottom:12px}
+.lp-guide-title{font:700 30px 'Shippori Mincho B1',serif;letter-spacing:-.01em;color:#f2f2ee;margin-bottom:12px}
+.lp-guide-sub{font:400 14px 'IBM Plex Sans JP',sans-serif;color:#8a8a94;line-height:1.7;margin-bottom:40px;max-width:560px}
+.lp-guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#16161c;border:1px solid #16161c}
+.lp-guide-card{background:#0d0d0f;padding:24px 26px;transition:background .2s}
+.lp-guide-card:hover{background:#121217}
+.lp-guide-card h4{font:600 15px 'IBM Plex Sans JP',sans-serif;color:#f2f2ee;margin:0 0 10px}
+.lp-guide-card p{font:400 13px 'IBM Plex Sans JP',sans-serif;color:#9a9aa4;line-height:1.75;margin:0}
+@media(max-width:760px){.lp-guide-grid{grid-template-columns:1fr}.lp-guide-section{padding:48px 24px}}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -720,6 +730,7 @@ body:not(.dark) .sbox-t{color:#161a16}
     </div>
     <div class="bp-nav-right">
       <span class="bp-nav-link" id="bp-nav-demo" onclick="bpScroll('.lp-demo-section')">デモ</span>
+      <span class="bp-nav-link" id="bp-nav-guide" onclick="bpScroll('.lp-guide-section')">機能ガイド</span>
       <div class="bp-lang">
         <button class="bp-lang-btn lp-lang-btn on" id="lp-lj" onclick="lpSetLang('ja')">JA</button>
         <button class="bp-lang-btn lp-lang-btn" id="lp-le" onclick="lpSetLang('en')">EN</button>
@@ -985,6 +996,14 @@ body:not(.dark) .sbox-t{color:#161a16}
     <!-- Next step CTA -->
     <div style="text-align:center;margin-top:28px;">
       <button class="lp-demo-next-btn" id="demo-next-btn" onclick="demoNext()">次のステップへ →</button>
+    </div>
+  </div>
+  <div class="lp-guide-section">
+    <div class="lp-guide-inner">
+      <div class="lp-guide-eyebrow" id="lp-guide-eyebrow">FEATURE GUIDE</div>
+      <div class="lp-guide-title" id="lp-guide-title">機能をすべて使いこなす</div>
+      <p class="lp-guide-sub" id="lp-guide-sub">マイソクジェネレーターの全機能と、最大限に活用するためのコツ。</p>
+      <div class="lp-guide-grid" id="lp-guide-grid"></div>
     </div>
   </div>
   <div class="bp-footer bp-reveal">
@@ -3893,6 +3912,20 @@ const LP_COPY = {
     s3t: 'デザインを選択', s3d: 'レイアウトとカラーを選択。写真をドラッグで調整できます。',
     s4t: 'PDFで書き出し', s4d: 'ワンクリックでA4横向きPDFを書き出し。そのまま印刷できます。',
     note: 'ブラウザのみで動作 · インストール不要 · 社内限定',
+    guideNav: '機能ガイド',
+    guideEyebrow: 'FEATURE GUIDE',
+    guideTitle: '機能をすべて使いこなす',
+    guideSub: 'マイソクジェネレーターの全機能と、最大限に活用するためのコツ。',
+    guideItems: [
+      ['① AI PDFスキャン','物件資料のPDFをドロップするだけで、AIが物件名・所在地・価格・間取り・面積・築年月などを自動で読み取り、フォームに入力します。手入力の手間を大幅に削減。スキャン後は必ず内容を確認してください。'],
+      ['② 4つの入力タブ','左サイドバーは「物件情報」「スペック」「アクセス」「画像」の4タブ構成。物件情報には物件名・価格・所在地・取引態様などの基本項目、スペックには構造・専有面積・バルコニー・築年月など、アクセスには最寄り駅と徒歩分数を入力します。'],
+      ['③ 住所から地図を自動生成','所在地を入力すると、住所をジオコーディングして地図を自動表示します。広尾なら日比谷線といった沿線情報も正しく反映。読み込みに失敗した場合はフォールバック表示になります。'],
+      ['④ 4つのデザインテンプレート','「クラシック」「プレミアム」「モダン」「縦型」から選択。物件写真が横長なら横型、縦長なら縦型レイアウトが最適です。カラーパレットの切り替えにも対応。'],
+      ['⑤ 画像のドラッグ調整','画像タブで外観・間取り写真をアップロードし、フレーム内でドラッグして位置やトリミングを微調整できます。'],
+      ['⑥ 日英バイリンガル＆英語エクスポートゲート','右上のJA/ENで全体を切り替え。英語モードでPDFを出力する際、物件データ欄に未翻訳の日本語が残っていると書き出しをブロックします（会社情報フッターの免許番号・担当者名などは日本語のままでもOK）。海外向け資料の品質を担保する安全機能です。'],
+      ['⑦ A4横向きPDF出力','ワンクリックでA4横向きのPDFを書き出し。そのまま印刷・送付できます。すべてブラウザ内で完結し、データは外部に送信されません。'],
+      ['⑧ 保存・読み込み＆ダークテーマ','「💾 本体の設定を保存する」で入力内容をJSONファイルとして書き出し、「📂 保存したファイルを読み込む」でいつでも復元できます。保存は手動で、ファイルはお使いのPCに保存されます。言語とダークテーマの設定はブラウザに自動保存されます。']
+    ],
     demoEyebrow: 'INTERACTIVE DEMO',
     demoTitle: '実際に触ってみる',
     demoSub: '各ステップをクリックして、ワークフローを体験してください。',
@@ -3928,6 +3961,20 @@ const LP_COPY = {
     s3t: 'Choose a Design', s3d: 'Pick a layout and colour palette. Drag to reframe your photos.',
     s4t: 'Export as PDF', s4d: 'One click exports a print-ready A4 landscape PDF.',
     note: 'Runs in your browser · No install · Internal use only',
+    guideNav: 'Feature Guide',
+    guideEyebrow: 'FEATURE GUIDE',
+    guideTitle: 'Get the Most Out of Every Feature',
+    guideSub: 'Everything the maisoku generator does — and how to make the most of it.',
+    guideItems: [
+      ['① AI PDF Scan','Drop a property PDF and the AI reads the property name, address, price, layout, floor area, build date and more, filling the form automatically. It dramatically cuts manual entry — always review the results after scanning.'],
+      ['② Four Input Tabs','The left sidebar has four tabs: Property Info, Specs, Access, and Images. Property Info holds the basics (name, price, address, transaction type); Specs covers structure, floor area, balcony, and build date; Access takes the nearest station and walk time.'],
+      ['③ Address → Auto Map','Enter the address and it geocodes the location and renders a map automatically — correctly reflecting line info such as the Hibiya line for Hiroo. If lookup fails, a graceful fallback message is shown.'],
+      ['④ Four Design Templates','Choose from Classic, Premium, Modern, or Vertical. Use a horizontal layout for landscape photos and the vertical layout for portrait photos. Color palettes are switchable too.'],
+      ['⑤ Drag-to-Adjust Images','In the Images tab, upload exterior and floor-plan photos, then drag within each frame to fine-tune position and cropping.'],
+      ['⑥ Bilingual + English Export Gate','Toggle the whole interface with JA/EN at the top right. When exporting a PDF in English mode, the gate blocks the export if any untranslated Japanese remains in the property-data fields. The fixed company footer (license number, agent name) is allowed to stay Japanese. It safeguards the quality of sheets for overseas clients.'],
+      ['⑦ A4 Landscape PDF Export','Export an A4 landscape PDF in one click, ready to print or send. Everything runs in your browser — no data leaves your machine.'],
+      ['⑧ Save / Load & Dark Theme','Use “💾 Save settings” to export your entries as a JSON file, and “📂 Load saved file” to restore them anytime. Saving is manual and the file is stored on your own computer. Your language and dark-theme preferences are remembered automatically in the browser.']
+    ],
     demoEyebrow: 'INTERACTIVE DEMO',
     demoTitle: 'Try It Yourself',
     demoSub: 'Click through each step to experience the workflow.',
@@ -4017,6 +4064,20 @@ function lpSetLang(l) {
   const pb = document.getElementById('demo-pdf-btn');
   if (pb && !pb.disabled) pb.textContent = c.dcPdfBtn;
   st('demo-pdf-sub', c.dcPdfSub);
+  // Feature guide (bilingual)
+  st('lp-guide-eyebrow', c.guideEyebrow);
+  st('lp-guide-title', c.guideTitle);
+  st('lp-guide-sub', c.guideSub);
+  st('bp-nav-guide', c.guideNav);
+  renderGuide(c.guideItems);
+}
+
+function renderGuide(items){
+  const grid = document.getElementById('lp-guide-grid');
+  if(!grid || !items) return;
+  grid.innerHTML = items.map(function(it){
+    return '<div class="lp-guide-card"><h4>'+it[0]+'</h4><p>'+it[1]+'</p></div>';
+  }).join('');
 }
 
 function lpEnter() {
@@ -4375,19 +4436,6 @@ window.addEventListener('DOMContentLoaded', () => {
   landing.addEventListener('scroll',upd,{passive:true});
   window.addEventListener('resize',upd);
   upd();
-})();
-</script>
-<script>
-(function(){
-  function bypass(){
-    var intro=document.getElementById('intro');
-    if(intro){ intro.classList.add('gone'); intro.style.display='none'; }
-    var landing=document.getElementById('landing');
-    if(landing){ landing.style.transform='none'; landing.style.opacity='1'; landing.scrollTop=0; }
-    try{ document.querySelectorAll('#landing .bp-reveal').forEach(function(e){ e.classList.add('in'); }); }catch(e){}
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bypass); else bypass();
-  setTimeout(bypass,60);
 })();
 </script>
 </body>
