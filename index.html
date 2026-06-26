@@ -703,6 +703,53 @@ body:not(.dark) .sbox-t{color:#161a16}
 </style>
 </head>
 <body>
+<!-- ============================================================= -->
+<!-- ACCESS GATE  ·  change the password on the line marked below   -->
+<!-- NOTE: this is a lightweight deterrent for casual access only.  -->
+<!--       The code is client-side and can be read by a technical   -->
+<!--       person. Do not rely on it for truly sensitive data.      -->
+<!-- ============================================================= -->
+<div id="access-gate" style="position:fixed;inset:0;z-index:99999;background:#0a0a0d;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Sans JP',system-ui,sans-serif">
+  <div style="width:min(360px,86vw);text-align:center;padding:0 20px">
+    <div style="font:700 11px 'IBM Plex Sans JP',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#C8102E;margin-bottom:18px">R.connect · Internal</div>
+    <div style="font:700 26px 'Shippori Mincho B1',serif;color:#f2f2ee;margin-bottom:8px">マイソク ジェネレーター</div>
+    <div style="font:400 13px 'IBM Plex Sans JP',sans-serif;color:#8a8a94;margin-bottom:26px">続けるにはパスワードを入力してください<br><span style="font-size:11px;color:#5c5c66">Enter the password to continue</span></div>
+    <input id="gate-pw" type="password" autocomplete="off" autofocus
+      style="width:100%;box-sizing:border-box;background:#121217;border:1px solid #2a2a32;border-radius:10px;color:#f2f2ee;font:400 15px 'IBM Plex Sans JP',sans-serif;padding:13px 15px;outline:none;text-align:center;letter-spacing:.05em"
+      onkeydown="if(event.key==='Enter')gateCheck()">
+    <button onclick="gateCheck()"
+      style="width:100%;margin-top:12px;background:#C8102E;border:none;border-radius:10px;color:#fff;font:600 14px 'IBM Plex Sans JP',sans-serif;padding:13px;cursor:pointer">入る / Enter</button>
+    <div id="gate-err" style="height:18px;margin-top:12px;font:400 12px 'IBM Plex Sans JP',sans-serif;color:#ff5a6e;opacity:0;transition:opacity .15s">パスワードが違います / Incorrect password</div>
+  </div>
+</div>
+<script>
+(function(){
+  /* ===== CHANGE THIS PASSWORD ===== */
+  var GATE_PASSWORD = "changeme";
+  /* ================================ */
+  var KEY = "maisoku-gate-ok";
+  function unlock(){
+    var g=document.getElementById("access-gate");
+    if(g) g.parentNode.removeChild(g);
+    document.body.style.overflow="";
+  }
+  // Stay unlocked for this browser session once entered correctly
+  try{ if(sessionStorage.getItem(KEY)==="1"){ unlock(); return; } }catch(e){}
+  document.body.style.overflow="hidden";
+  window.gateCheck=function(){
+    var inp=document.getElementById("gate-pw");
+    var err=document.getElementById("gate-err");
+    if(inp && inp.value===GATE_PASSWORD){
+      try{ sessionStorage.setItem(KEY,"1"); }catch(e){}
+      unlock();
+    } else {
+      if(err){ err.style.opacity="1"; }
+      if(inp){ inp.value=""; inp.focus(); }
+    }
+  };
+})();
+</script>
+
 <div id="intro">
   <div class="intro-bg"></div>
   <div class="intro-particles" id="introParticles"></div>
